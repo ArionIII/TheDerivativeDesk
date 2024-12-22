@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Forward Pricing - Futures & Forwards{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/static/css/forward-pricing.css">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>Forward Pricing Tools</h1>
+    <p>Select a forward pricing tool based on the type of asset you are analyzing.</p>
+</header>
+<main>
+    <section class="cards-container">
+        <div class="category-card">
+            <h3>Investment Asset without Income</h3>
+            <p>Calculate the forward price of an investment asset that generates no income during its life.</p>
+            <a href="/tools/futures-forwards/forward-pricing/forward_pricing_no_income" class="btn-explore">Explore</a>
+        </div>
+        <div class="category-card">
+            <h3>Investment Asset with Known Income</h3>
+            <p>Evaluate the forward price of an investment asset with discrete or continuous income.</p>
+            <a href="/tools/futures-forwards/forward-pricing/forward_pricing_with_income" class="btn-explore">Explore</a>
+        </div>
+        <div class="category-card">
+            <h3>Investment Asset with Known Yield</h3>
+            <p>Determine the forward price of an investment asset with a predictable yield over its life.</p>
+            <a href="/tools/futures-forwards/forward-pricing/forward_pricing_with_yield" class="btn-explore">Explore</a>
+        </div>
+        <div class="category-card">
+            <h3>Foreign Currency (Interest Rate Parity)</h3>
+            <p>Compute the forward price of foreign currency using interest rate parity principles.</p>
+            <a href="/tools/futures-forwards/forward-pricing/forward_pricing_foreign_currency" class="btn-explore">Explore</a>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Home - The Derivative Desk{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/static/css/index.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <h2>Your One-Stop Solution for Financial Derivatives</h2>
+    <p>Explore our tools and learn more about derivatives.</p>
+    <div class="cta-buttons">
+        <a href="/tools" class="btn-primary">Explore Tools</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <h3>Our Features</h3>
+    <div class="feature-row">
+        <div class="feature-image">
+            <img src="/static/images/calculator.jpg" alt="Interactive Calculators">
+        </div>
+        <div class="feature-text">
+            <h4>Interactive Calculators</h4>
+            <p>Our interactive calculators simplify complex calculations for financial derivatives, including options pricing, risk metrics, and more. These tools are designed for accuracy and ease of use, helping you save time while ensuring precision.</p>
+            <a href="/tools/interactive-calculators" class="btn-feature">Learn More</a>
+        </div>
+    </div>
+    <div class="feature-row reverse">
+        <div class="feature-image">
+            <img src="/static/images/education.jpg" alt="Educational Resources">
+        </div>
+        <div class="feature-text">
+            <h4>Educational Resources</h4>
+            <p>Access comprehensive tutorials and guides tailored to help you master financial derivatives. Whether you're a beginner or an expert, our resources offer in-depth explanations, examples, and practical insights.</p>
+            <a href="/learn/educational-resources" class="btn-feature">Explore Tutorials</a>
+        </div>
+    </div>
+    <div class="feature-row">
+        <div class="feature-image">
+            <img src="/static/images/visualization.jpg" alt="Visualization Tools">
+        </div>
+        <div class="feature-text">
+            <h4>Visualization Tools</h4>
+            <p>Transform data into actionable insights with our visualization tools. Create and customize graphs, option payoffs, and sensitivity analyses to better understand market dynamics and make informed decisions.</p>
+            <a href="/tools/visualization-tools" class="btn-feature">Try Tools</a>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Featured Tools Section -->
+<section class="featured-tools">
+    <h3>Explore Our Tools</h3>
+    <div class="tools-grid">
+        <a href="/tools/black-scholes" class="tool-item">
+            <h4>Black-Scholes Calculator</h4>
+            <p>Accurately price European options using the Black-Scholes model.</p>
+        </a>
+        <a href="/tools/var" class="tool-item">
+            <h4>Value at Risk (VaR)</h4>
+            <p>Estimate potential losses with our advanced VaR tool.</p>
+        </a>
+        <a href="/tools/greeks" class="tool-item">
+            <h4>Greeks Calculator</h4>
+            <p>Analyze sensitivities with Delta, Gamma, Vega, and more.</p>
+        </a>
+    </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section class="cta">
+    <h3>Start Your Journey Today</h3>
+    <p>Create an account to save your progress and access personalized tools.</p>
+    <a href="/register" class="btn-primary">Sign Up Now</a>
+</section>
+{% endblock %}

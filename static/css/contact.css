@@ -1,0 +1,46 @@
+.contact-us {
+    padding: var(--padding-main);
+    text-align: center;
+    background-color: var(--background-color);
+    color: var(--secondary-color);
+}
+
+.contact-us form {
+    max-width: var(--form-max-width);
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: var(--form-group-margin);
+}
+
+label {
+    display: block;
+    margin-bottom: var(--label-margin);
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+input, textarea {
+    width: 100%;
+    padding: var(--input-padding);
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-radius: var(--border-radius);
+    font-family: var(--font-family);
+    color: var(--secondary-color);
+    background-color: var(--background-color);
+}
+
+button {
+    padding: var(--button-padding);
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-family: var(--font-family);
+}
+
+button:hover {
+    background-color: var(--primary-color-hover);
+}

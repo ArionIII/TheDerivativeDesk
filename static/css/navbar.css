@@ -1,0 +1,166 @@
+.site-header {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    padding: var(--header-padding);
+}
+
+.logo h1 a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: var(--font-family);
+}
+
+.main-navigation .nav-list {
+    list-style: none;
+    display: flex;
+    gap: var(--nav-gap);
+    margin: 0;
+    padding: 0;
+}
+
+.main-navigation .nav-list li a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: var(--font-family);
+}
+
+.main-navigation .nav-list li a:hover {
+    color: var(--primary-color-hover);
+}
+
+/* Search Bar Container */
+.search-bar {
+    display: flex;
+    justify-content: center; /* Center the search bar horizontally */
+    align-items: center;
+    margin: 10px 20px; /* Add spacing around the bar */
+}
+
+/* Search Bar Form */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Full width for the container */
+    max-width: 600px; /* Restrict max width for better readability */
+    background-color: #fff; /* Background for the search bar */
+    border: 1px solid #ddd; /* Border for the search bar */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Prevent content overflow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Input Field */
+.navbar-search input {
+    flex: 1; /* Take up remaining space */
+    padding: 10px 15px; /* Spacing inside the input */
+    font-size: 1rem; /* Readable font size */
+    border: none; /* Remove default border */
+    outline: none; /* Remove outline on focus */
+    color: #333; /* Text color */
+}
+
+/* Placeholder Styling */
+.navbar-search input::placeholder {
+    color: #aaa; /* Subtle placeholder text color */
+}
+
+/* Search Button */
+.navbar-search button {
+    padding: 10px 20px; /* Add padding for clickable area */
+    background-color: var(--primary-color); /* Use primary color */
+    color: #fff; /* White text for contrast */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+/* Search Button Hover Effect */
+.navbar-search button:hover {
+    background-color: var(--primary-color-hover); /* Slightly darker on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-search {
+        max-width: 100%; /* Full width on smaller screens */
+    }
+}
+
+
+/* Ensure the search bar container is positioned correctly */
+.search-bar {
+    position: relative; /* Set a reference for absolute positioning of suggestions */
+}
+
+/* Suggestions container: Default hidden state */
+.suggestions-container {
+    display: none; /* Completely hide the container initially */
+    position: absolute;
+    top: 100%; /* Place it right below the search bar */
+    left: 0;
+    right: 0;
+    background: #fff; /* White background for contrast */
+    border: 1px solid #ccc; /* Light border */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    z-index: 1000; /* Ensure it appears above other elements */
+    max-height: 300px; /* Limit height for scrollable results */
+    overflow-y: auto; /* Enable scrolling if results exceed container height */
+    padding: 10px 0; /* Padding inside the container */
+}
+
+/* Show container when it has content */
+.suggestions-container.active {
+    display: block; /* Only show the container when it has suggestions */
+}
+
+/* Suggestion item styling */
+.suggestion-item {
+    padding: 10px 15px; /* Adjust padding for better spacing */
+    display: flex;
+    flex-direction: column; /* Align title and description */
+    gap: 5px; /* Space between title and description */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Highlight matching text */
+.suggestion-item .highlight {
+    font-weight: bold;
+    color: #FF8C00; /* Highlight color */
+}
+
+/* Title styling */
+.suggestion-item a {
+    font-weight: bold;
+    color: #333; /* Darker text for visibility */
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+/* Description styling */
+.suggestion-item p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #777; /* Muted text for descriptions */
+}
+
+/* Hover effect */
+.suggestion-item:hover {
+    background-color: #f9f9f9; /* Light gray background */
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+/* Scrollbar styling */
+.suggestions-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb {
+    background: #ccc; /* Scroll thumb color */
+    border-radius: 8px;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}

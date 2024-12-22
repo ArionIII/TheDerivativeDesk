@@ -1,0 +1,85 @@
+/* Page Header */
+.page-header {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Tools Container */
+.tools-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for all screens */
+    gap: 30px; /* Larger gap for better spacing */
+    padding: 30px 20px;
+}
+
+/* Tool Cards */
+.tool-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px; /* Rounded corners for modern design */
+    padding: 25px; /* Reduced padding for compactness */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center; /* Center-align content for consistency */
+}
+
+.tool-card h3 {
+    font-size: 1.5rem; /* Slightly smaller font size */
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.tool-card p {
+    font-size: 1rem; /* Slightly smaller font size */
+    color: var(--secondary-color); /* Subtle text color */
+    margin-bottom: 15px;
+}
+
+.tool-card .btn-explore {
+    display: inline-block; /* Inline block to prevent full-width */
+    text-align: center;
+    background-color: var(--primary-color);
+    color: #fff; /* High contrast for button text */
+    padding: 10px 20px; /* Adjusted padding for compactness */
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px; /* Rounded corners for button */
+    transition: background-color 0.3s ease;
+    margin: 0 auto; /* Center align within the card */
+    max-width: fit-content; /* Prevent the button from stretching */
+}
+
+.tool-card .btn-explore:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.tool-card:hover {
+    transform: translateY(-5px); /* Lift on hover for interaction feedback */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tools-container {
+        grid-template-columns: 1fr; /* Single column for smaller screens */
+    }
+
+    .tool-card {
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+}

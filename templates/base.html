@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your one-stop solution for financial derivatives calculations and education.">
+    <meta name="keywords" content="Derivatives, Financial Tools, Education, Risk Management">
+    <meta name="author" content="The Derivative Desk">
+    <title>{% block title %}The Derivative Desk{% endblock %}</title>
+    {% block styles %}
+    {% endblock %}
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/variables.css">
+</head>
+<body class="light-mode">
+    {% include 'navbar.html' %} <!-- Inclure la barre de navigation -->
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+    {% include 'footer.html' %} <!-- Inclure le footer -->
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

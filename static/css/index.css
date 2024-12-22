@@ -1,0 +1,248 @@
+.hero {
+    width: 100%; /* Full viewport width */
+    padding: 60px 20px; /* Spacious padding */
+    background-color: var(--primary-color); /* Background color from variables */
+    color: var(--secondary-color); /* Text color from variables */
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 3rem; /* Large heading size for emphasis */
+    margin-bottom: 20px; /* Space below the heading */
+    color: var(--background-color); /* Contrast with background */
+    max-width: 900px; /* Limit width for readability */
+    margin-left: auto; /* Center-align horizontally */
+    margin-right: auto;
+}
+
+.hero p {
+    font-size: 1.2rem; /* Comfortable font size for reading */
+    margin-bottom: 30px; /* Space below paragraph */
+    color: var(--background-color); /* Contrast with background */
+    max-width: 800px; /* Limit width for readability */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center; /* Center-align buttons */
+    gap: 15px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.cta-buttons a {
+    display: inline-block;
+    padding: 15px 30px; /* Larger padding for emphasis */
+    text-decoration: none; /* Remove underline */
+    font-size: 1.2rem; /* Slightly larger font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    background-color: var(--secondary-color); /* Button background color */
+    color: var(--primary-color); /* Button text color */
+}
+
+.cta-buttons a:hover {
+    background-color: var(--secondary-color-hover); /* Hover effect */
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color-hover);
+}
+
+.btn-secondary {
+    background-color: var(--dark-gray);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--dark-gray-hover);
+}
+/* Features Section */
+.btn-feature {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--background-color);
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-feature:hover {
+    background-color: var(--primary-color-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Légère ombre au survol */
+}
+
+.features {
+    padding: 60px 10px;
+    background-color: var(--background-color);
+    text-align: center;
+}
+
+.features h3 {
+    margin-bottom: 40px;
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.feature-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 50px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feature-row.reverse {
+    flex-direction: row-reverse; /* Inverse l'ordre pour alterner */
+}
+
+.feature-image {
+    flex: 1;
+    text-align: center;
+}
+
+.feature-image img {
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre portée */
+}
+
+.feature-text {
+    flex: 1;
+    text-align: left;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.feature-text h4 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.feature-text p {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    line-height: 1.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .feature-row {
+        flex-direction: column; /* Empile les éléments sur petits écrans */
+        text-align: center;
+    }
+
+    .feature-row.reverse {
+        flex-direction: column; /* Annule l'ordre inverse */
+    }
+
+    .feature-text {
+        text-align: center;
+    }
+
+    .feature-text h4 {
+        margin-top: 20px;
+    }
+}
+
+
+/* Featured Tools Section */
+.featured-tools {
+    padding-top: 10px;
+    padding-bottom: 50px;
+    background-color: var(--footer-bg-color);
+    color: var(--background-color);
+    text-align: center;
+}
+
+.featured-tools h3 {
+    color: var(--secondary-color); /* Si non défini, hérite des styles globaux */
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.tools-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tool-item {
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    color: var(--background-color);
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.tool-item:hover {
+    background: var(--primary-color-hover);
+    transform: translateY(-5px);
+}
+
+/* Call-to-Action Section */
+.cta {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.cta a {
+    background: var(--background-color);
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cta a:hover {
+    background: var(--primary-color-hover);
+    color: var(--background-color);
+}
+
+/* Testimonials Section */
+.testimonials {
+    padding: 50px 20px;
+    background-color: var(--background-color);
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.testimonials-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.testimonial {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    color: var(--secondary-color);
+    border: 1px solid #ddd;
+}

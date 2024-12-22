@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<header class="search-header">
+    <h1>Search Results</h1>
+    {% if query %}
+        <p>Results for "{{ query }}":</p>
+    {% endif %}
+</header>
+
+<main>
+    <ul class="search-results">
+        {% for tool in results %}
+            <li>
+                <a href="{{ tool.url }}">
+                    <h3>{{ tool.name }}</h3>
+                    <p>{{ tool.description }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if not results %}
+        <p>No tools found. Try another search term.</p>
+    {% endif %}
+</main>
+{% endblock %}
+
