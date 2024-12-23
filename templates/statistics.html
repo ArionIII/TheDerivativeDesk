@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Data Analytics Tools - The Derivative Desk{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/static/css/statistics.css">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>Data Analytics Tools</h1>
+    <p>Explore tools for advanced data analytics, including statistical evaluations and predictive modeling to enhance decision-making.</p>
+</header>
+<main>
+    <!-- Statistical Analysis Section -->
+    <section class="category-section">
+        <h2>Statistical Analysis</h2>
+        <p>Delve into tools that analyze variability, relationships, and dependencies in datasets to uncover valuable insights.</p>
+        <a href="/tools/statistical-analysis" class="btn-explore">Explore Statistical Analysis Tools</a>
+    </section>
+
+    <!-- Predictive Modeling Section -->
+    <section class="category-section">
+        <h2>Predictive Modeling</h2>
+        <p>Access tools designed to build models that predict outcomes based on statistical relationships and historical data.</p>
+        <a href="/tools/predictive-modeling" class="btn-explore">Explore Predictive Modeling Tools</a>
+    </section>
+</main>
+{% endblock %}

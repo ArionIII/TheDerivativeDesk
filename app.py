@@ -4,7 +4,8 @@ from futures_forward_routes import forwards_routes, futures_routes
 from hedging_routes import hedging_basics_routes, equity_hedging_routes
 from search_routes import search_routes
 from contract_valuation_routes import value_forward_routes, delivery_timing_decision_routes
-from sub_categories_config import tool_category_future_forwards_routes
+from futures_forwards_categories_config import tool_category_future_forwards_routes
+from statistical_categories_config import tool_category_stat_analysis_routes
 from config import logger
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(equity_hedging_routes)
 app.register_blueprint(tool_category_future_forwards_routes) 
 app.register_blueprint(value_forward_routes)  
 app.register_blueprint(delivery_timing_decision_routes)
+app.register_blueprint(tool_category_stat_analysis_routes)
 
 # Route pour la page d'accueil
 @app.route("/")
@@ -63,6 +65,11 @@ def learn():
 @app.route("/tools/futures-forwards")
 def futures_forwards():
     return render_template("futures-forwards.html")
+
+# Route pour la page statistics
+@app.route("/tools/statistics")
+def statistics():
+    return render_template("statistics.html")
 
 # Lancer le serveur Flask
 if __name__ == "__main__":
