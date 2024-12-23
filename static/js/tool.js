@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Handle the toggle value if the toggle exists
+        // Add toggle value to data if toggle exists
         if (toggleInput) {
-            inputData["position_type"] = toggleInput.checked ? "Long" : "Short"; // Long if checked, Short if not
+            inputData["toggle"] = toggleInput.checked ? 1 : 0; // Generic boolean toggle
         }
 
         try {
