@@ -3,7 +3,8 @@ from futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
 from futures_forward_routes import forwards_routes, futures_routes
 from hedging_routes import hedging_basics_routes
 from search_routes import search_routes
-from sub_categories_config import tool_category_routes
+from contract_valuation_routes import value_forward_routes
+from sub_categories_config import tool_category_future_forwards_routes
 from config import logger
 app = Flask(__name__)
 
@@ -12,7 +13,8 @@ app.register_blueprint(forwards_routes)
 app.register_blueprint(futures_routes)
 app.register_blueprint(search_routes)
 app.register_blueprint(hedging_basics_routes)   
-app.register_blueprint(tool_category_routes)   
+app.register_blueprint(tool_category_future_forwards_routes) 
+app.register_blueprint(value_forward_routes)  
 
 # Route pour la page d'accueil
 @app.route("/")

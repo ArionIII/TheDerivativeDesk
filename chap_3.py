@@ -1,4 +1,5 @@
 import numpy as np
+from config import logger
 
 def compute_basis_hedge(asset_price, futures_price_contract):
     """
@@ -215,6 +216,86 @@ def compute_tailing_the_hedge_adjustment(asset_value, futures_value, hedge_ratio
         raise ValueError("Values must be positive.")
 
     return hedge_ratio * (asset_value / futures_value)
+
+# Concatenate three functions above
+def compute_optimal_number_of_futures_contracts_tailing_the_hedge(
+    asset_quantity=None,
+    futures_quantity=None,
+    hedge_ratio=None,
+    asset_price=None,
+    futures_price=None,
+    asset_value=None,
+    futures_value=None
+):
+    """
+    Compute the optimal number of futures contracts, dollar value of a hedge, 
+    or adjustment for tailing the hedge based on provided inputs.
+
+    Args:
+        asset_quantity (float, optional): Quantity of the asset to be hedged.
+        futures_quantity (float, optional): Quantity of the futures contract.
+        hedge_ratio (float, optional): The hedge ratio.
+        asset_price (float, optional): Dollar value of the asset per unit.
+        futures_price (float, optional): Dollar value of the futures contract per unit.
+        asset_value (float, optional): Value of the asset (optional).
+        futures_value (float, optional): Value of the futures contract (optional).
+
+    Returns:
+        dict: Results of the calculation, depending on the provided inputs.
+
+    Raises:
+        ValueError: If inputs are invalid or insufficient for any computation.
+    """
+    # Validate inputs
+    inputs = {
+        "asset_quantity": asset_quantity,
+        "futures_quantity": futures_quantity,
+        "hedge_ratio": hedge_ratio,
+        "asset_price": asset_price,
+        "futures_price": futures_price,
+        "asset_value": asset_value,
+        "futures_value": futures_value,
+    }
+    for key, value in inputs.items():
+        if value is not None and not isinstance(value, (int, float)):
+            raise ValueError(f"{key} must be numeric (int or float).")
+
+    # Ensure hedge ratio is provided for all calculations
+    if hedge_ratio is None:
+        raise ValueError("Hedge ratio is required for all calculations.")
+
+    results = {}
+    results["optimal_n_futures"] = ("Optimal number of contracts : ","N/A")
+    results["tailing_hedge_adjustment"] = ("Tailing the hedge : ", "N/A")
+
+    # Compute the optimal number of futures contracts
+    if asset_quantity is not None and futures_quantity is not None:
+        if asset_quantity <= 0 or futures_quantity <= 0:
+            raise ValueError("Asset and futures quantities must be positive.")
+        results["optimal_n_futures"] = ("Optimal number of contracts : ", hedge_ratio * (asset_quantity / futures_quantity))
+
+    # Compute the dollar value of the hedge
+    if asset_quantity is not None and futures_quantity is not None and asset_price is not None and futures_price is not None:
+        if any(val <= 0 for val in [asset_quantity, futures_quantity, asset_price, futures_price]):
+            raise ValueError("Asset and futures quantities and prices must be positive.")
+        asset_value_calculated = asset_quantity * asset_price
+        futures_value_calculated = futures_quantity * futures_price
+        results["dollar_value_asset"] = asset_value_calculated
+        results["dollar_value_futures"] = futures_value_calculated
+
+    # Compute tailing the hedge adjustment
+    if asset_value is not None and futures_value is not None:
+        if asset_value <= 0 or futures_value <= 0:
+            raise ValueError("Asset and futures values must be positive.")
+        results["tailing_hedge_adjustment"] = ("Tailing the hedge : ", hedge_ratio * (asset_value / futures_value))
+
+    # Ensure at least one calculation was performed
+    if not results:
+        raise ValueError("Insufficient inputs to perform any calculation.")
+    logger.info(results)
+    return results
+
+
 
 def compute_hedge_equity_portfolio(beta, asset_value, futures_value):
     """

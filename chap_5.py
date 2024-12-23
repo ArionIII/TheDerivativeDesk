@@ -45,7 +45,7 @@ def calculate_forward_price_with_yield(spot_price, yield_rate, risk_free_rate, t
     return spot_price * math.exp((risk_free_rate - yield_rate) * time_to_maturity)
 
 
-def calculate_forward_contract_value(forward_price, delivery_price, risk_free_rate, time_to_maturity):
+def calculate_forward_contract_value(forward_price, delivery_price, risk_free_rate, time_to_maturity, long_position=True):
     """
     Calculate the value of a forward contract.
 
@@ -59,7 +59,7 @@ def calculate_forward_contract_value(forward_price, delivery_price, risk_free_ra
         raise ValueError("Inputs must be non-negative.")
     long_value = (forward_price - delivery_price) * math.exp(-risk_free_rate * time_to_maturity)
     short_value = (delivery_price - forward_price) * math.exp(-risk_free_rate * time_to_maturity)
-    return long_value, short_value
+    return long_value if long_position else short_value
 
 
 def calculate_futures_price_stock_index(spot_price, dividend_yield, risk_free_rate, time_to_maturity):

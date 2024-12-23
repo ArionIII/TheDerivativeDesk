@@ -32,12 +32,26 @@
                     {% if not input.optional %} required {% endif %} 
                 >
             {% endfor %}
+            <!-- Toggle Section -->
+            {% if tool.toggle %}
+            <div class="toggle-section">
+                <label for="toggle-input" class="toggle-label">{{ tool.toggle.label }}</label>
+                <label class="toggle">
+                    <input 
+                        type="checkbox" 
+                        id="toggle-input" 
+                        name="toggle" 
+                        {% if tool.toggle.default_checked %}checked{% endif %}
+                    >
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            {% endif %}
             <button type="submit" class="btn-submit">Calculate</button>
         </form>
     </section>
     
-    
-
     <!-- Results Section -->
     <section class="results-section">
         <h2>Results</h2>
@@ -56,10 +70,10 @@
                 <canvas id="chart"></canvas>
             </div>
         </section>
-        {% endif %}
-
+    {% endif %}
 </main>
 {% endblock %}
+
 
 {% block scripts %}
 <script src="/static/js/tool.js"></script>

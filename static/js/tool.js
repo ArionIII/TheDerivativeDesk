@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("tool-form");
     const results = document.getElementById("results");
     const chartElement = document.getElementById("chart");
+    const toggleInput = document.getElementById("toggle-input");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -11,10 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputData = Object.fromEntries(formData.entries());
 
         // Remove empty optional inputs before sending
-        for (const key in inputData) {
+        Object.keys(inputData).forEach((key) => {
             if (inputData[key].trim() === "") {
                 delete inputData[key];
             }
+        });
+
+        // Add toggle value to data if toggle exists
+        if (toggleInput) {
+            inputData["long_position"] = toggleInput.checked;
         }
 
         try {
@@ -31,11 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const resultData = await response.json();
 
-            // Update results
-            results.querySelectorAll("span").forEach((span, index) => {
-                const resultKey = Object.keys(resultData)[index];
-                span.textContent = resultData[resultKey] || "N/A";
-            });
+            // Update results dynamically
+            if (resultData.error) {
+                results.innerHTML = `<p class="error">${resultData.error}</p>`;
+                return;
+            }
+
+            results.innerHTML = formatResultData(resultData);
 
             // Update visualization (if chart exists)
             if (chartElement) {
@@ -60,17 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Real-time optional input validation
-    form.querySelectorAll("input").forEach((input) => {
-        if (input.hasAttribute("optional")) {
-            input.addEventListener("input", () => {
-                // Optional inputs can be left empty, so no error unless the value is invalid
-                if (input.value && input.type === "number" && parseFloat(input.value) < 0) {
-                    input.setCustomValidity("Value cannot be negative.");
-                } else {
-                    input.setCustomValidity("");
-                }
-            });
+    // Helper function to format result data
+    function formatResultData(data) {
+        if (typeof data === "object" && data !== null) {
+            return (
+                `<ul>` +
+                Object.values(data)
+                    .map((value) => {
+                        if (Array.isArray(value) && value.length === 2) {
+                            return `<li>${value[0]} <strong>${value[1]}</strong></li>`;
+                        } else if (typeof value === "object" && value !== null) {
+                            return `<li>${formatResultData(value)}</li>`;
+                        } else {
+                            return `<li>${value !== null ? value : "N/A"}</li>`;
+                        }
+                    })
+                    .join("") +
+                `</ul>`
+            );
         }
-    });
+        return `<p>${data}</p>`;
+    }
 });

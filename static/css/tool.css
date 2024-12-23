@@ -98,3 +98,57 @@ body {
     font-weight: bold;
     margin-left: 5px;
 }
+
+/* Toggle Section */
+.toggle-section {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Label Styling */
+.toggle-label {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+/* Hide the default checkbox */
+.toggle input[type="checkbox"] {
+    display: none;
+}
+
+/* Slider container */
+.toggle .slider {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Slider knob */
+.toggle .slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 2.5px;
+    left: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Checked state */
+.toggle input[type="checkbox"]:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+.toggle input[type="checkbox"]:checked + .slider::before {
+    transform: translateX(25px);
+}
