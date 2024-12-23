@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("tool-form");
     const results = document.getElementById("results");
     const chartElement = document.getElementById("chart");
-    const toggleInput = document.getElementById("toggle-input");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -18,12 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Add toggle value to data if toggle exists
-        if (toggleInput) {
-            inputData["toggle"] = toggleInput.checked ? 1 : 0; // Generic boolean toggle
-        }
-
         try {
+            console.log("Sending data to the server:", inputData);
             // Send data to the server for calculation
             const response = await fetch(window.location.pathname, {
                 method: "POST",
@@ -51,11 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 new Chart(ctx, {
                     type: "line",
                     data: {
-                        labels: Array.from({ length: 10 }, (_, i) => i), // Example labels
+                        labels: Array.from({ length: 10 }, (_, i) => i),
                         datasets: [
                             {
                                 label: "Forward Price Over Time",
-                                data: Array.from({ length: 10 }, () => Math.random() * 100), // Example data
+                                data: Array.from({ length: 10 }, () => Math.random() * 100),
                                 backgroundColor: "rgba(255, 140, 0, 0.5)",
                             },
                         ],

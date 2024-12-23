@@ -99,47 +99,30 @@ body {
     margin-left: 5px;
 }
 
-/* Toggle Section */
-/* Toggle Slider Button */
-.toggle {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 25px;
+.dropdown-section {
+    margin-bottom: 20px;
 }
 
-.toggle input {
-    display: none; /* Hide default checkbox */
+.dropdown-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-.slider {
-    position: absolute;
+.dropdown-section select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    appearance: none; /* Removes default browser styles for dropdowns */
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 25px;
 }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #2196F3; /* Slider color when checked */
-}
-
-input:checked + .slider:before {
-    transform: translateX(25px); /* Move the slider */
+.dropdown-section select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
 }

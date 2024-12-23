@@ -45,7 +45,7 @@ def calculate_forward_price_with_yield(spot_price, yield_rate, risk_free_rate, t
     return spot_price * math.exp((risk_free_rate - yield_rate) * time_to_maturity)
 
 
-def calculate_forward_contract_value(forward_price, delivery_price, risk_free_rate, time_to_maturity, long_position=True):
+def calculate_forward_contract_value(forward_price, delivery_price, risk_free_rate, time_to_maturity, long_position):
     """
     Calculate the value of a forward contract.
 

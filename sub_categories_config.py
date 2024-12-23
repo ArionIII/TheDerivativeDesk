@@ -121,7 +121,20 @@ TOOL_CATEGORIES = {
             "url": "/tools/value-forward-contracts/value_forward_contracts",
         },
     ],
+},
+"delivery-timing": {
+    "title": "Delivery Timing Tools",
+    "description": "Evaluate the optimal delivery timing for futures contracts based on cost of carry and convenience yield.",
+    "parent_category": "futures-forwards",
+    "tools": [
+        {
+            "title": "Delivery Timing Decision",
+            "description": "Determine whether to deliver a futures contract as soon as possible or as late as possible, based on cost of carry and convenience yield.",
+            "url": "/tools/delivery-timing/delivery_timing_decision",
+        }
+    ]
 }
+
 
 }
 

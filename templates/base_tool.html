@@ -16,7 +16,9 @@
     <section class="input-section">
         <h2>Inputs</h2>
         <form id="tool-form">
+            <!-- Classic Inputs -->
             {% for input in tool.inputs %}
+                {% if input.type != "select" %}
                 <label for="{{ input.id }}">
                     {{ input.label }}
                     {% if not input.optional %}
@@ -31,23 +33,24 @@
                     {% if input.step %} step="{{ input.step }}" {% endif %} 
                     {% if not input.optional %} required {% endif %} 
                 >
+                {% endif %}
             {% endfor %}
-            <!-- Toggle Section -->
-            {% if tool.toggle %}
-            <div class="toggle-section">
-                <label for="toggle-input" class="toggle-label">{{ tool.toggle.label }}</label>
-                <label class="toggle">
-                    <input 
-                        type="checkbox" 
-                        id="toggle-input" 
-                        name="toggle"
-                        {% if tool.toggle.default_checked %}checked{% endif %}
-                    >
-                    <span class="slider"></span>
-                </label>
-            </div>
-            {% endif %}
-
+            
+            <!-- Dropdown Section -->
+            {% for input in tool.inputs %}
+                {% if input.type == "select" %}
+                <div class="dropdown-section">
+                    <label for="{{ input.id }}">{{ input.label }}</label>
+                    <select id="{{ input.id }}" name="{{ input.id }}">
+                        {% for option in input.options %}
+                        <option value="{{ option }}" {% if input.default == option %}selected{% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            {% endfor %}
 
             <button type="submit" class="btn-submit">Calculate</button>
         </form>
@@ -74,7 +77,6 @@
     {% endif %}
 </main>
 {% endblock %}
-
 
 {% block scripts %}
 <script src="/static/js/tool.js"></script>
