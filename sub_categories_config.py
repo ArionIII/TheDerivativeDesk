@@ -81,12 +81,12 @@ TOOL_CATEGORIES = {
                     "Compute the optimal number of futures contracts or adjust for tailing the hedge "
                     "with optional asset and futures value parameters."
                 ),
-                "url": "/tools/hedging/optimal_number_of_futures_contracts_tailing_the_hedge",
+                "url": "/tools/hedging-basics/optimal_number_of_futures_contracts_tailing_the_hedge",
             },
             {
                 "title": "Minimum Variance Hedge Ratio",
                 "description": "Calculate the minimum variance hedge ratio using standard deviations of spot and futures prices, and their correlation.",
-                "url": "/tools/hedging/minimum_variance_hedge_ratio",
+                "url": "/tools/hedging-basics/minimum_variance_hedge_ratio",
             },
         ],
     },
@@ -98,12 +98,12 @@ TOOL_CATEGORIES = {
             {
                 "title": "Hedge Equity Portfolio",
                 "description": "Compute the hedge for an equity portfolio using futures contracts based on beta and portfolio value.",
-                "url": "/tools/hedging/hedge_equity_portfolio",
+                "url": "/tools/equity-hedging/hedge_equity_portfolio",
             },
             {
                 "title": "Change Portfolio Beta",
                 "description": "Calculate the optimal hedge to adjust an equity portfolio beta to a target level.",
-                "url": "/tools/hedging/change_beta_portfolio",
+                "url": "/tools/equity-hedging/change_beta_portfolio",
             },
         ],
     },
@@ -130,7 +130,7 @@ TOOL_CATEGORIES = {
         {
             "title": "Delivery Timing Decision",
             "description": "Determine whether to deliver a futures contract as soon as possible or as late as possible, based on cost of carry and convenience yield.",
-            "url": "/tools/value-forward-contracts/delivery_timing_decision",
+            "url": "/tools/delivery-timing-decision/delivery_timing_decision",
         }
     ]
 }

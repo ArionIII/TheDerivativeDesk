@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify
 from config import logger
 from futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
+from hedging_tool_config import HEDGING_TOOL_CONFIG
+from contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
+
+ALL_TOOLS = FUTURES_FORWARDS_TOOL_CONFIG | HEDGING_TOOL_CONFIG | CONTRACT_VALUATION_TOOL_CONFIG
+
 search_routes = Blueprint("search", __name__)
 
 @search_routes.route("/search", methods=["GET"])
@@ -13,7 +18,7 @@ def search():
     query_tokens = query.split()  # Split query into tokens
     results = []
 
-    for tool_key, tool in FUTURES_FORWARDS_TOOL_CONFIG.items():
+    for tool_key, tool in ALL_TOOLS.items():
         score = 0
 
         # Normalize title, description, and keywords
@@ -62,7 +67,7 @@ def suggest():
     query_tokens = query.split()
     suggestions = []
 
-    for tool_key, tool in FUTURES_FORWARDS_TOOL_CONFIG.items():
+    for tool_key, tool in ALL_TOOLS.items():
         score = 0
 
         # Normalize title, description, and keywords
