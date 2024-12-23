@@ -187,4 +187,4 @@ def delivery_timing_decision(cost_of_carry, convenience_yield):
         raise ValueError("Both inputs must be numeric.")
 
     # Decision logic: deliver asap if cost_of_carry - convenience_yield > 0, deliver late if cost_of_carry - convenience_yield <= 0
-    return 0 if cost_of_carry - convenience_yield > 0 else 1
+    return "Deliver as soon as possible" if cost_of_carry - convenience_yield > 0 else "Deliver as late as possible"

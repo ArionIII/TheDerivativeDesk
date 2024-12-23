@@ -59,7 +59,7 @@ CONTRACT_VALUATION_TOOL_CONFIG = {
             "Determine whether to deliver a futures contract as soon as possible or as late as possible, "
             "based on the cost of carry and convenience yield."
         ),
-        "url": "/tools/value-forward-contracts/delivery_timing_decision",
+        "url": "/tools/delivery-timing-decision/delivery_timing_decision",
         "inputs": [
             {
                 "label": "Cost of Carry (c)", 

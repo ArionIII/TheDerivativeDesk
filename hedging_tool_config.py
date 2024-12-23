@@ -5,7 +5,7 @@ HEDGING_TOOL_CONFIG = {
             "Compute the optimal number of futures contracts or adjust for tailing the hedge "
             "with optional asset and futures value parameters."
         ),
-        "url": "/tools/hedging/hedging_tool",
+        "url": "/tools/hedging-basics/hedging_tool",
         "inputs": [
             {"label": "Asset Quantity", "id": "asset_quantity", "type": "number", "placeholder": "e.g., 1000", "step": "any"},
             {"label": "Futures Quantity", "id": "futures_quantity", "type": "number", "placeholder": "e.g., 50", "step": "any"},
@@ -24,7 +24,7 @@ HEDGING_TOOL_CONFIG = {
     "minimum_variance_hedge_ratio"   : {
     "title": "Minimum Variance Hedge Ratio",
     "description": "Calculate the minimum variance hedge ratio using standard deviations of spot and futures prices, and their correlation.",
-    "url": "/tools/hedging/minimum_variance_hedge_ratio",
+    "url": "/tools/hedging-basics/minimum_variance_hedge_ratio",
     "inputs": [
         {"label": "Standard Deviation of Spot Changes (σₛ)", "id": "std_change_spot", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
         {"label": "Standard Deviation of Futures Changes (σₓ)", "id": "std_change_futures", "type": "number", "placeholder": "e.g., 0.04", "step": "any"},
@@ -41,7 +41,7 @@ HEDGING_TOOL_CONFIG = {
  "hedge_equity_portfolio": {
         "title": "Hedge Equity Portfolio",
         "description": "Compute the hedge for an equity portfolio using futures.",
-        "url": "/tools/hedging/equity/hedge_equity_portfolio",
+        "url": "/tools/equity-hedging/hedge_equity_portfolio",
         "inputs": [
             {"label": "Beta (β)", "id": "beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
             {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "e.g., 1000000", "step": "any"},
@@ -58,7 +58,7 @@ HEDGING_TOOL_CONFIG = {
     "change_beta_portfolio": {
         "title": "Change Portfolio Beta",
         "description": "Compute the hedge to change the beta of an equity portfolio to a target level.",
-        "url": "/tools/hedging/equity/change_beta_portfolio",
+        "url": "/tools/equity-hedging/change_beta_portfolio",
         "inputs": [
             {"label": "Target Beta (βₜ)", "id": "target_beta", "type": "number", "placeholder": "e.g., 0.8", "step": "any"},
             {"label": "Current Beta (βₒ)", "id": "current_beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
