@@ -16,7 +16,9 @@
     <section class="input-section">
         <h2>Inputs</h2>
         <form id="tool-form">
+            <!-- Classic Inputs -->
             {% for input in tool.inputs %}
+                {% if input.type != "select" %}
                 <label for="{{ input.id }}">
                     {{ input.label }}
                     {% if not input.optional %}
@@ -31,13 +33,29 @@
                     {% if input.step %} step="{{ input.step }}" {% endif %} 
                     {% if not input.optional %} required {% endif %} 
                 >
+                {% endif %}
             {% endfor %}
+            
+            <!-- Dropdown Section -->
+            {% for input in tool.inputs %}
+                {% if input.type == "select" %}
+                <div class="dropdown-section">
+                    <label for="{{ input.id }}">{{ input.label }}</label>
+                    <select id="{{ input.id }}" name="{{ input.id }}">
+                        {% for option in input.options %}
+                        <option value="{{ option }}" {% if input.default == option %}selected{% endif %}>
+                            {{ option }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            {% endfor %}
+
             <button type="submit" class="btn-submit">Calculate</button>
         </form>
     </section>
     
-    
-
     <!-- Results Section -->
     <section class="results-section">
         <h2>Results</h2>
@@ -56,8 +74,7 @@
                 <canvas id="chart"></canvas>
             </div>
         </section>
-        {% endif %}
-
+    {% endif %}
 </main>
 {% endblock %}
 

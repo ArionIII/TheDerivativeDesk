@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-tool_category_routes = Blueprint("tool_category_routes", __name__)
+tool_category_future_forwards_routes = Blueprint("tool_category_future_forwards_routes", __name__)
 
 TOOL_CATEGORIES = {
     # Futures Pricing Tools
@@ -70,7 +70,7 @@ TOOL_CATEGORIES = {
         ],
     },
     # Hedging Tools
-    "hedging": {
+    "hedging-basics": {
         "title": "Hedging Strategies",
         "description": "Explore tools for optimizing hedge strategies, including minimum variance, tailing adjustments, and optimal contract calculations.",
         "parent_category":"futures-forwards",
@@ -81,7 +81,7 @@ TOOL_CATEGORIES = {
                     "Compute the optimal number of futures contracts or adjust for tailing the hedge "
                     "with optional asset and futures value parameters."
                 ),
-                "url": "/tools/hedging/hedging_tool",
+                "url": "/tools/hedging/optimal_number_of_futures_contracts_tailing_the_hedge",
             },
             {
                 "title": "Minimum Variance Hedge Ratio",
@@ -90,11 +90,56 @@ TOOL_CATEGORIES = {
             },
         ],
     },
-    # Add more subcategories as needed...
+    "equity-hedging": {
+        "title": "Equity Hedging Tools",
+        "description": "Discover tools for managing equity portfolio risk, including beta adjustments and portfolio hedging using futures.",
+        "parent_category": "futures-forwards",
+        "tools": [
+            {
+                "title": "Hedge Equity Portfolio",
+                "description": "Compute the hedge for an equity portfolio using futures contracts based on beta and portfolio value.",
+                "url": "/tools/hedging/hedge_equity_portfolio",
+            },
+            {
+                "title": "Change Portfolio Beta",
+                "description": "Calculate the optimal hedge to adjust an equity portfolio beta to a target level.",
+                "url": "/tools/hedging/change_beta_portfolio",
+            },
+        ],
+    },
+    "forward-contract-value": {
+    "title": "Value of Forward Contracts",
+    "description": "Evaluate the value of forward contracts for both long and short positions based on market price, forward price, and contract size.",
+    "parent_category": "futures-forwards",
+    "tools": [
+        {
+            "title": "Value of Forward Contracts",
+            "description": (
+                "Calculate the value of forward contracts for both long and short positions "
+                "using the market price, forward price, and contract size."
+            ),
+            "url": "/tools/value-forward-contracts/value_forward_contracts",
+        },
+    ],
+},
+"delivery-timing": {
+    "title": "Delivery Timing Tools",
+    "description": "Evaluate the optimal delivery timing for futures contracts based on cost of carry and convenience yield.",
+    "parent_category": "futures-forwards",
+    "tools": [
+        {
+            "title": "Delivery Timing Decision",
+            "description": "Determine whether to deliver a futures contract as soon as possible or as late as possible, based on cost of carry and convenience yield.",
+            "url": "/tools/value-forward-contracts/delivery_timing_decision",
+        }
+    ]
 }
 
 
-@tool_category_routes.route("/tools/futures-forwards/<category_key>")
+}
+
+
+@tool_category_future_forwards_routes.route("/tools/futures-forwards/<category_key>")
 def render_tool_category(category_key):
     category = TOOL_CATEGORIES.get(category_key)
     if not category:

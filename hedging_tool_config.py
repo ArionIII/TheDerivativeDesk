@@ -1,5 +1,5 @@
 HEDGING_TOOL_CONFIG = {
-    "hedging_tool": {
+    "optimal_number_of_futures_contracts_tailing_the_hedge": {
         "title": "Hedging Strategies: Optimal Futures & Tailing the Hedge",
         "description": (
             "Compute the optimal number of futures contracts or adjust for tailing the hedge "
@@ -37,4 +37,39 @@ HEDGING_TOOL_CONFIG = {
         "spot standard deviation", "futures standard deviation", "financial derivatives",
         "hedging strategies", "variance minimization", "risk management"
     ],
-}}
+},
+ "hedge_equity_portfolio": {
+        "title": "Hedge Equity Portfolio",
+        "description": "Compute the hedge for an equity portfolio using futures.",
+        "url": "/tools/hedging/equity/hedge_equity_portfolio",
+        "inputs": [
+            {"label": "Beta (β)", "id": "beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
+            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "e.g., 1000000", "step": "any"},
+            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "e.g., 200000", "step": "any"},
+        ],
+        "outputs": ["Optimal Number of Futures Contracts"],
+        "visualization": False,
+        "keywords": [
+            "equity hedging", "portfolio hedge", "hedging strategies",
+            "equity futures", "portfolio beta", "financial derivatives",
+            "risk management", "hedging tools", "optimal hedge"
+        ],
+    },
+    "change_beta_portfolio": {
+        "title": "Change Portfolio Beta",
+        "description": "Compute the hedge to change the beta of an equity portfolio to a target level.",
+        "url": "/tools/hedging/equity/change_beta_portfolio",
+        "inputs": [
+            {"label": "Target Beta (βₜ)", "id": "target_beta", "type": "number", "placeholder": "e.g., 0.8", "step": "any"},
+            {"label": "Current Beta (βₒ)", "id": "current_beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
+            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "e.g., 1000000", "step": "any"},
+            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "e.g., 200000", "step": "any"},
+        ],
+        "outputs": ["Optimal Number of Futures Contracts"],
+        "visualization": False,
+        "keywords": [
+            "change portfolio beta", "target beta", "hedging strategies",
+            "equity portfolio", "futures hedge", "portfolio risk",
+            "financial derivatives", "portfolio adjustment", "hedging tools"
+        ],
+    }}

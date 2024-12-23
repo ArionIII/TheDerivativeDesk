@@ -13,6 +13,10 @@ TOOL_FUNCTIONS = {
     "tailing_the_hedge_adjustment": compute_tailing_the_hedge_adjustment,
     "optimal_number_futures_contract": compute_optimal_number_futures_contract,
     "minimum_variance_hedge_ratio": compute_minimum_variance_hedge_ratio,
+    "optimal_number_of_futures_contracts_tailing_the_hedge": compute_optimal_number_of_futures_contracts_tailing_the_hedge,
+    # New equity hedging tools
+    "hedge_equity_portfolio": compute_hedge_equity_portfolio,
+    "change_beta_portfolio": compute_change_beta_portfolio,
 }
 
 @hedging_basics_routes.route("/tools/hedging/<tool_key>", methods=["GET", "POST"])

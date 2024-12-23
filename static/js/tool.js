@@ -11,13 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputData = Object.fromEntries(formData.entries());
 
         // Remove empty optional inputs before sending
-        for (const key in inputData) {
+        Object.keys(inputData).forEach((key) => {
             if (inputData[key].trim() === "") {
                 delete inputData[key];
             }
-        }
+        });
 
         try {
+            console.log("Sending data to the server:", inputData);
             // Send data to the server for calculation
             const response = await fetch(window.location.pathname, {
                 method: "POST",
@@ -31,11 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const resultData = await response.json();
 
-            // Update results
-            results.querySelectorAll("span").forEach((span, index) => {
-                const resultKey = Object.keys(resultData)[index];
-                span.textContent = resultData[resultKey] || "N/A";
-            });
+            // Update results dynamically
+            if (resultData.error) {
+                results.innerHTML = `<p class="error">${resultData.error}</p>`;
+                return;
+            }
+
+            results.innerHTML = formatResultData(resultData);
 
             // Update visualization (if chart exists)
             if (chartElement) {
@@ -43,11 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 new Chart(ctx, {
                     type: "line",
                     data: {
-                        labels: Array.from({ length: 10 }, (_, i) => i), // Example labels
+                        labels: Array.from({ length: 10 }, (_, i) => i),
                         datasets: [
                             {
                                 label: "Forward Price Over Time",
-                                data: Array.from({ length: 10 }, () => Math.random() * 100), // Example data
+                                data: Array.from({ length: 10 }, () => Math.random() * 100),
                                 backgroundColor: "rgba(255, 140, 0, 0.5)",
                             },
                         ],
@@ -60,17 +63,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Real-time optional input validation
-    form.querySelectorAll("input").forEach((input) => {
-        if (input.hasAttribute("optional")) {
-            input.addEventListener("input", () => {
-                // Optional inputs can be left empty, so no error unless the value is invalid
-                if (input.value && input.type === "number" && parseFloat(input.value) < 0) {
-                    input.setCustomValidity("Value cannot be negative.");
-                } else {
-                    input.setCustomValidity("");
-                }
-            });
+    // Helper function to format result data
+    function formatResultData(data) {
+        if (typeof data === "object" && data !== null) {
+            return (
+                `<ul>` +
+                Object.values(data)
+                    .map((value) => {
+                        if (Array.isArray(value) && value.length === 2) {
+                            return `<li>${value[0]} <strong>${value[1]}</strong></li>`;
+                        } else if (typeof value === "object" && value !== null) {
+                            return `<li>${formatResultData(value)}</li>`;
+                        } else {
+                            return `<li>${value !== null ? value : "N/A"}</li>`;
+                        }
+                    })
+                    .join("") +
+                `</ul>`
+            );
         }
-    });
+        return `<p>${data}</p>`;
+    }
 });

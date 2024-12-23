@@ -98,3 +98,31 @@ body {
     font-weight: bold;
     margin-left: 5px;
 }
+
+.dropdown-section {
+    margin-bottom: 20px;
+}
+
+.dropdown-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dropdown-section select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    appearance: none; /* Removes default browser styles for dropdowns */
+    cursor: pointer;
+}
+
+.dropdown-section select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
