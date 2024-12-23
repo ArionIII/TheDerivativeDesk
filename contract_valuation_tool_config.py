@@ -11,10 +11,10 @@ CONTRACT_VALUATION_TOOL_CONFIG = {
             {"label": "Forward Price (F₀)", "id": "forward_price", "type": "number", "placeholder": "e.g., 1400", "step": "any"},
             {"label": "Contract Size (Q)", "id": "contract_size", "type": "number", "placeholder": "e.g., 100", "step": "any"},
             {
-                "label": "Position Type (Lon", 
+                "label": "Position Type (Long/Short)", 
                 "id": "position_type", 
                 "type": "toggle", 
-                "placeholder": "Selecort Position", 
+                "placeholder": "Select Long or Short Position", 
                 "options": ["Long", "Short"], 
                 "default": "Long",
                 "optional": True
