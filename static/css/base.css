@@ -16,3 +16,61 @@ body {
     max-width: var(--container-max-width);
     margin: 0 auto;
 }
+
+/* User Actions Section */
+.user-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-action {
+    text-decoration: none;
+    padding: 8px 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    color: var(--primary-color);
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Profile Section */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-picture {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-color);
+}
+
+.user-name {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.btn-logout {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: var(--primary-color-hover);
+}

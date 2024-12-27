@@ -14,6 +14,19 @@
 </head>
 <body class="light-mode">
     {% include 'navbar.html' %} <!-- Inclure la barre de navigation -->
+     <!-- User Actions -->
+     <div class="user-actions">
+        {% if not user_authenticated %}
+            <a href="/login" class="btn-action">Login</a>
+            <a href="/register" class="btn-action">Register</a>
+        {% else %}
+            <div class="user-profile">
+                <img src="{{ user.profile_picture or '/static/images/default-profile.png' }}" alt="{{ user.first_name }}" class="profile-picture">
+                <span class="user-name">{{ user.first_name }}</span>
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        {% endif %}
+    </div>
     <main class="site-main">
         {% block content %}{% endblock %}
     </main>
