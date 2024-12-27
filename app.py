@@ -4,10 +4,27 @@ from futures_forward_routes import forwards_routes, futures_routes
 from hedging_routes import hedging_basics_routes, equity_hedging_routes
 from search_routes import search_routes
 from contract_valuation_routes import value_forward_routes, delivery_timing_decision_routes
-from futures_forwards_categories_config import tool_category_future_forwards_routes
-from statistical_categories_config import tool_category_stat_analysis_routes
+
+from sub_categories_config import tool_category_future_forwards_routes
+from auth_routes import auth_routes
 from config import logger
+from flask_jwt_extended import JWTManager
+from pymongo import MongoClient
+from flask_bcrypt import Bcrypt
+from flask import session
+from config import Config
 app = Flask(__name__)
+app.config.from_object(Config)
+
+# Initialize JWT
+jwt = JWTManager(app)
+
+# MongoDB connection
+client = MongoClient(app.config["MONGO_URI"])
+db = client.get_database()
+
+# Initialize Bcrypt
+bcrypt = Bcrypt(app)
 
 # Register Blueprints
 app.register_blueprint(forwards_routes)
@@ -18,7 +35,9 @@ app.register_blueprint(equity_hedging_routes)
 app.register_blueprint(tool_category_future_forwards_routes) 
 app.register_blueprint(value_forward_routes)  
 app.register_blueprint(delivery_timing_decision_routes)
-app.register_blueprint(tool_category_stat_analysis_routes)
+
+app.register_blueprint(auth_routes)
+
 
 # Route pour la page d'accueil
 @app.route("/")
@@ -66,10 +85,17 @@ def learn():
 def futures_forwards():
     return render_template("futures-forwards.html")
 
-# Route pour la page statistics
-@app.route("/tools/statistics")
-def statistics():
-    return render_template("statistics.html")
+
+@app.context_processor
+def inject_user():
+    return {
+        "user_authenticated": "user_id" in session,
+        "user": {
+            "first_name": session.get("first_name"),
+            "profile_picture": session.get("profile_picture", "/static/images/default-profile.png"),
+        } if "user_id" in session else None
+    }
+
 
 # Lancer le serveur Flask
 if __name__ == "__main__":
