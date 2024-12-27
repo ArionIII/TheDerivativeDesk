@@ -4,6 +4,7 @@ from futures_forward_routes import forwards_routes, futures_routes
 from hedging_routes import hedging_basics_routes, equity_hedging_routes
 from search_routes import search_routes
 from contract_valuation_routes import value_forward_routes, delivery_timing_decision_routes
+
 from sub_categories_config import tool_category_future_forwards_routes
 from auth_routes import auth_routes
 from config import logger
@@ -34,7 +35,9 @@ app.register_blueprint(equity_hedging_routes)
 app.register_blueprint(tool_category_future_forwards_routes) 
 app.register_blueprint(value_forward_routes)  
 app.register_blueprint(delivery_timing_decision_routes)
+
 app.register_blueprint(auth_routes)
+
 
 # Route pour la page d'accueil
 @app.route("/")
