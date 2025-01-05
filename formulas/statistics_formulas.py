@@ -110,6 +110,38 @@ def anova(group_a, group_b, group_c=None):
     return {"F-Statistic": f_stat, "P-Value": p_value}
 
 
+def simple_regression(x, y):
+    """
+    Perform simple linear regression (y = mx + b).
+    """
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    return {
+        "Slope (m)": slope,
+        "Intercept (b)": intercept,
+        "R-Squared": r_value**2,
+        "P-Value": p_value,
+        "Standard Error": std_err,
+    }
+
+
+def multiple_regression(X, y):
+    """
+    Perform multiple linear regression.
+    X: 2D array-like (independent variables)
+    y: 1D array-like (dependent variable)
+    """
+    from sklearn.linear_model import LinearRegression
+    model = LinearRegression()
+    model.fit(X, y)
+    coefficients = model.coef_
+    intercept = model.intercept_
+    r_squared = model.score(X, y)
+    return {
+        "Coefficients": coefficients.tolist(),
+        "Intercept": intercept,
+        "R-Squared": r_squared,
+    }
+
 def calculate_pdf_cdf(distribution, parameters):
     """
     Compute PDF and CDF for a given distribution.
@@ -127,10 +159,13 @@ def calculate_pdf_cdf(distribution, parameters):
         mu, x = parameters.get("mu"), parameters.get("x")
         pdf_value = stats.poisson.pmf(x, mu)
         cdf_value = stats.poisson.cdf(x, mu)
+    elif distribution == "T-Distribution":
+        df, x = parameters.get("df"), parameters.get("x")
+        pdf_value = stats.t.pdf(x, df)
+        cdf_value = stats.t.cdf(x, df)
     else:
         raise ValueError("Unsupported distribution type.")
     return {"PDF Value": pdf_value, "CDF Value": cdf_value}
-
 
 def calculate_z_score(data_point, mean, std_dev):
     """
