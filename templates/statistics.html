@@ -1,29 +1,133 @@
 {% extends "base.html" %}
 
-{% block title %}Data Analytics Tools - The Derivative Desk{% endblock %}
+{% block title %}Statistics Tools - The Derivative Desk{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="/static/css/statistics.css">
+<link rel="stylesheet" href="/static/css/sub_cat.css">
 {% endblock %}
 
 {% block content %}
 <header class="page-header">
-    <h1>Data Analytics Tools</h1>
-    <p>Explore tools for advanced data analytics, including statistical evaluations and predictive modeling to enhance decision-making.</p>
+    <h1>Statistics</h1>
+    <p>Explore tools for advanced data analytics, including statistical evaluations, data modeling, and visualizations to enhance decision-making.</p>
 </header>
 <main>
     <!-- Statistical Analysis Section -->
     <section class="category-section">
-        <h2>Statistical Analysis</h2>
-        <p>Delve into tools that analyze variability, relationships, and dependencies in datasets to uncover valuable insights.</p>
-        <a href="/tools/statistical-analysis" class="btn-explore">Explore Statistical Analysis Tools</a>
+        <h2>Basic Statistical Analysis</h2>
+        
+        <!-- Descriptive Statistics -->
+        <div class="cards-container">
+            <div class="category-card">
+                <h3>Descriptive Statistics</h3>
+                <p>Summarize and describe datasets with key metrics:</p>
+                <ul>
+                    <li>Mean, Median, Mode</li>
+                    <li>Range and Interquartile Range (IQR)</li>
+                    <li>Skewness and Kurtosis</li>
+                </ul>
+                <a href="/tools/statistics/descriptive-analysis" class="btn-explore">Explore</a>
+            </div>
+
+            <!-- Inferential Statistics -->
+            <div class="category-card">
+                <h3>Inferential Statistics</h3>
+                <p>Make predictions and test hypotheses:</p>
+                <ul>
+                    <li>t-tests, z-tests, chi-square tests</li>
+                    <li>Confidence intervals and p-value calculation</li>
+                    <li>ANOVA and regression analysis</li>
+                </ul>
+                <a href="/tools/statistics/inferential-statistics" class="btn-explore">Explore</a>
+            </div>
+
+            <!-- Probability Tools -->
+            <div class="category-card">
+                <h3>Probability Tools</h3>
+                <p>Analyze uncertainty and distributions:</p>
+                <ul>
+                    <li>Probability Density and Cumulative Distribution Functions</li>
+                    <li>Distributions: Binomial, Poisson, Normal, and more</li>
+                    <li>Z-Score and related calculations</li>
+                </ul>
+                <a href="/tools/statistics/probability-tools" class="btn-explore">Explore</a>
+            </div>
+        </div>
     </section>
 
-    <!-- Predictive Modeling Section -->
+    <!-- Time Series and Modeling Section -->
     <section class="category-section">
-        <h2>Predictive Modeling</h2>
-        <p>Access tools designed to build models that predict outcomes based on statistical relationships and historical data.</p>
-        <a href="/tools/predictive-modeling" class="btn-explore">Explore Predictive Modeling Tools</a>
+        <h2>Time Series and Modeling</h2>
+        <div class="cards-container">
+            <div class="category-card">
+                <h3>Time Series Analysis</h3>
+                <p>Analyze trends and patterns over time:</p>
+                <ul>
+                    <li>Moving averages and exponential smoothing</li>
+                    <li>Autocorrelation analysis</li>
+                </ul>
+                <a href="/tools/statistics/time-series-analysis" class="btn-explore">Explore</a>
+            </div>
+            <div class="category-card">
+                <h3>Markov Chains and Random Walks</h3>
+                <p>Simulate and model stochastic processes:</p>
+                <ul>
+                    <li>Transition matrices for Markov chains</li>
+                    <li>Simulate random walks</li>
+                </ul>
+                <a href="/tools/statistics/markov-chains-and-random-walks" class="btn-explore">Explore</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulation and Bayesian Analysis Section -->
+    <section class="category-section">
+        <h2>Simulation and Bayesian Analysis</h2>
+        <div class="cards-container">
+            <div class="category-card">
+                <h3>Monte Carlo Simulations</h3>
+                <p>Simulate outcomes for advanced analysis:</p>
+                <ul>
+                    <li>Generate random samples</li>
+                    <li>Expected value and risk analysis</li>
+                </ul>
+                <a href="/tools/statistics/monte-carlo-simulations" class="btn-explore">Explore</a>
+            </div>
+            <div class="category-card">
+                <h3>Bayesian Analysis</h3>
+                <p>Update beliefs using Bayesian methods:</p>
+                <ul>
+                    <li>Compute prior, posterior, and likelihood</li>
+                    <li>Perform Bayesian updating</li>
+                </ul>
+                <a href="/tools/statistics/bayesian-analysis" class="btn-explore">Explore</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Linear Algebra and Advanced Calculations Section -->
+    <section class="category-section">
+        <h2>Linear Algebra and Advanced Calculations</h2>
+        <div class="cards-container">
+            <div class="category-card">
+                <h3>Linear Algebra Tools</h3>
+                <p>Perform matrix operations and decompositions:</p>
+                <ul>
+                    <li>Matrix multiplication and inverses</li>
+                    <li>Singular Value Decomposition (SVD)</li>
+                </ul>
+                <a href="/tools/statistics/linear-algebra" class="btn-explore">Explore</a>
+            </div>
+            <div class="category-card">
+                <h3>Advanced Calculations</h3>
+                <p>Analyze datasets using advanced techniques:</p>
+                <ul>
+                    <li>Principal Component Analysis (PCA)</li>
+                    <li>Compute eigenvalues, eigenvectors, and determinants</li>
+                </ul>
+                <a href="/tools/statistics/advanced-calculations" class="btn-explore">Explore</a>
+            </div>
+        </div>
     </section>
 </main>
 {% endblock %}
