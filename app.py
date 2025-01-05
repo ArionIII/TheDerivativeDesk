@@ -5,7 +5,7 @@ from routes.hedging_routes import hedging_basics_routes, equity_hedging_routes
 from routes.search_routes import search_routes
 from routes.contract_valuation_routes import value_forward_routes, delivery_timing_decision_routes
 
-from sub_categories_config import tool_category_future_forwards_routes
+from configurations.sub_categories_config import tool_category_future_forwards_routes
 from routes.auth_routes import auth_routes
 from config import logger
 from flask_jwt_extended import JWTManager

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
-from futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
-from chap_3 import *
-from chap_5 import *
+from configurations.futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
+from formulas.chap_3 import *
+from formulas.chap_5 import *
 from config import logger
 
 # Blueprints for forwards and futures

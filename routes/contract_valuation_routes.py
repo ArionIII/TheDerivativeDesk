@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, jsonify
 from math import exp
 from config import logger
-from chap_3 import *
-from chap_5 import *
-from contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
+from formulas.chap_3 import *
+from formulas.chap_5 import *
+from configurations.contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
 
 # Blueprints for valuation tools
 value_forward_routes = Blueprint("value_forward_routes", __name__)
