@@ -15,10 +15,10 @@
     <!-- Input Section -->
     <section class="input-section">
         <h2>Inputs</h2>
-        <form id="tool-form">
+        <form id="tool-form" enctype="multipart/form-data">
             <!-- Classic Inputs -->
             {% for input in tool.inputs %}
-                {% if input.type != "select" %}
+                {% if input.type != "select" and input.type != "file" %}
                 <label for="{{ input.id }}">
                     {{ input.label }}
                     {% if not input.optional %}
@@ -35,7 +35,7 @@
                 >
                 {% endif %}
             {% endfor %}
-            
+
             <!-- Dropdown Section -->
             {% for input in tool.inputs %}
                 {% if input.type == "select" %}
@@ -49,6 +49,23 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
+            {% endfor %}
+            
+            <!-- File Input for CSV -->
+            {% for input in tool.inputs %}
+                {% if input.type == "file" %}
+                <label for="{{ input.id }}">
+                    {{ input.label }}
+                    <span class="optional">(Optional - replaces {{ input.target }})</span>
+                </label>
+                <input 
+                    type="file" 
+                    id="{{ input.id }}" 
+                    name="{{ input.id }}" 
+                    accept=".csv"
+                    data-target="{{ input.target }}"
+                >
                 {% endif %}
             {% endfor %}
 

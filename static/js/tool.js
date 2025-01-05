@@ -85,3 +85,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<p>${data}</p>`;
     }
 });
+
+const csvInputs = document.querySelectorAll('input[type="file"][data-target]');
+    csvInputs.forEach(csvInput => {
+        const targetInputId = csvInput.getAttribute('data-target');
+        const targetInput = document.getElementById(targetInputId);
+
+        csvInput.addEventListener('change', () => {
+            if (csvInput.files.length > 0) {
+                if (targetInput) targetInput.disabled = true; // Disable target input if CSV is provided
+            } else {
+                if (targetInput) targetInput.disabled = false; // Enable target input if CSV is cleared
+            }
+        });
+
+        if (targetInput) {
+            targetInput.addEventListener('input', () => {
+                if (targetInput.value.trim() !== '') {
+                    csvInput.disabled = true; // Disable CSV input if target input is filled
+                } else {
+                    csvInput.disabled = false; // Enable CSV input if target input is cleared
+                }
+            });
+        }
+    });

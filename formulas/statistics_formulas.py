@@ -57,6 +57,20 @@ def calculate_kurtosis(dataset):
     kurtosis_value = stats.kurtosis(dataset)
     return {"Kurtosis Value": kurtosis_value}
 
+def perform_comprehensive_analysis(dataset):
+    """
+    Perform a full descriptive analysis on the dataset.
+    """
+    results = {
+        "mean_value": ("Mean Value : ", calculate_mean(dataset)["Mean Value"]),
+        "median_value": ("Median Value : ", calculate_median(dataset)["Median Value"]),
+        "mode_values": ("Mode Value(s) : ", calculate_mode(dataset)["Mode Value(s)"]),
+        "range_value": ("Range Value : ", calculate_range(dataset)["Range Value"]),
+        "iqr_value": ("IQR Value : ", calculate_iqr(dataset)["IQR Value"]),
+        "skewness_value": ("Skewness Value : ", calculate_skewness(dataset)["Skewness Value"]),
+        "kurtosis_value": ("Kurtosis Value : ", calculate_kurtosis(dataset)["Kurtosis Value"]),
+    }
+    return results
 
 def t_test(sample_a, sample_b=None, test_type="One-Sample"):
     """

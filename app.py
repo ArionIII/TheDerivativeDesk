@@ -14,6 +14,8 @@ from pymongo import MongoClient
 from flask_bcrypt import Bcrypt
 from flask import session
 from config import Config
+from routes.basic_statistical_analysis_routes import descriptive_statistics_routes, inferential_statistics_routes, probability_tools_routes
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -38,6 +40,9 @@ app.register_blueprint(value_forward_routes)
 app.register_blueprint(delivery_timing_decision_routes)
 app.register_blueprint(tool_category_statistics_routes)
 app.register_blueprint(auth_routes)
+app.register_blueprint(descriptive_statistics_routes)
+app.register_blueprint(inferential_statistics_routes)
+app.register_blueprint(probability_tools_routes)
 
 
 # Route pour la page d'accueil

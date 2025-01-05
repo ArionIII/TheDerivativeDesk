@@ -1,6 +1,8 @@
 # colored_logger.py
 import logging
 import os
+import csv
+from io import StringIO
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue
@@ -41,3 +43,22 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "your_secret_key")
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your_jwt_secret_key")
+
+# CSV parsing utility function
+def parse_csv(csv_content):
+    """
+    Parse CSV content into a list of numbers.
+    Expects a single column or comma-separated values.
+    """
+    try:
+        # Parse CSV content
+        csv_file = StringIO(csv_content)
+        reader = csv.reader(csv_file)
+        values = []
+        for row in reader:
+            # Assume single-column or comma-separated values
+            values.extend(float(x) for x in row if x.strip())
+        return values
+    except Exception as e:
+        logger.error(f"Error parsing CSV: {e}")
+        raise ValueError("Invalid CSV content")

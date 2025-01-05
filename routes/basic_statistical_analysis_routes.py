@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger
-from configurations.tool_config.statistics.basic_statistical_analysis_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
+from config import logger, parse_csv
+from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
 
 # Blueprints for the three sub-categories
 descriptive_statistics_routes = Blueprint("descriptive_statistics_routes", __name__)
@@ -17,6 +17,8 @@ TOOL_FUNCTIONS = {
     "iqr": calculate_iqr,
     "skewness": calculate_skewness,
     "kurtosis": calculate_kurtosis,
+    "comprehensive-basic-analysis": perform_comprehensive_analysis,
+
 
     # Inferential Statistics
     "t_test": t_test,
@@ -32,7 +34,8 @@ TOOL_FUNCTIONS = {
 
 # Common route handler
 def handle_statistical_tool_request(tool_key, sub_category_key):
-    tool_config = BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG.get(sub_category_key, {}).get("tools", {}).get(tool_key)
+    logger.info(f"Handling request for tool: {tool_key} in {sub_category_key}")
+    tool_config = BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG.get(tool_key)
 
     if not tool_config:
         logger.warning(f"Tool not found: {tool_key} in {sub_category_key}")
@@ -41,13 +44,34 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
     if request.method == "POST":
         data = request.json
         try:
-            # Parse inputs
-            params = {
-                input["id"]: float(data[input["id"]]) 
-                if input["type"] == "number" else data[input["id"]]
-                for input in tool_config["inputs"] 
-                if not input.get("optional") or data.get(input["id"])
-            }
+            params = {}
+            for input_field in tool_config["inputs"]:
+                input_id = input_field["id"]
+                input_type = input_field["type"]
+
+                # Handle input parsing based on type
+                if input_id in data:
+                    if input_type == "number":
+                        params[input_id] = float(data[input_id])
+                    elif input_type == "array":
+                        if isinstance(data[input_id], list):
+                            params[input_id] = data[input_id]  # JSON array
+                        elif isinstance(data[input_id], str):
+                            # Remove non-numeric characters like brackets
+                            clean_data = data[input_id].strip("[]")
+                            params[input_id] = [
+                                float(x) for x in clean_data.split(",") if x.strip()
+                            ]
+                        else:
+                            raise ValueError(f"Invalid format for array input: {input_id}")
+                    elif input_type == "file":
+                        # Handle file upload (e.g., CSV)
+                        file_content = data[input_id]
+                        params[input_id] = parse_csv(file_content)  # Implement CSV parsing function
+                    else:
+                        params[input_id] = data[input_id]
+                elif not input_field.get("optional"):
+                    raise ValueError(f"Missing required input: {input_id}")
 
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
@@ -58,7 +82,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             # Execute the function and return results
             result = calculation_function(**params)
             return jsonify({"result": result})
-        
+
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
             return jsonify({"error": str(e)}), 400
@@ -67,16 +91,16 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
     return render_template("base_tool.html", tool=tool_config)
 
 # Routes for Descriptive Statistics
-@descriptive_statistics_routes.route("/tools/statistical-analysis/basic-statistical-analysis/<tool_key>", methods=["GET", "POST"])
+@descriptive_statistics_routes.route("/tools/descriptive-analysis/<tool_key>", methods=["GET", "POST"])
 def handle_descriptive_tool(tool_key):
     return handle_statistical_tool_request(tool_key, "descriptive_statistics")
 
 # Routes for Inferential Statistics
-@inferential_statistics_routes.route("/tools/statistical-analysis/inferential/<tool_key>", methods=["GET", "POST"])
+@inferential_statistics_routes.route("/tools/inferential-statistics/<tool_key>", methods=["GET", "POST"])
 def handle_inferential_tool(tool_key):
     return handle_statistical_tool_request(tool_key, "inferential_statistics")
 
 # Routes for Probability Tools
-@probability_tools_routes.route("/tools/statistical-analysis/probability/<tool_key>", methods=["GET", "POST"])
+@probability_tools_routes.route("/tools/probability-tools/<tool_key>", methods=["GET", "POST"])
 def handle_probability_tool(tool_key):
     return handle_statistical_tool_request(tool_key, "probability_tools")
