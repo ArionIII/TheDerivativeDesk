@@ -93,6 +93,12 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                     elif not input_field.get("optional"):
                         raise ValueError(f"Missing required input: {input_id}")
             logger.info(params)
+            if params.get("csv_file"):
+                # ATT : Particulier au traitement statistique
+                params= {"dataset": params["csv_file"]}
+            else:
+                del params["csv_file"]
+
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:

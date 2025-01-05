@@ -57,14 +57,14 @@
                 {% if input.type == "file" %}
                 <label for="{{ input.id }}">
                     {{ input.label }}
-                    <span class="optional">(Optional - replaces {{ input.target }})</span>
+                    <span class="optional">(Optional - replaces {{ input.data_target }})</span>
                 </label>
                 <input 
                     type="file" 
                     id="{{ input.id }}" 
                     name="{{ input.id }}" 
                     accept=".csv"
-                    data-target="{{ input.target }}"
+                    data_target="{{ input.target }}"
                 >
                 {% endif %}
             {% endfor %}

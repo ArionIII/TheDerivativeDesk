@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Handle CSV inputs
             if (inputElement && inputElement.type === "file" && inputElement.files.length > 0) {
-                const dataTarget = inputElement.getAttribute("data-target");
+                const dataTarget = inputElement.getAttribute("data_target");
 
                 if (dataTarget) {
-                    // If CSV has a data-target, remove the target input
+                    // If CSV has a data_target, remove the target input
                     formData.delete(dataTarget);
                 }
 
@@ -114,10 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<p>${data}</p>`;
     }
 
-    // Manage mutual exclusivity for CSV inputs with data-target
-    const csvInputs = document.querySelectorAll('input[type="file"][data-target]');
+    // Manage mutual exclusivity for CSV inputs with data_target
+    const csvInputs = document.querySelectorAll('input[type="file"][data_target]');
     csvInputs.forEach((csvInput) => {
-        const targetInputId = csvInput.getAttribute("data-target");
+        const targetInputId = csvInput.getAttribute("data_target");
         const targetInput = document.getElementById(targetInputId);
 
         csvInput.addEventListener("change", () => {
@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (input.type === "file" && input.files.length > 0) {
-                const dataTarget = input.getAttribute("data-target");
+                const dataTarget = input.getAttribute("data_target");
                 if (dataTarget) {
                     // If a CSV input is provided, ensure its target is ignored
                     const targetInput = document.getElementById(dataTarget);

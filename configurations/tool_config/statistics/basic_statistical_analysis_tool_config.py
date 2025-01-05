@@ -5,7 +5,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/mean",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset", "optional": True},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True},
         ],
         "outputs": ["Mean Value"],
     },
@@ -15,7 +15,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/median",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["Median Value"],
     },
@@ -24,7 +24,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Identify the most frequently occurring value(s) in a dataset.",
         "url": "/tools/descriptive-analysis/mode",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,4]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,4]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["Mode Value(s)"],
     },
@@ -34,7 +35,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/range",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["Range Value"],
     },
@@ -44,7 +45,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/iqr",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["IQR Value"],
     },
@@ -54,7 +55,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/skewness",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["Skewness Value"],
     },
@@ -64,7 +65,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/kurtosis",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
         ],
         "outputs": ["Kurtosis Value"],
     },
@@ -74,7 +75,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "url": "/tools/descriptive-analysis/comprehensive-basic-analysis",
     "inputs": [
         {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1, 2, 3, 4, 5]"},
-        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
+        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
     ],
     "outputs": [
         "Mean Value",
