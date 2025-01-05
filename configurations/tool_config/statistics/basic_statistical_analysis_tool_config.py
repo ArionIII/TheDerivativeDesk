@@ -4,7 +4,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Calculate the arithmetic mean of a dataset.",
         "url": "/tools/descriptive-analysis/mean",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset", "optional": True},
         ],
         "outputs": ["Mean Value"],
     },
@@ -13,7 +14,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Determine the median value of a dataset.",
         "url": "/tools/descriptive-analysis/median",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
         ],
         "outputs": ["Median Value"],
     },
@@ -31,7 +33,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Calculate the range of a dataset (difference between max and min values).",
         "url": "/tools/descriptive-analysis/range",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
         ],
         "outputs": ["Range Value"],
     },
@@ -40,7 +43,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Compute the interquartile range of a dataset.",
         "url": "/tools/descriptive-analysis/iqr",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
         ],
         "outputs": ["IQR Value"],
     },
@@ -49,7 +53,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Measure the asymmetry of the data distribution.",
         "url": "/tools/descriptive-analysis/skewness",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
         ],
         "outputs": ["Skewness Value"],
     },
@@ -58,7 +63,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Measure the 'tailedness' of the data distribution.",
         "url": "/tools/descriptive-analysis/kurtosis",
         "inputs": [
-            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"}
+            {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
         ],
         "outputs": ["Kurtosis Value"],
     },
@@ -67,7 +73,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "description": "Perform a complete descriptive analysis, including mean, median, mode, range, IQR, skewness, and kurtosis, in one step.",
     "url": "/tools/descriptive-analysis/comprehensive-basic-analysis",
     "inputs": [
-        {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1, 2, 3, 4, 5]"}
+        {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1, 2, 3, 4, 5]"},
+        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data-target": "dataset"},
     ],
     "outputs": [
         "Mean Value",

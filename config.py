@@ -44,20 +44,18 @@ class Config:
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your_jwt_secret_key")
 
-# CSV parsing utility function
-def parse_csv(csv_content):
+def parse_csv(file):
     """
-    Parse CSV content into a list of numbers.
+    Parse CSV file content into a list of numbers.
     Expects a single column or comma-separated values.
     """
     try:
-        # Parse CSV content
-        csv_file = StringIO(csv_content)
-        reader = csv.reader(csv_file)
+        file_content = file.read().decode('utf-8')  # Decode file content
+        reader = csv.reader(StringIO(file_content))
         values = []
         for row in reader:
             # Assume single-column or comma-separated values
-            values.extend(float(x) for x in row if x.strip())
+            values.extend(float(x.strip()) for x in row if x.strip())
         return values
     except Exception as e:
         logger.error(f"Error parsing CSV: {e}")

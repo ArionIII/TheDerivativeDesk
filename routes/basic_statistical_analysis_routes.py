@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
 from config import logger, parse_csv
@@ -19,7 +21,6 @@ TOOL_FUNCTIONS = {
     "kurtosis": calculate_kurtosis,
     "comprehensive-basic-analysis": perform_comprehensive_analysis,
 
-
     # Inferential Statistics
     "t_test": t_test,
     "z_test": z_test,
@@ -32,6 +33,7 @@ TOOL_FUNCTIONS = {
     "z_score": calculate_z_score,
 }
 
+
 # Common route handler
 def handle_statistical_tool_request(tool_key, sub_category_key):
     logger.info(f"Handling request for tool: {tool_key} in {sub_category_key}")
@@ -42,37 +44,55 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
         return "Tool not found", 404
 
     if request.method == "POST":
-        data = request.json
         try:
             params = {}
-            for input_field in tool_config["inputs"]:
-                input_id = input_field["id"]
-                input_type = input_field["type"]
+            # Handle multipart/form-data for file uploads
+            if request.content_type.startswith("multipart/form-data"):
+                for input_field in tool_config["inputs"]:
+                    input_id = input_field["id"]
+                    input_type = input_field["type"]
 
-                # Handle input parsing based on type
-                if input_id in data:
-                    if input_type == "number":
-                        params[input_id] = float(data[input_id])
-                    elif input_type == "array":
-                        if isinstance(data[input_id], list):
-                            params[input_id] = data[input_id]  # JSON array
-                        elif isinstance(data[input_id], str):
-                            # Remove non-numeric characters like brackets
-                            clean_data = data[input_id].strip("[]")
-                            params[input_id] = [
-                                float(x) for x in clean_data.split(",") if x.strip()
-                            ]
+                    if input_type == "file" and input_id in request.files:
+                        # Handle CSV file upload
+                        csv_file = request.files[input_id]
+                        params[input_id] = parse_csv(csv_file)
+                    elif input_type == "array" and input_id in request.form:
+                        # Handle array from form input
+                        raw_array = request.form[input_id]
+                        params[input_id] = [
+                            float(x.strip()) for x in raw_array.strip("[]").split(",") if x.strip()
+                        ]
+                    elif input_type == "number" and input_id in request.form:
+                        params[input_id] = float(request.form[input_id])
+                    elif input_id in request.form:
+                        params[input_id] = request.form[input_id]
+                    elif not input_field.get("optional"):
+                        raise ValueError(f"Missing required input: {input_id}")
+            else:
+                # Handle application/json for non-file uploads
+                data = request.json
+                for input_field in tool_config["inputs"]:
+                    input_id = input_field["id"]
+                    input_type = input_field["type"]
+
+                    if input_id in data:
+                        if input_type == "number":
+                            params[input_id] = float(data[input_id])
+                        elif input_type == "array":
+                            if isinstance(data[input_id], list):
+                                params[input_id] = data[input_id]
+                            elif isinstance(data[input_id], str):
+                                clean_data = data[input_id].strip("[]")
+                                params[input_id] = [
+                                    float(x) for x in clean_data.split(",") if x.strip()
+                                ]
+                            else:
+                                raise ValueError(f"Invalid format for array input: {input_id}")
                         else:
-                            raise ValueError(f"Invalid format for array input: {input_id}")
-                    elif input_type == "file":
-                        # Handle file upload (e.g., CSV)
-                        file_content = data[input_id]
-                        params[input_id] = parse_csv(file_content)  # Implement CSV parsing function
-                    else:
-                        params[input_id] = data[input_id]
-                elif not input_field.get("optional"):
-                    raise ValueError(f"Missing required input: {input_id}")
-
+                            params[input_id] = data[input_id]
+                    elif not input_field.get("optional"):
+                        raise ValueError(f"Missing required input: {input_id}")
+            logger.info(params)
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
