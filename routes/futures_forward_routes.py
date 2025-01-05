@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from configurations.futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
 from formulas.chap_3 import *
 from formulas.chap_5 import *
 from config import logger

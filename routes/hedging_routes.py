@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 from formulas.chap_3 import *
 from formulas.chap_5 import *
 from config import logger
-from configurations.hedging_tool_config import HEDGING_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.hedging_tool_config import HEDGING_TOOL_CONFIG
 
 # Blueprints for forwards and futures
 hedging_basics_routes = Blueprint("hedging_basics_routes", __name__)

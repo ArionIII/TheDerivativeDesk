@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, jsonify
 from config import logger
-from configurations.futures_forwards_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
-from configurations.hedging_tool_config import HEDGING_TOOL_CONFIG
-from configurations.contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.hedging_tool_config import HEDGING_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
 
 ALL_TOOLS = FUTURES_FORWARDS_TOOL_CONFIG | HEDGING_TOOL_CONFIG | CONTRACT_VALUATION_TOOL_CONFIG
 
