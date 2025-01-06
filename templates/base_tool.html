@@ -12,6 +12,14 @@
     <p>{{ tool.description }}</p>
 </header>
 <main>
+    <!-- Note Section -->
+    {% if tool.note %}
+    <section class="note-section">
+        <h3>Additional Information</h3>
+        <p>{{ tool.note }}</p>
+    </section>
+    {% endif %}
+    
     <!-- Input Section -->
     <section class="input-section">
         <h2>Inputs</h2>

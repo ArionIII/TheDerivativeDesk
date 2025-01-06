@@ -27,9 +27,9 @@ TOOL_FUNCTIONS = {
     "chi-square": chi_square_test,
     "confidence-intervals": calculate_confidence_intervals,
     "anova": anova,
-    "simple_regression": simple_regression,
-    "multiple_regression": multiple_regression,
-    "p_value-calculation": calculate_p_value,
+    "simple-regression": simple_regression,
+    "multiple-regression": multiple_regression,
+    "p-value": calculate_p_value,
 
     # Probability Tools
     "pdf_cdf": calculate_pdf_cdf,
@@ -54,6 +54,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                 logger.info("Handling form data")
                 logger.info(request.form)
                 for input_field in tool_config["inputs"]:
+                    logger.info(input_field)
                     input_id = input_field["id"]
                     input_type = input_field["type"]
 
@@ -64,11 +65,13 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                     elif input_type == "array" and input_id in request.form:
                         # Handle array from form input
                         raw_array = request.form[input_id]
-                        params[input_id] = [
-                            float(x.strip()) for x in raw_array.strip("[]").split(",") if x.strip()
-                        ]
+                        if raw_array:
+                            params[input_id] = [
+                                float(x.strip()) for x in raw_array.strip("[]").split(",") if x.strip()
+                            ]
                     elif input_type == "number" and input_id in request.form:
-                        params[input_id] = float(request.form[input_id])
+                        if request.form[input_id]:
+                            params[input_id] = float(request.form[input_id])
                     elif input_id in request.form:
                         params[input_id] = request.form[input_id]
                     elif not input_field.get("optional"):
@@ -78,7 +81,9 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                 logger.info("Handling JSON data")
                 logger.info(request.json)
                 data = request.json
+                logger.info(data)
                 for input_field in tool_config["inputs"]:
+                    logger.info(input_field)
                     input_id = input_field["id"]
                     input_type = input_field["type"]
 

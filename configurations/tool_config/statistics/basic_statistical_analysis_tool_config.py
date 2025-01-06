@@ -119,6 +119,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Expected Frequencies", "id": "expected", "type": "array", "placeholder": "e.g., [15,15,30]"}
         ],
         "outputs": ["Chi-Square Statistic", "P-Value"],
+        "note": "For each axis slice, the sum of the observed frequencies must agree with the sum of the expected frequencies to a relative tolerance of 1e-08"
+
     },
     "confidence-intervals": {
         "title": "Confidence Intervals",
@@ -132,7 +134,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["Confidence Interval"],
     },
-    "p-value-calculation": {
+    "p-value": {
         "title": "P-Value Calculation",
         "description": "Determine the p-value for hypothesis testing.",
         "url": "/tools/inferential-statistics/p-value-calculation",
@@ -142,6 +144,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Distribution Type", "id": "distribution_type", "type": "select", "options": ["Normal", "T-Distribution"], "default": "Normal"}
         ],
         "outputs": ["P-Value"],
+        "note": "For T-Distribution, degrees of freedom are required."
     },
     "anova": {
         "title": "ANOVA (Analysis of Variance)",
