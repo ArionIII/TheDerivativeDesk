@@ -217,10 +217,10 @@ def multiple_regression(independent_variables, dependent_variables):
     mse = mean_squared_error(y, predictions)
     
     return {
-        "coefficients": ("Coefficients :", model.coef_.tolist()),
-        "intercept": ("Intercept :", model.intercept_),
-        "r_squared": ("R-Squared :", r_squared),
-        "mean_squared_error": ("Mean Squared Error :", mse),
+        "coefficients": ("Coefficients ", model.coef_.tolist()),
+        "intercept": ("Intercept ", model.intercept_),
+        "r_squared": ("R-Squared ", r_squared),
+        "mean_squared_error": ("Mean Squared Error ", mse),
     }
 
 

@@ -36,8 +36,6 @@ TOOL_FUNCTIONS = {
     "z_score": calculate_z_score,
 }
 
-
-# Common route handler
 def handle_statistical_tool_request(tool_key, sub_category_key):
     logger.info(f"Handling request for tool: {tool_key} in {sub_category_key}")
     tool_config = BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG.get(tool_key)
@@ -48,69 +46,19 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
     if request.method == "POST":
         try:
-            params = {}
-            # Handle multipart/form-data for file uploads
-            if request.content_type.startswith("multipart/form-data"):
-                logger.info("Handling form data")
-                logger.info(request.form)
-                for input_field in tool_config["inputs"]:
-                    logger.info(input_field)
-                    input_id = input_field["id"]
-                    input_type = input_field["type"]
+            # Determine source of data: form or JSON
+            data_source = request.form if request.content_type.startswith("multipart/form-data") else request.json
+            logger.info("Received data:")
+            logger.info(data_source)
 
-                    if input_type == "file" and input_id in request.files:
-                        # Handle CSV file upload
-                        csv_file = request.files[input_id]
-                        params[input_id] = parse_csv(csv_file)
-                    elif input_type == "array" and input_id in request.form:
-                        # Handle array from form input
-                        raw_array = request.form[input_id]
-                        if raw_array:
-                            params[input_id] = [
-                                float(x.strip()) for x in raw_array.strip("[]").split(",") if x.strip()
-                            ]
-                    elif input_type == "number" and input_id in request.form:
-                        if request.form[input_id]:
-                            params[input_id] = float(request.form[input_id])
-                    elif input_id in request.form:
-                        params[input_id] = request.form[input_id]
-                    elif not input_field.get("optional"):
-                        raise ValueError(f"Missing required input: {input_id}")
-            else:
-                # Handle application/json for non-file uploads
-                logger.info("Handling JSON data")
-                logger.info(request.json)
-                data = request.json
-                logger.info(data)
-                for input_field in tool_config["inputs"]:
-                    logger.info(input_field)
-                    input_id = input_field["id"]
-                    input_type = input_field["type"]
-
-                    if input_id in data:
-                        if input_type == "number":
-                            params[input_id] = float(data[input_id])
-                        elif input_type == "array":
-                            if isinstance(data[input_id], list):
-                                params[input_id] = data[input_id]
-                            elif isinstance(data[input_id], str):
-                                clean_data = data[input_id].strip("[]")
-                                params[input_id] = [
-                                    float(x) for x in clean_data.split(",") if x.strip()
-                                ]
-                            else:
-                                raise ValueError(f"Invalid format for array input: {input_id}")
-                        else:
-                            params[input_id] = data[input_id]
-                    elif not input_field.get("optional"):
-                        raise ValueError(f"Missing required input: {input_id}")
-            logger.info("Received parameters:")
+            params = parse_inputs(data_source, tool_config["inputs"])
+            logger.info("Parsed parameters:")
             logger.info(params)
-            if params.get("csv_file"):
+
+            if "csv_file" in params:
                 logger.info("Processing CSV file")
-                # ATT TODO : Particulier au traitement statistique descriptive !!! Nul, à refaire !
-                params= {"dataset": params["csv_file"]}
-            logger.info("Processing parameters via calculation function:")
+                params = {"dataset": params["csv_file"]}
+
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
@@ -127,6 +75,75 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
+
+
+def parse_inputs(data_source, inputs_config):
+    """
+    Parse and validate the inputs based on the provided configuration.
+
+    Args:
+        data_source: Request data (form or JSON).
+        inputs_config: List of input configurations.
+
+    Returns:
+        A dictionary of parsed parameters.
+    """
+    params = {}
+    for input_field in inputs_config:
+        input_id = input_field["id"]
+        input_type = input_field["type"]
+        optional = input_field.get("optional", False)
+
+        if input_id in data_source:
+            raw_value = data_source[input_id]
+            logger.info(f"Parsing input {input_id}: {raw_value}")
+            if raw_value:
+                if input_type == "file":
+                    logger.info("Processing file input")
+                    # Handle CSV file upload
+                    file_data = request.files[input_id] if request.files else None
+                    if file_data:
+                        params[input_id] = parse_csv(file_data)
+                elif input_type == "array":
+                    logger.info("Processing array input")
+                    params[input_id] = parse_array(raw_value)
+                elif input_type == "number":
+                    logger.info("Processing number input")
+                    params[input_id] = float(raw_value)
+                else:
+                    params[input_id] = raw_value
+            elif not optional:
+                raise ValueError(f"Missing required input: {input_id}")
+
+    return params
+
+
+def parse_array(raw_value):
+    """
+    Parse an array input, supporting nested arrays or flat arrays.
+
+    Args:
+        raw_value: Raw input value (string or list).
+
+    Returns:
+        Parsed array.
+    """
+    if isinstance(raw_value, list):
+        return raw_value
+    if "[" in raw_value and "]" in raw_value:
+        # Parse nested lists
+        try:
+            return [
+                [float(x.strip()) for x in inner_list.strip("[]").split(",") if x.strip()]
+                for inner_list in raw_value.strip("[]").split("],[")
+            ]
+        except ValueError as e:
+            logger.error(f"Error parsing nested array: {raw_value}, Error: {e}")
+            raise ValueError(f"Invalid format for nested array input: {raw_value}")
+    else:
+        # Parse flat lists
+        return [float(x.strip()) for x in raw_value.strip("[]").split(",") if x.strip()]
+
 
 # Routes for Descriptive Statistics
 @descriptive_statistics_routes.route("/tools/descriptive-analysis/<tool_key>", methods=["GET", "POST"])

@@ -173,7 +173,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/inferential-statistics/multiple-regression",
         "inputs": [
             {"label": "Independent Variables (X)", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
-            {"label": "Dependent Variable (Y)", "id": "dependent_variable", "type": "array", "placeholder": "e.g., [4,5,6]"}
+            {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"}
         ],
         "outputs": ["Coefficients", "Intercept", "R-Squared Value"],
     }
