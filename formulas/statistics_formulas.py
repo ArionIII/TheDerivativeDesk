@@ -1,5 +1,8 @@
 import numpy as np
 import scipy.stats as stats
+from scipy.stats import linregress
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 def calculate_mean(dataset):
     """
@@ -76,13 +79,15 @@ def t_test(sample_a, sample_b=None, test_type="One-Sample"):
     """
     Perform a t-test.
     """
+    signi = "The test is significant at the 0.05 level."
+    not_signi = "The test is not significant at the 0.05 level."
     if test_type == "One-Sample":
         t_stat, p_value = stats.ttest_1samp(sample_a, 0)  # Test against mean = 0
     elif test_type == "Two-Sample":
         t_stat, p_value = stats.ttest_ind(sample_a, sample_b, equal_var=False)
     else:
         raise ValueError("Invalid test type. Choose 'One-Sample' or 'Two-Sample'.")
-    return {"t-Statistic": t_stat, "P-Value": p_value}
+    return {"t_statistic" : ("t-Statistic :", t_stat), "p_value" : ("P-Value : ", f"{p_value} : {signi if p_value <= 0.05 else not_signi}")}
 
 
 def z_test(sample_mean, population_mean, std_dev, sample_size):
@@ -91,7 +96,12 @@ def z_test(sample_mean, population_mean, std_dev, sample_size):
     """
     z_stat = (sample_mean - population_mean) / (std_dev / np.sqrt(sample_size))
     p_value = 2 * (1 - stats.norm.cdf(abs(z_stat)))
-    return {"z-Statistic": z_stat, "P-Value": p_value}
+    return {
+    "z_statistic": ("z-Statistic :", z_stat), 
+    "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")
+}
+
+
 
 
 def chi_square_test(observed, expected):
@@ -99,7 +109,12 @@ def chi_square_test(observed, expected):
     Perform a chi-square test.
     """
     chi_stat, p_value = stats.chisquare(f_obs=observed, f_exp=expected)
-    return {"Chi-Square Statistic": chi_stat, "P-Value": p_value}
+    return {
+    "chi_square_statistic": ("Chi-Square Statistic :", chi_stat), 
+    "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")
+}
+
+
 
 
 def calculate_confidence_intervals(sample_mean, std_dev, sample_size, confidence_level):
@@ -121,40 +136,77 @@ def anova(group_a, group_b, group_c=None):
         f_stat, p_value = stats.f_oneway(group_a, group_b, group_c)
     else:
         f_stat, p_value = stats.f_oneway(group_a, group_b)
-    return {"F-Statistic": f_stat, "P-Value": p_value}
+    return {
+    "f_statistic": ("F-Statistic :", f_stat), 
+    "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")
+}
 
+
+
+
+def calculate_p_value(test_statistic, df, test_type="two-tailed"):
+    """
+    Calculate the p-value based on a test statistic and degrees of freedom.
+    """
+    from scipy.stats import t, norm
+    
+    if test_type == "two-tailed":
+        p_value = 2 * (1 - t.cdf(abs(test_statistic), df)) if df else 2 * (1 - norm.cdf(abs(test_statistic)))
+    elif test_type == "one-tailed":
+        p_value = 1 - t.cdf(abs(test_statistic), df) if df else 1 - norm.cdf(abs(test_statistic))
+    else:
+        raise ValueError("Invalid test type. Choose 'two-tailed' or 'one-tailed'.")
+    return {"P-Value": p_value}
 
 def simple_regression(x, y):
     """
-    Perform simple linear regression (y = mx + b).
+    Perform simple linear regression analysis.
     """
-    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    if len(x) != len(y):
+        raise ValueError("Input arrays x and y must have the same length.")
+    
+    # Using scipy's linregress
+    slope, intercept, r_value, p_value, std_err = linregress(x, y)
+    
     return {
-        "Slope (m)": slope,
-        "Intercept (b)": intercept,
-        "R-Squared": r_value**2,
-        "P-Value": p_value,
-        "Standard Error": std_err,
+        "slope": ("Slope :", slope),
+        "intercept": ("Intercept :", intercept),
+        "r_squared": ("R-Squared :", r_value**2),
+        "p_value": ("P-Value :", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}"),
+        "std_err": ("Standard Error :", std_err),
     }
 
 
 def multiple_regression(X, y):
     """
-    Perform multiple linear regression.
-    X: 2D array-like (independent variables)
-    y: 1D array-like (dependent variable)
+    Perform multiple linear regression analysis.
     """
-    from sklearn.linear_model import LinearRegression
+    # Ensure X is a 2D array
+    X = np.array(X)
+    y = np.array(y)
+
+    if len(X.shape) == 1:
+        X = X.reshape(-1, 1)  # Convert to 2D if it's a single feature
+    
+    if len(y) != X.shape[0]:
+        raise ValueError("The number of rows in X must match the length of y.")
+    
+    # Using sklearn's LinearRegression
     model = LinearRegression()
     model.fit(X, y)
-    coefficients = model.coef_
-    intercept = model.intercept_
-    r_squared = model.score(X, y)
+    
+    predictions = model.predict(X)
+    r_squared = r2_score(y, predictions)
+    mse = mean_squared_error(y, predictions)
+    
     return {
-        "Coefficients": coefficients.tolist(),
-        "Intercept": intercept,
-        "R-Squared": r_squared,
+        "coefficients": ("Coefficients :", model.coef_.tolist()),
+        "intercept": ("Intercept :", model.intercept_),
+        "r_squared": ("R-Squared :", r_squared),
+        "mean_squared_error": ("Mean Squared Error :", mse),
     }
+
+
 
 def calculate_pdf_cdf(distribution, parameters):
     """

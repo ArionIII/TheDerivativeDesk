@@ -87,10 +87,10 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "Kurtosis Value",
     ],
 },
-    "t_test": {
+    "t-test": {
         "title": "Hypothesis Testing - t-test",
         "description": "Perform a t-test for comparing sample means.",
-        "url": "/tools/statistical-analysis/t_test",
+        "url": "/tools/inferential-statistics/t-test",
         "inputs": [
             {"label": "Sample Dataset A", "id": "sample_a", "type": "array", "placeholder": "e.g., [1,2,3]"},
             {"label": "Sample Dataset B (optional)", "id": "sample_b", "type": "array", "placeholder": "e.g., [4,5,6]", "optional": True},
@@ -98,10 +98,10 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["t-Statistic", "P-Value"],
     },
-    "z_test": {
+    "z-test": {
         "title": "Hypothesis Testing - z-test",
         "description": "Conduct a z-test for comparing population means.",
-        "url": "/tools/statistical-analysis/z_test",
+        "url": "/tools/inferential-statistics/z-test",
         "inputs": [
             {"label": "Sample Mean", "id": "sample_mean", "type": "number", "placeholder": "e.g., 5.5"},
             {"label": "Population Mean", "id": "population_mean", "type": "number", "placeholder": "e.g., 5.0"},
@@ -110,20 +110,20 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["z-Statistic", "P-Value"],
     },
-    "chi_square": {
+    "chi-square": {
         "title": "Chi-Square Test",
         "description": "Perform a chi-square test for independence or goodness-of-fit.",
-        "url": "/tools/statistical-analysis/chi_square",
+        "url": "/tools/inferential-statistics/chi-square",
         "inputs": [
             {"label": "Observed Frequencies", "id": "observed", "type": "array", "placeholder": "e.g., [10,20,30]"},
             {"label": "Expected Frequencies", "id": "expected", "type": "array", "placeholder": "e.g., [15,15,30]"}
         ],
         "outputs": ["Chi-Square Statistic", "P-Value"],
     },
-    "confidence_intervals": {
+    "confidence-intervals": {
         "title": "Confidence Intervals",
         "description": "Calculate confidence intervals for population parameters.",
-        "url": "/tools/statistical-analysis/confidence_intervals",
+        "url": "/tools/inferential-statistics/confidence-intervals",
         "inputs": [
             {"label": "Sample Mean", "id": "sample_mean", "type": "number", "placeholder": "e.g., 5.5"},
             {"label": "Standard Deviation", "id": "std_dev", "type": "number", "placeholder": "e.g., 1.5"},
@@ -132,10 +132,21 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["Confidence Interval"],
     },
+    "p-value-calculation": {
+        "title": "P-Value Calculation",
+        "description": "Determine the p-value for hypothesis testing.",
+        "url": "/tools/inferential-statistics/p-value-calculation",
+        "inputs": [
+            {"label": "Test Statistic", "id": "test_statistic", "type": "number", "placeholder": "e.g., 2.5"},
+            {"label": "Degrees of Freedom (optional)", "id": "degrees_of_freedom", "type": "number", "placeholder": "e.g., 10", "optional": True},
+            {"label": "Distribution Type", "id": "distribution_type", "type": "select", "options": ["Normal", "T-Distribution"], "default": "Normal"}
+        ],
+        "outputs": ["P-Value"],
+    },
     "anova": {
-        "title": "ANOVA",
-        "description": "Perform ANOVA for analyzing variance between groups.",
-        "url": "/tools/statistical-analysis/anova",
+        "title": "ANOVA (Analysis of Variance)",
+        "description": "Analyze differences between group means in datasets.",
+        "url": "/tools/inferential-statistics/anova",
         "inputs": [
             {"label": "Group A Data", "id": "group_a", "type": "array", "placeholder": "e.g., [1,2,3]"},
             {"label": "Group B Data", "id": "group_b", "type": "array", "placeholder": "e.g., [4,5,6]"},
@@ -143,28 +154,27 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["F-Statistic", "P-Value"],
     },
-    "pdf_cdf": {
-    "title": "PDF and CDF",
-    "description": "Compute the Probability Density and Cumulative Distribution functions.",
-    "url": "/tools/statistical-analysis/pdf_cdf",
-    "inputs": [
-        {"label": "Distribution Type", "id": "distribution", "type": "select", "options": ["Normal", "Binomial", "Poisson"], "default": "Normal"},
-        {"label": "Parameters", "id": "parameters", "type": "text", "placeholder": "e.g., mean=0,std=1"},
-        {"label": "Value (x)", "id": "x_value", "type": "number", "placeholder": "e.g., 1.5"},
-    ],
-    "outputs": ["PDF Value", "CDF Value"],
-},
-"z_score": {
-    "title": "Z-Score Calculation",
-    "description": "Calculate Z-scores for data points.",
-    "url": "/tools/statistical-analysis/z_score",
-    "inputs": [
-        {"label": "Data Point", "id": "data_point", "type": "number", "placeholder": "e.g., 5"},
-        {"label": "Mean", "id": "mean", "type": "number", "placeholder": "e.g., 3.5"},
-        {"label": "Standard Deviation", "id": "std_dev", "type": "number", "placeholder": "e.g., 1.2"},
-    ],
-    "outputs": ["Z-Score"],
-},
+    "simple-regression": {
+        "title": "Simple Regression",
+        "description": "Perform simple linear regression analysis.",
+        "url": "/tools/inferential-statistics/simple-regression",
+        "inputs": [
+            {"label": "Independent Variable (X)", "id": "independent_variable", "type": "array", "placeholder": "e.g., [1,2,3]"},
+            {"label": "Dependent Variable (Y)", "id": "dependent_variable", "type": "array", "placeholder": "e.g., [4,5,6]"}
+        ],
+        "outputs": ["Slope", "Intercept", "R-Squared Value"],
+    },
+    "multiple-regression": {
+        "title": "Multiple Regression",
+        "description": "Conduct multiple regression for multivariate datasets.",
+        "url": "/tools/inferential-statistics/multiple-regression",
+        "inputs": [
+            {"label": "Independent Variables (X)", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
+            {"label": "Dependent Variable (Y)", "id": "dependent_variable", "type": "array", "placeholder": "e.g., [4,5,6]"}
+        ],
+        "outputs": ["Coefficients", "Intercept", "R-Squared Value"],
+    }
 
-    
+
+
 }

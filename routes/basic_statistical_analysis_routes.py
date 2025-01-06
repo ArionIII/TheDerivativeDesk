@@ -22,11 +22,14 @@ TOOL_FUNCTIONS = {
     "comprehensive-basic-analysis": perform_comprehensive_analysis,
 
     # Inferential Statistics
-    "t_test": t_test,
-    "z_test": z_test,
-    "chi_square_test": chi_square_test,
-    "confidence_intervals": calculate_confidence_intervals,
+    "t-test": t_test,
+    "z-test": z_test,
+    "chi-square": chi_square_test,
+    "confidence-intervals": calculate_confidence_intervals,
     "anova": anova,
+    "simple_regression": simple_regression,
+    "multiple_regression": multiple_regression,
+    "p_value-calculation": calculate_p_value,
 
     # Probability Tools
     "pdf_cdf": calculate_pdf_cdf,
@@ -48,6 +51,8 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             params = {}
             # Handle multipart/form-data for file uploads
             if request.content_type.startswith("multipart/form-data"):
+                logger.info("Handling form data")
+                logger.info(request.form)
                 for input_field in tool_config["inputs"]:
                     input_id = input_field["id"]
                     input_type = input_field["type"]
@@ -70,6 +75,8 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                         raise ValueError(f"Missing required input: {input_id}")
             else:
                 # Handle application/json for non-file uploads
+                logger.info("Handling JSON data")
+                logger.info(request.json)
                 data = request.json
                 for input_field in tool_config["inputs"]:
                     input_id = input_field["id"]
@@ -92,13 +99,13 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                             params[input_id] = data[input_id]
                     elif not input_field.get("optional"):
                         raise ValueError(f"Missing required input: {input_id}")
+            logger.info("Received parameters:")
             logger.info(params)
             if params.get("csv_file"):
-                # ATT : Particulier au traitement statistique
+                logger.info("Processing CSV file")
+                # ATT TODO : Particulier au traitement statistique descriptive !!! Nul, à refaire !
                 params= {"dataset": params["csv_file"]}
-            else:
-                del params["csv_file"]
-
+            logger.info("Processing parameters via calculation function:")
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
