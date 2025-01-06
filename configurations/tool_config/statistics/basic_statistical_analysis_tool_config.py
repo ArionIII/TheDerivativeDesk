@@ -134,7 +134,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         ],
         "outputs": ["Confidence Interval"],
     },
-    "p-value-calculation": {
+    "p-value": {
         "title": "P-Value Calculation",
         "description": "Determine the p-value for hypothesis testing.",
         "url": "/tools/inferential-statistics/p-value-calculation",
@@ -144,6 +144,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Distribution Type", "id": "distribution_type", "type": "select", "options": ["Normal", "T-Distribution"], "default": "Normal"}
         ],
         "outputs": ["P-Value"],
+        "note": "For T-Distribution, degrees of freedom are required."
     },
     "anova": {
         "title": "ANOVA (Analysis of Variance)",

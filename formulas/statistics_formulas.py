@@ -3,6 +3,7 @@ import scipy.stats as stats
 from scipy.stats import linregress
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
+from scipy.stats import norm, t
 
 def calculate_mean(dataset):
     """
@@ -141,32 +142,48 @@ def anova(group_a, group_b, group_c=None):
     "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")
 }
 
-
-
-
-def calculate_p_value(test_statistic, df, test_type="two-tailed"):
+def calculate_p_value(test_statistic: float, distribution_type: str, degrees_of_freedom: int = None) -> dict:
     """
-    Calculate the p-value based on a test statistic and degrees of freedom.
-    """
-    from scipy.stats import t, norm
+    Calculate the p-value for a given test statistic based on the distribution type.
     
-    if test_type == "two-tailed":
-        p_value = 2 * (1 - t.cdf(abs(test_statistic), df)) if df else 2 * (1 - norm.cdf(abs(test_statistic)))
-    elif test_type == "one-tailed":
-        p_value = 1 - t.cdf(abs(test_statistic), df) if df else 1 - norm.cdf(abs(test_statistic))
-    else:
-        raise ValueError("Invalid test type. Choose 'two-tailed' or 'one-tailed'.")
-    return {"P-Value": p_value}
+    Parameters:
+    - test_statistic (float): The test statistic value.
+    - distribution_type (str): Type of distribution ("Normal" or "T-Distribution").
+    - degrees_of_freedom (int, optional): Degrees of freedom (required for T-Distribution).
+    
+    Returns:
+    - dict: A dictionary containing the p-value and details of the calculation.
+    """
+    try:
+        distribution_type = distribution_type.lower()
+        if distribution_type == "normal":
+            # Two-tailed p-value for normal distribution
+            p_value = 2 * (1 - norm.cdf(abs(test_statistic)))
+        elif distribution_type == "t-distribution":
+            if degrees_of_freedom is None:
+                raise ValueError("Degrees of freedom must be provided for T-Distribution.")
+            # Two-tailed p-value for t-distribution
+            p_value = 2 * (1 - t.cdf(abs(test_statistic), df=degrees_of_freedom))
+        else:
+            raise ValueError("Unsupported distribution type. Use 'Normal' or 'T-Distribution'.")
+        
+        return {
+    "p_value": ("P-Value :", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}"),
+}
 
-def simple_regression(x, y):
+    except Exception as e:
+        return {"Error": str(e)}
+
+
+def simple_regression(independent_variable, dependent_variable):
     """
     Perform simple linear regression analysis.
     """
-    if len(x) != len(y):
+    if len(independent_variable) != len(dependent_variable):
         raise ValueError("Input arrays x and y must have the same length.")
     
     # Using scipy's linregress
-    slope, intercept, r_value, p_value, std_err = linregress(x, y)
+    slope, intercept, r_value, p_value, std_err = linregress(independent_variable, dependent_variable)
     
     return {
         "slope": ("Slope :", slope),
@@ -177,13 +194,13 @@ def simple_regression(x, y):
     }
 
 
-def multiple_regression(X, y):
+def multiple_regression(independent_variables, dependent_variables):
     """
     Perform multiple linear regression analysis.
     """
     # Ensure X is a 2D array
-    X = np.array(X)
-    y = np.array(y)
+    X = np.array(independent_variables)
+    y = np.array(dependent_variables)
 
     if len(X.shape) == 1:
         X = X.reshape(-1, 1)  # Convert to 2D if it's a single feature
