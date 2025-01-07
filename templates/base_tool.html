@@ -4,6 +4,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="/static/css/tool.css">
+<link rel="stylesheet" href="/static/css/stock.css">
 {% endblock %}
 
 {% block content %}
@@ -91,6 +92,28 @@
         </div>
     </section>
 
+    <!-- Actions Section -->
+    <section class="actions-section">
+        <h2>Stocks</h2>
+        <div class="search-bar">
+            <input type="text" id="search-action" placeholder="Search for actions..." />
+            <button id="search-btn">Search</button>
+        </div>
+        <ul id="actions-list">
+            <!-- Dynamically filled -->
+        </ul>
+    </section>
+
+    <!-- Modal for See More -->
+    <div id="see-more-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-action-title">Stock Details</h3>
+            <p id="modal-action-details">Details about the stock will be shown here.</p>
+        </div>
+    </div>
+
+    
     <!-- Visualization Section (Optional) -->
     {% if tool.visualization %}
         <section class="visualization-section">
@@ -101,8 +124,18 @@
         </section>
     {% endif %}
 </main>
+
+<!-- Modal for See More -->
+<div id="see-more-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3 id="modal-action-title">Action Details</h3>
+        <p id="modal-action-details">Details about the action will be shown here.</p>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script src="/static/js/tool.js"></script>
+<script src="/static/js/stock.js"></script>
 {% endblock %}

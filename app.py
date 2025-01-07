@@ -15,7 +15,7 @@ from flask_bcrypt import Bcrypt
 from flask import session
 from config import Config
 from routes.basic_statistical_analysis_routes import descriptive_statistics_routes, inferential_statistics_routes, probability_tools_routes
-
+from routes.stock_routes import stocks_routes, stock_chart_routes
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -43,7 +43,8 @@ app.register_blueprint(auth_routes)
 app.register_blueprint(descriptive_statistics_routes)
 app.register_blueprint(inferential_statistics_routes)
 app.register_blueprint(probability_tools_routes)
-
+app.register_blueprint(stocks_routes)
+app.register_blueprint(stock_chart_routes)
 
 # Route pour la page d'accueil
 @app.route("/")

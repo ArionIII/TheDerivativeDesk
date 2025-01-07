@@ -26,15 +26,17 @@ TOOL_FUNCTIONS = {
 }
 
 def handle_tool_request(tool_name):
+    logger.info(f"Handling request for tool: {tool_name}")
     # Get the tool configuration
     tool_config = FUTURES_FORWARDS_TOOL_CONFIG.get(tool_name)
+    logger.info(f"Tool configuration: {tool_config}")
     if not tool_config:
         logger.warning(f"Tool not found: {tool_name}")
         return "Tool not found", 404
-
+    logger.info(f"Request headers: {request.headers}")
     if request.method == "POST":
         # Handle POST request
-        data = request.json
+        data = request.form if request.content_type.startswith("multipart/form-data") else request.json
         try:
             # Map input field IDs to their values
             params = {input["id"]: float(data[input["id"]]) for input in tool_config["inputs"]}
