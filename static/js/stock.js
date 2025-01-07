@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="action-chart">
                             <img src="/api/stock-chart/${action.ticker}" alt="${action.ticker} chart" />
                         </div>
-                        <button class="btn-see-more" data-action-ticker="${action.ticker}">See more</button>
                     </li>`
             )
             .join("");
@@ -43,21 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const actions = await fetchActions(searchTerm);
         renderActions(actions);
     };
-
-    actionsList.addEventListener("click", (e) => {
-        if (e.target.classList.contains("btn-see-more")) {
-            const ticker = e.target.dataset.actionTicker;
-            document.getElementById("modal-action-title").textContent = `Details for ${ticker}`;
-            document.getElementById("modal-action-details").textContent = `Fetching details for ${ticker}...`;
-
-            // Fetch details (if required) and update modal
-            modal.style.display = "block";
-        }
-    });
-
-    closeModalBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
 
     searchBtn.addEventListener("click", () => {
         loadActions(searchInput.value);

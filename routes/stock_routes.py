@@ -5,6 +5,7 @@ from config import logger
 import matplotlib.pyplot as plt
 from io import BytesIO
 import matplotlib.dates as mdates
+from matplotlib.dates import DateFormatter
 import matplotlib
 matplotlib.use("Agg")
 # Blueprint for stock data
@@ -65,13 +66,20 @@ def get_stock_chart(ticker):
             return jsonify({"error": f"No data available for {ticker}"}), 404
 
         # Plotting
-        plt.figure(figsize=(6, 4))
+        plt.figure(figsize=(4.5, 2.3))
         plt.plot(history.index, history["Close"], label=f"{ticker} Price", color="#007bff", linewidth=2)
         plt.title(f"{ticker} - Last 1 Month")
         plt.xlabel("Date")
         plt.ylabel("Price (USD)")
         plt.grid(alpha=0.3)
         plt.legend()
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(DateFormatter('%m'))
+        plt.xticks(rotation=45, fontsize=8)
+        plt.yticks(fontsize=8)
+        plt.xlabel("Month", fontsize=9)
+        plt.ylabel("Price", fontsize=9)
+
 
         # Save plot to buffer
         buffer = BytesIO()
