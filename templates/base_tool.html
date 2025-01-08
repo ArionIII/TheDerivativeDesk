@@ -111,9 +111,18 @@
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h3 id="modal-action-title">Stock Details</h3>
-            <p id="modal-action-details">Details about the stock will be shown here.</p>
+            <p id="stock-sector"></p>
+            <p id="stock-industry"></p>
+            <p id="stock-market-cap"></p>
+            <p id="stock-52-week-high"></p>
+            <p id="stock-52-week-low"></p>
+            <p id="stock-volume"></p>
+            <canvas id="detailed-stock-chart"></canvas>
         </div>
     </div>
+    
+    
+    
 
     
     <!-- Visualization Section (Optional) -->
@@ -132,5 +141,6 @@
 
 {% block scripts %}
 <script src="/static/js/tool.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/static/js/stock.js"></script>
 {% endblock %}

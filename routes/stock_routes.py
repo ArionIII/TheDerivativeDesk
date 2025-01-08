@@ -112,16 +112,19 @@ def get_stock_chart(ticker):
 @stocks_routes.route("/api/stock-details/<ticker>", methods=["GET"])
 def get_stock_details(ticker):
     """
-    Fetch detailed information about a specific stock.
+    Fetch detailed information and historical data for a specific stock.
     """
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
+        history = stock.history(period="6mo", interval="1d")  # 6 months daily data
 
-        # Select key details to return
+        if history.empty:
+            return jsonify({"error": "No historical data available"}), 404
+
         stock_details = {
             "ticker": ticker,
-            "name": info.get("shortName", "N/A"),
+            "name": info.get("shortName", ticker),
             "sector": info.get("sector", "N/A"),
             "industry": info.get("industry", "N/A"),
             "market_cap": info.get("marketCap", "N/A"),
@@ -135,9 +138,15 @@ def get_stock_details(ticker):
             "pe_ratio": info.get("trailingPE", "N/A"),
             "dividend_yield": info.get("dividendYield", "N/A"),
             "description": info.get("longBusinessSummary", "N/A"),
+            "chart_data": {
+                "dates": history.index.strftime("%Y-%m-%d").tolist(),
+                "prices": history["Close"].tolist(),
+                "volumes": history["Volume"].tolist(),
+            },
         }
 
         return jsonify({"details": stock_details})
     except Exception as e:
         logger.error(f"Error fetching stock details for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
+
