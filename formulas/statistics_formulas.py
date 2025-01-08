@@ -4,6 +4,8 @@ from scipy.stats import linregress
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import norm, t
+from scipy.stats import binom, poisson
+import math
 
 def calculate_mean(dataset):
     """
@@ -223,35 +225,51 @@ def multiple_regression(independent_variables, dependent_variables):
         "mean_squared_error": ("Mean Squared Error ", mse),
     }
 
+def calculate_pdf(value, mean, std_dev):
+    try:
+        pdf_value = norm.pdf(value, loc=mean, scale=std_dev)
+        return ({"PDF Value": pdf_value})
+    except Exception as e:
+        return ({"error": str(e)}), 400
 
-def calculate_pdf_cdf(distribution, parameters):
-    """
-    Compute PDF and CDF for a given distribution.
-    """
-    if distribution == "Normal":
-        mean, std = parameters.get("mean", 0), parameters.get("std", 1)
-        x = parameters.get("x", 0)
-        pdf_value = stats.norm.pdf(x, mean, std)
-        cdf_value = stats.norm.cdf(x, mean, std)
-    elif distribution == "Binomial":
-        n, p, x = parameters.get("n"), parameters.get("p"), parameters.get("x")
-        pdf_value = stats.binom.pmf(x, n, p)
-        cdf_value = stats.binom.cdf(x, n, p)
-    elif distribution == "Poisson":
-        mu, x = parameters.get("mu"), parameters.get("x")
-        pdf_value = stats.poisson.pmf(x, mu)
-        cdf_value = stats.poisson.cdf(x, mu)
-    elif distribution == "T-Distribution":
-        df, x = parameters.get("df"), parameters.get("x")
-        pdf_value = stats.t.pdf(x, df)
-        cdf_value = stats.t.cdf(x, df)
-    else:
-        raise ValueError("Unsupported distribution type.")
-    return {"PDF Value": pdf_value, "CDF Value": cdf_value}
+def calculate_cdf(value, mean, std_dev):
+    try:
+        cdf_value = norm.cdf(value, loc=mean, scale=std_dev)
+        return ({"CDF Value": cdf_value})
+    except Exception as e:
+        return ({"error": str(e)}), 400
 
-def calculate_z_score(data_point, mean, std_dev):
-    """
-    Calculate the z-score of a data point.
-    """
-    z_score = (data_point - mean) / std_dev
-    return {"Z-Score": z_score}
+def calculate_z_score(value, mean, std_dev):
+    try:
+        z_score = (value - mean) / std_dev
+        return ({"Z-Score": z_score})
+    except Exception as e:
+        return ({"error": str(e)}), 400
+
+def calculate_binomial(num_trials, prob_success, num_successes):
+    try:
+        probability = binom.pmf(num_successes, num_trials, prob_success)
+        return ({"Probability": probability})
+    except Exception as e:
+        return ({"error": str(e)}), 400
+
+def calculate_poisson(num_events, rate):
+    try:
+        probability = poisson.pmf(num_events, rate)
+        return ({"Probability": probability})
+    except Exception as e:
+        return ({"error": str(e)}), 400
+
+def calculate_normal_distribution(value, mean, std_dev):
+    try:
+        probability = norm.cdf(value, loc=mean, scale=std_dev)
+        return ({"Probability": probability})
+    except Exception as e:
+        return ({"error": str(e)}), 400
+
+def calculate_t_distribution(value, degrees_freedom):
+    try:
+        probability = t.cdf(value, degrees_freedom)
+        return ({"Probability": probability})
+    except Exception as e:
+        return ({"error": str(e)}), 400

@@ -176,8 +176,80 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"}
         ],
         "outputs": ["Coefficients", "Intercept", "R-Squared Value"],
+    },
+    "pdf": {
+        "title": "Probability Density Function (PDF)",
+        "description": "Calculate the PDF for continuous random variables.",
+        "url": "/tools/probability/pdf",
+        "inputs": [
+            {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
+            {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
+            {"label": "Standard Deviation (σ)", "id": "std_dev", "type": "number", "placeholder": "e.g., 1"}
+        ],
+        "outputs": ["PDF Value"]
+    },
+    "cdf": {
+        "title": "Cumulative Distribution Function (CDF)",
+        "description": "Compute the cumulative probability of random variables.",
+        "url": "/tools/probability/cdf",
+        "inputs": [
+            {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
+            {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
+            {"label": "Standard Deviation (σ)", "id": "std_dev", "type": "number", "placeholder": "e.g., 1"}
+        ],
+        "outputs": ["CDF Value"]
+    },
+    "z-score": {
+        "title": "Z-Score Calculation",
+        "description": "Find the Z-score to standardize data points.",
+        "url": "/tools/probability/z-score",
+        "inputs": [
+            {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
+            {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
+            {"label": "Standard Deviation (σ)", "id": "std_dev", "type": "number", "placeholder": "e.g., 1"}
+        ],
+        "outputs": ["Z-Score"]
+    },
+    "binomial-distribution": {
+        "title": "Binomial Distribution",
+        "description": "Analyze binomial random variables and probabilities.",
+        "url": "/tools/probability/binomial-distribution",
+        "inputs": [
+            {"label": "Number of Trials (n)", "id": "num_trials", "type": "number", "placeholder": "e.g., 10"},
+            {"label": "Probability of Success (p)", "id": "prob_success", "type": "number", "placeholder": "e.g., 0.5"},
+            {"label": "Number of Successes (k)", "id": "num_successes", "type": "number", "placeholder": "e.g., 5"}
+        ],
+        "outputs": ["Probability"]
+    },
+    "poisson-distribution": {
+        "title": "Poisson Distribution",
+        "description": "Evaluate Poisson-distributed random events.",
+        "url": "/tools/probability/poisson-distribution",
+        "inputs": [
+            {"label": "Number of Events (k)", "id": "num_events", "type": "number", "placeholder": "e.g., 3"},
+            {"label": "Average Rate (λ)", "id": "rate", "type": "number", "placeholder": "e.g., 5"}
+        ],
+        "outputs": ["Probability"]
+    },
+    "normal-distribution": {
+        "title": "Normal Distribution",
+        "description": "Compute probabilities for normally distributed variables.",
+        "url": "/tools/probability/normal-distribution",
+        "inputs": [
+            {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
+            {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
+            {"label": "Standard Deviation (σ)", "id": "std_dev", "type": "number", "placeholder": "e.g., 1"}
+        ],
+        "outputs": ["Probability"]
+    },
+    "t-distribution": {
+        "title": "T-Distribution",
+        "description": "Work with T-distributed data for small sample sizes.",
+        "url": "/tools/probability/t-distribution",
+        "inputs": [
+            {"label": "Value (t)", "id": "value", "type": "number", "placeholder": "e.g., 2.5"},
+            {"label": "Degrees of Freedom (df)", "id": "degrees_freedom", "type": "number", "placeholder": "e.g., 10"}
+        ],
+        "outputs": ["Probability"]
     }
-
-
-
 }

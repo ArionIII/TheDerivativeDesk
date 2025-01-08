@@ -32,9 +32,15 @@ TOOL_FUNCTIONS = {
     "p-value": calculate_p_value,
 
     # Probability Tools
-    "pdf_cdf": calculate_pdf_cdf,
-    "z_score": calculate_z_score,
+    "pdf": calculate_pdf,
+    "cdf": calculate_cdf,
+    "z-score": calculate_z_score,
+    "binomial-distribution": calculate_binomial,
+    "poisson-distribution": calculate_poisson,
+    "normal-distribution": calculate_normal_distribution,
+    "t-distribution": calculate_t_distribution,
 }
+
 
 def handle_statistical_tool_request(tool_key, sub_category_key):
     logger.info(f"Handling request for tool: {tool_key} in {sub_category_key}")
