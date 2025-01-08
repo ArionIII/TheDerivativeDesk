@@ -2,61 +2,183 @@ import requests
 import pandas as pd
 from config import logger
 
+indices = {
+    "S&P 500": {
+        "url": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+        "table_idx": 0,
+        "symbol_col": "Symbol",
+        "name_col": "Security"
+    },
+    "CAC 40": {
+        "url": "https://fr.wikipedia.org/wiki/CAC_40",
+        "table_idx": 2,
+        "symbol_col": "Mnémo",
+        "name_col": "Société"
+    },
+    "DOW JONES": {
+        "url": "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average",
+        "table_idx": 2,
+        "symbol_col": "Symbol",
+        "name_col": "Company"
+    },
+    "NIKKEI": {
+        "url": "https://en.wikipedia.org/wiki/Nikkei_225",
+        "table_idx": 2,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "FTSE 100": {
+        "url": "https://en.wikipedia.org/wiki/FTSE_100_Index",
+        "table_idx": 4,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "DAX": {
+        "url": "https://en.wikipedia.org/wiki/DAX",
+        "table_idx": 4,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "Hang Seng": {
+        "url": "https://en.wikipedia.org/wiki/Hang_Seng_Index",
+        "table_idx": 6,
+        "symbol_col": "Ticker",
+        "name_col": "Name"
+    },
+    "Nasdaq-100": {
+        "url": "https://en.wikipedia.org/wiki/NASDAQ-100",
+        "table_idx": 4,
+        "symbol_col": "Symbol",
+        "name_col": "Company"
+    },
+    "Russell 2000": {
+        "url": "https://en.wikipedia.org/wiki/Russell_2000_Index",
+        "table_idx": 0,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "Shanghai Composite": {
+        "url": "https://en.wikipedia.org/wiki/Shanghai_Composite",
+        "table_idx": 0,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "Euro Stoxx 50": {
+        "url": "https://en.wikipedia.org/wiki/EURO_STOXX_50",
+        "table_idx": 1,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "BSE Sensex": {
+        "url": "https://en.wikipedia.org/wiki/BSE_SENSEX",
+        "table_idx": 2,
+        "symbol_col": "Symbol",
+        "name_col": "Company"
+    },
+    "ASX 200": {
+        "url": "https://en.wikipedia.org/wiki/S%26P/ASX_200",
+        "table_idx": 2,
+        "symbol_col": "Code",
+        "name_col": "Company"
+    },
+    "KOSPI": {
+        "url": "https://en.wikipedia.org/wiki/KOSPI",
+        "table_idx": 0,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "IBEX 35": {
+        "url": "https://en.wikipedia.org/wiki/IBEX_35",
+        "table_idx": 2,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "TSX Composite": {
+        "url": "https://en.wikipedia.org/wiki/S%26P/TSX_Composite_Index",
+        "table_idx": 3,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "Swiss Market Index": {
+        "url": "https://en.wikipedia.org/wiki/Swiss_Market_Index",
+        "table_idx": 2,
+        "symbol_col": "Ticker",
+        "name_col": "Name"
+    },
+    "AEX": {
+        "url": "https://en.wikipedia.org/wiki/AEX_index",
+        "table_idx": 3,
+        "symbol_col": "Ticker symbol",
+        "name_col": "Company"
+    },
+    "MIB": {
+        "url": "https://en.wikipedia.org/wiki/FTSE_MIB",
+        "table_idx": 1,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "PSI-20": {
+        "url": "https://en.wikipedia.org/wiki/PSI-20",
+        "table_idx": 2,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "BEL 20": {
+        "url": "https://en.wikipedia.org/wiki/BEL20",
+        "table_idx": 2,
+        "symbol_col": "Ticker",
+        "name_col": "Company"
+    },
+    "OMX Stockholm 30": {
+        "url": "https://en.wikipedia.org/wiki/OMX_Stockholm_30",
+        "table_idx": 1,
+        "symbol_col": "Symbol",
+        "name_col": "Company"
+    },
+    "NZX 50": {
+        "url": "https://en.wikipedia.org/wiki/NZX_50_Index",
+        "table_idx": 1,
+        "symbol_col": "Ticker symbol",
+        "name_col": "Company"
+    },
+}
+
+# Fetch tickers and titles for a specific index
 def fetch_index_tickers(index_name):
     """
     Fetch the tickers and titles for a given index.
     """
-    if index_name == "S&P 500":
-        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-        table_idx = 0
-        symbol_col, name_col = "Symbol", "Security"
-    elif index_name == "CAC 40":
-        url = "https://en.wikipedia.org/wiki/CAC_40"
-        table_idx = 3
-        symbol_col, name_col = "Ticker", "Company"
-    elif index_name == "DOW JONES":
-        url = "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average"
-        table_idx = 1
-        symbol_col, name_col = "Symbol", "Company"
-    elif index_name == "NIKKEI":
-        url = "https://en.wikipedia.org/wiki/Nikkei_225"
-        table_idx = 2
-        symbol_col, name_col = "Ticker", "Company"
-    else:
+    index_data = indices.get(index_name)
+    if not index_data:
         raise ValueError(f"Unsupported index: {index_name}")
 
     try:
-        response = requests.get(url)
-        logger.warning(f"Fetching data for {index_name} from {url}")
-        logger.error(f"Response status code: {response.status_code}")
+        response = requests.get(index_data["url"])
+        logger.info(f"Fetching data for {index_name} from {index_data['url']}")
         if response.status_code == 200:
             tables = pd.read_html(response.text)
-            index_table = tables[table_idx]
-            tickers = index_table[[symbol_col, name_col]].dropna()
+            index_table = tables[index_data["table_idx"]]
+            tickers = index_table[[index_data["symbol_col"], index_data["name_col"]]].dropna()
             return {
-                row[symbol_col]: row[name_col]
+                row[index_data["symbol_col"]]: row[index_data["name_col"]]
                 for _, row in tickers.iterrows()
             }
         else:
-            raise Exception(f"Failed to fetch data for {index_name}")
+            raise Exception(f"Failed to fetch data for {index_name}: {response.status_code}")
     except Exception as e:
-        print(f"Error fetching tickers for {index_name}: {e}")
+        logger.error(f"Error fetching tickers for {index_name}: {e}")
         return {}
 
-# Combine tickers into a single dictionary
+# Combine tickers from all indices into a single dictionary
 def combine_tickers_and_titles():
-    all_indices = {
-    "S&P 500": fetch_index_tickers("S&P 500"),
-    "CAC 40": fetch_index_tickers("CAC 40"),
-    "DOW JONES": fetch_index_tickers("DOW JONES"),
-    "NIKKEI": fetch_index_tickers("NIKKEI"),
-}
     """
     Combine all index tickers and titles into a single dictionary.
     """
     global_tickers = {}
-    for index, tickers in all_indices.items():
+    for index_name in indices.keys():
+        tickers = fetch_index_tickers(index_name)
         for ticker, title in tickers.items():
             global_tickers[ticker] = title
+    output_path = "static/data/combined_tickers.csv"
+    pd.DataFrame(list(global_tickers.items()), columns=["Ticker", "Title"]).to_csv(output_path, index=False)
     return global_tickers
-

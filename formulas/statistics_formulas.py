@@ -224,7 +224,6 @@ def multiple_regression(independent_variables, dependent_variables):
     }
 
 
-
 def calculate_pdf_cdf(distribution, parameters):
     """
     Compute PDF and CDF for a given distribution.
