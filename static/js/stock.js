@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     const actionsList = document.getElementById("actions-list");
-    const searchBtn = document.getElementById("search-btn");
     const searchInput = document.getElementById("search-action");
-    const modal = document.getElementById("see-more-modal");
-    const closeModalBtn = modal.querySelector(".close-btn");
+    const suggestionsDiv = document.createElement("div"); // Suggestions dropdown
+    suggestionsDiv.className = "suggestions hidden";
+    document.querySelector(".search-bar").appendChild(suggestionsDiv);
 
+    // Fetch actions from the server
     const fetchActions = async (searchTerm = "", limit = 4) => {
         try {
             const response = await fetch(`/api/stocks?search=${searchTerm}&limit=${limit}`);
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Render actions on the page
     const renderActions = (actions) => {
         actionsList.innerHTML = actions
             .map(
@@ -30,7 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
                             </h4>
                             <p>Price: $${action.price}</p>
-                            <p>Change: ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%</p>
+                            <p style="color: ${action.change > 0 ? "green" : "red"};">
+                                Change: ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%
+                            </p>
                         </div>
                         <div class="action-chart">
                             <img src="/api/stock-chart/${action.ticker}" alt="${action.ticker} chart" />
@@ -39,22 +43,89 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
-    
-    
 
+    // Render search suggestions
+    const renderSuggestions = (stocks) => {
+        suggestionsDiv.innerHTML = stocks
+            .map(
+                (stock) =>
+                    `<p class="suggestion-item" 
+                        data-title="${stock.title}" 
+                        data-ticker="${stock.ticker}" 
+                        data-price="${stock.price}" 
+                        data-change="${stock.change}">
+                        ${stock.title} (${stock.ticker})
+                    </p>`
+            )
+            .join("");
+
+        suggestionsDiv.classList.remove("hidden");
+    };
+
+    // Hide suggestions
+    const hideSuggestions = () => {
+        suggestionsDiv.innerHTML = "";
+        suggestionsDiv.classList.add("hidden");
+    };
+
+    // Search input event
+    searchInput.addEventListener("input", async (e) => {
+        const searchTerm = e.target.value.trim();
+        if (searchTerm) {
+            const suggestions = await fetchActions(searchTerm, 10); // Fetch more for suggestions
+            renderSuggestions(suggestions);
+        } else {
+            hideSuggestions();
+        }
+    });
+
+    // Handle suggestion click
+    suggestionsDiv.addEventListener("click", (e) => {
+        if (e.target.classList.contains("suggestion-item")) {
+            const { title, ticker, price, change } = e.target.dataset;
+
+            // Replace the rightmost action and shift others
+            const currentActions = Array.from(actionsList.children).map((child) =>
+                JSON.parse(child.dataset.action)
+            );
+            const newAction = {
+                title,
+                ticker,
+                price: parseFloat(price),
+                change: parseFloat(change),
+            };
+
+            if (currentActions.length > 0) {
+                currentActions.pop(); // Remove the last action
+                const updatedActions = [newAction, ...currentActions];
+
+                renderActions(updatedActions);
+            }
+
+            // Clear search and suggestions
+            searchInput.value = "";
+            hideSuggestions();
+        }
+    });
+
+    // Fetch and render actions
     const loadActions = async (searchTerm = "") => {
         const actions = await fetchActions(searchTerm);
         renderActions(actions);
     };
 
-    searchBtn.addEventListener("click", () => {
-        loadActions(searchInput.value);
+    // Load initial actions
+    loadActions();
+
+    // Modal handling
+    window.openSeeMore = async (ticker) => {
+        alert(`Showing details for ${ticker}`);
+    };
+
+    // Close suggestions on outside click
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".search-bar")) {
+            hideSuggestions();
+        }
     });
-
-    loadActions(); // Initial load
 });
-
-const openSeeMore = (ticker) => {
-    // Fetch and display more information about the stock
-    alert(`Showing details for ${ticker}`);
-};
