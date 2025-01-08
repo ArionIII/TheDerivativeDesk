@@ -7,6 +7,8 @@ from io import BytesIO
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib
+from fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
+
 matplotlib.use("Agg")
 # Blueprint for stock data
 stocks_routes = Blueprint("stocks_routes", __name__)
@@ -18,40 +20,56 @@ SP500_TICKERS = [
     "AAPL", "MSFT", "GOOG", "AMZN", "TSLA", "META", "NVDA", "JNJ", "XOM", "PG",  # Add more tickers
 ]
 
+#TODO : Pas utile de fetch a chaque fois, autant s'output un csv 1 fois par semaine ou autre.
+ALL_TICKERS = combine_tickers_and_titles()
+
 @stocks_routes.route("/api/stocks", methods=["GET"])
 def get_random_stocks():
     """
-    Fetch random stocks data from the S&P 500.
+    Fetch random stocks data from ALL_TICKERS.
     """
     search_term = request.args.get("search", "").lower()
     num_stocks = int(request.args.get("limit", 4))
 
     try:
-        # Filter or get random stocks
-        selected_tickers = (
-            [ticker for ticker in SP500_TICKERS if search_term in ticker.lower()]
-            if search_term
-            else random.sample(SP500_TICKERS, num_stocks)
-        )
+        # Filter based on search term or get random stocks
+        if search_term:
+            selected_tickers = [
+                ticker for ticker, title in ALL_TICKERS.items()
+                if search_term in ticker.lower() or search_term in title.lower()
+            ]
+        else:
+            selected_tickers = random.sample(list(ALL_TICKERS.keys()), num_stocks)
+
+        # Ensure we don't exceed the requested number of stocks
+        selected_tickers = selected_tickers[:num_stocks]
+
         logger.info(f"Selected tickers: {selected_tickers}")
+
         # Fetch stock data
         stocks_data = []
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
             info = stock.info
-            logger.warning(f"Stock info: ({info.get('currentPrice')}, {info.get('previousClose')})")
+            current_price = info.get("currentPrice", None)
+            previous_close = info.get("previousClose", None)
+            
+            if current_price is not None and previous_close is not None:
+                change = (current_price - previous_close) / previous_close
+            else:
+                change = None
+
             stocks_data.append({
                 "ticker": ticker,
-                "title": info.get("shortName", ticker),
-                "price": info.get("currentPrice", "N/A"),
-                "change": ((info.get("currentPrice") - info.get("previousClose")) / info.get("previousClose"))
+                "title": ALL_TICKERS[ticker],
+                "price": current_price if current_price is not None else "N/A",
+                "change": change if change is not None else "N/A",
             })
 
         return jsonify({"stocks": stocks_data})
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         return jsonify({"error": str(e)}), 500
-
 
 
 @stock_chart_routes.route("/api/stock-chart/<ticker>", methods=["GET"])
@@ -72,13 +90,11 @@ def get_stock_chart(ticker):
         plt.xlabel("Date")
         plt.ylabel("Price (USD)")
         plt.grid(alpha=0.3)
-        plt.legend()
+        # plt.legend()
         ax = plt.gca()
-        ax.xaxis.set_major_formatter(DateFormatter('%m'))
-        plt.xticks(rotation=45, fontsize=8)
-        plt.yticks(fontsize=8)
-        plt.xlabel("Month", fontsize=9)
-        plt.ylabel("Price", fontsize=9)
+        ax.xaxis.set_major_formatter(DateFormatter('%d'))
+        # plt.xticks(rotation=45, fontsize=8)
+        # plt.yticks(fontsize=8)
 
 
         # Save plot to buffer
@@ -91,3 +107,46 @@ def get_stock_chart(ticker):
     except Exception as e:
         logger.error(f"Error generating chart for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@stocks_routes.route("/api/stock-details/<ticker>", methods=["GET"])
+def get_stock_details(ticker):
+    """
+    Fetch detailed information and historical data for a specific stock.
+    """
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        history = stock.history(period="6mo", interval="1d")  # 6 months daily data
+
+        if history.empty:
+            return jsonify({"error": "No historical data available"}), 404
+
+        stock_details = {
+            "ticker": ticker,
+            "name": info.get("shortName", ticker),
+            "sector": info.get("sector", "N/A"),
+            "industry": info.get("industry", "N/A"),
+            "market_cap": info.get("marketCap", "N/A"),
+            "current_price": info.get("currentPrice", "N/A"),
+            "day_high": info.get("dayHigh", "N/A"),
+            "day_low": info.get("dayLow", "N/A"),
+            "52_week_high": info.get("fiftyTwoWeekHigh", "N/A"),
+            "52_week_low": info.get("fiftyTwoWeekLow", "N/A"),
+            "volume": info.get("volume", "N/A"),
+            "average_volume": info.get("averageVolume", "N/A"),
+            "pe_ratio": info.get("trailingPE", "N/A"),
+            "dividend_yield": info.get("dividendYield", "N/A"),
+            "description": info.get("longBusinessSummary", "N/A"),
+            "chart_data": {
+                "dates": history.index.strftime("%Y-%m-%d").tolist(),
+                "prices": history["Close"].tolist(),
+                "volumes": history["Volume"].tolist(),
+            },
+        }
+
+        return jsonify({"details": stock_details})
+    except Exception as e:
+        logger.error(f"Error fetching stock details for {ticker}: {e}")
+        return jsonify({"error": str(e)}), 500
+
