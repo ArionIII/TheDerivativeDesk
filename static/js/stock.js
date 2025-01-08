@@ -37,13 +37,38 @@ document.addEventListener("DOMContentLoaded", () => {
                             </p>
                         </div>
                         <div class="action-chart">
-                            <img src="/api/stock-chart/${action.ticker}" alt="${action.ticker} chart" />
+                            <img 
+                                src="/static/images/loading-spinner.gif" 
+                                data-src="/api/stock-chart/${action.ticker}" 
+                                alt="${action.ticker} chart" 
+                                class="chart-img"
+                            />
                         </div>
                     </li>`
             )
             .join("");
+
+        // Attach lazy loading to the charts
+        attachChartLoaders();
     };
-    
+
+    // Attach loaders to chart images
+    const attachChartLoaders = () => {
+        const charts = document.querySelectorAll(".chart-img");
+
+        charts.forEach((chart) => {
+            const img = new Image();
+            img.src = chart.dataset.src;
+
+            img.onload = () => {
+                chart.src = img.src; // Replace placeholder once loaded
+            };
+
+            img.onerror = () => {
+                chart.src = "/static/images/error-placeholder.png"; // Fallback image if loading fails
+            };
+        });
+    };
 
     // Render search suggestions
     const renderSuggestions = (stocks) => {
@@ -84,37 +109,36 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestionsDiv.addEventListener("click", (e) => {
         if (e.target.classList.contains("suggestion-item")) {
             const { title, ticker, price, change } = e.target.dataset;
-    
-            // Remplacer la dernière action et décaler les autres
+
+            // Replace the last action and shift others
             const currentActions = Array.from(actionsList.children).map((child) => {
                 try {
                     return JSON.parse(child.dataset.action);
                 } catch (err) {
                     console.error("Error parsing action data:", err);
-                    return null; // Si erreur, ignore l'action
+                    return null; // Ignore invalid actions
                 }
-            }).filter((action) => action !== null); // Filtrer les entrées nulles
-    
+            }).filter((action) => action !== null); // Filter out null entries
+
             const newAction = {
                 title,
                 ticker,
                 price: parseFloat(price),
                 change: parseFloat(change),
             };
-    
+
             if (currentActions.length > 0) {
-                currentActions.pop(); // Supprimer la dernière action
+                currentActions.pop(); // Remove the last action
                 const updatedActions = [newAction, ...currentActions];
-    
+
                 renderActions(updatedActions);
             }
-    
-            // Réinitialiser la barre de recherche
+
+            // Reset search bar
             searchInput.value = "";
             hideSuggestions();
         }
     });
-    
 
     // Fetch and render actions
     const loadActions = async (searchTerm = "") => {
@@ -137,3 +161,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+

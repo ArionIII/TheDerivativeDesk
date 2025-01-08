@@ -28,9 +28,10 @@ def handle_basics_hedging_tool(tool_key):
     if not tool_config:
         logger.warning(f"Tool not found: {tool_key}")
         return "Tool not found", 404
-
+    logger.info(request)
     if request.method == "POST":
-        data = request.json
+        logger.info(request)
+        data = request.form
         try:
             # Parse inputs
             params = {
@@ -66,7 +67,7 @@ def handle_equity_hedging_tool(tool_key):
         return "Tool not found", 404
 
     if request.method == "POST":
-        data = request.json
+        data = request.form
         try:
             # Parse inputs
             params = {

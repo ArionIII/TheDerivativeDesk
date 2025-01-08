@@ -35,6 +35,7 @@ def handle_tool_request(tool_name):
         return "Tool not found", 404
     logger.info(f"Request headers: {request.headers}")
     if request.method == "POST":
+        logger.info(request)
         # Handle POST request
         data = request.form if request.content_type.startswith("multipart/form-data") else request.json
         try:

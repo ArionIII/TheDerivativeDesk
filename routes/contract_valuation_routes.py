@@ -24,7 +24,7 @@ def handle_value_forward_contracts(tool_key):
         return "Tool not found", 404
 
     if request.method == "POST":
-        data = request.json
+        data = request.form
         try:
             # Parse inputs from the request
             forward_price = float(data.get("forward_price", 0))
@@ -65,7 +65,7 @@ def handle_delivery_timing_decision(tool_key):
         return "Tool not found", 404
 
     if request.method == "POST":
-        data = request.json
+        data = request.form
         try:
             # Parse inputs
             cost_of_carry = float(data.get("cost_of_carry", 0))
