@@ -72,13 +72,11 @@ def get_stock_chart(ticker):
         plt.xlabel("Date")
         plt.ylabel("Price (USD)")
         plt.grid(alpha=0.3)
-        plt.legend()
+        # plt.legend()
         ax = plt.gca()
-        ax.xaxis.set_major_formatter(DateFormatter('%m'))
-        plt.xticks(rotation=45, fontsize=8)
-        plt.yticks(fontsize=8)
-        plt.xlabel("Month", fontsize=9)
-        plt.ylabel("Price", fontsize=9)
+        ax.xaxis.set_major_formatter(DateFormatter('%d'))
+        # plt.xticks(rotation=45, fontsize=8)
+        # plt.yticks(fontsize=8)
 
 
         # Save plot to buffer

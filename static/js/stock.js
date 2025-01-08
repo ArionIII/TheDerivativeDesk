@@ -25,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 (action) =>
                     `<li class="action-item">
                         <div class="action-info">
-                            <h4>${action.title} (${action.ticker})</h4>
+                            <h4>
+                                ${action.title} (${action.ticker})
+                                <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
+                            </h4>
                             <p>Price: $${action.price}</p>
                             <p>Change: ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%</p>
                         </div>
@@ -36,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
+    
     
 
     const loadActions = async (searchTerm = "") => {
@@ -49,3 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadActions(); // Initial load
 });
+
+const openSeeMore = (ticker) => {
+    // Fetch and display more information about the stock
+    alert(`Showing details for ${ticker}`);
+};
