@@ -21,12 +21,6 @@ indices = {
         "symbol_col": "Symbol",
         "name_col": "Company"
     },
-    "NIKKEI": {
-        "url": "https://en.wikipedia.org/wiki/Nikkei_225",
-        "table_idx": 2,
-        "symbol_col": "Ticker",
-        "name_col": "Company"
-    },
     "FTSE 100": {
         "url": "https://en.wikipedia.org/wiki/FTSE_100_Index",
         "table_idx": 4,
@@ -51,24 +45,6 @@ indices = {
         "symbol_col": "Symbol",
         "name_col": "Company"
     },
-    "Russell 2000": {
-        "url": "https://en.wikipedia.org/wiki/Russell_2000_Index",
-        "table_idx": 0,
-        "symbol_col": "Ticker",
-        "name_col": "Company"
-    },
-    "Shanghai Composite": {
-        "url": "https://en.wikipedia.org/wiki/Shanghai_Composite",
-        "table_idx": 0,
-        "symbol_col": "Ticker",
-        "name_col": "Company"
-    },
-    "Euro Stoxx 50": {
-        "url": "https://en.wikipedia.org/wiki/EURO_STOXX_50",
-        "table_idx": 1,
-        "symbol_col": "Ticker",
-        "name_col": "Company"
-    },
     "BSE Sensex": {
         "url": "https://en.wikipedia.org/wiki/BSE_SENSEX",
         "table_idx": 2,
@@ -79,12 +55,6 @@ indices = {
         "url": "https://en.wikipedia.org/wiki/S%26P/ASX_200",
         "table_idx": 2,
         "symbol_col": "Code",
-        "name_col": "Company"
-    },
-    "KOSPI": {
-        "url": "https://en.wikipedia.org/wiki/KOSPI",
-        "table_idx": 0,
-        "symbol_col": "Ticker",
         "name_col": "Company"
     },
     "IBEX 35": {
@@ -123,12 +93,7 @@ indices = {
         "symbol_col": "Ticker",
         "name_col": "Company"
     },
-    "BEL 20": {
-        "url": "https://en.wikipedia.org/wiki/BEL20",
-        "table_idx": 2,
-        "symbol_col": "Ticker",
-        "name_col": "Company"
-    },
+
     "OMX Stockholm 30": {
         "url": "https://en.wikipedia.org/wiki/OMX_Stockholm_30",
         "table_idx": 1,
