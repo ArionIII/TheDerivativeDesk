@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         actionsList.innerHTML = actions
             .map(
                 (action) =>
-                    `<li class="action-item">
+                    `<li class="action-item" data-action='${JSON.stringify(action)}'>
                         <div class="action-info">
                             <h4>
                                 ${action.title} (${action.ticker})
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
+    
 
     // Render search suggestions
     const renderSuggestions = (stocks) => {
@@ -83,30 +84,37 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestionsDiv.addEventListener("click", (e) => {
         if (e.target.classList.contains("suggestion-item")) {
             const { title, ticker, price, change } = e.target.dataset;
-
-            // Replace the rightmost action and shift others
-            const currentActions = Array.from(actionsList.children).map((child) =>
-                JSON.parse(child.dataset.action)
-            );
+    
+            // Remplacer la dernière action et décaler les autres
+            const currentActions = Array.from(actionsList.children).map((child) => {
+                try {
+                    return JSON.parse(child.dataset.action);
+                } catch (err) {
+                    console.error("Error parsing action data:", err);
+                    return null; // Si erreur, ignore l'action
+                }
+            }).filter((action) => action !== null); // Filtrer les entrées nulles
+    
             const newAction = {
                 title,
                 ticker,
                 price: parseFloat(price),
                 change: parseFloat(change),
             };
-
+    
             if (currentActions.length > 0) {
-                currentActions.pop(); // Remove the last action
+                currentActions.pop(); // Supprimer la dernière action
                 const updatedActions = [newAction, ...currentActions];
-
+    
                 renderActions(updatedActions);
             }
-
-            // Clear search and suggestions
+    
+            // Réinitialiser la barre de recherche
             searchInput.value = "";
             hideSuggestions();
         }
     });
+    
 
     // Fetch and render actions
     const loadActions = async (searchTerm = "") => {
