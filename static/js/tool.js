@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             results.innerHTML = formatResultData(resultData);
+            console.log("Results:", resultData);
 
             // Update visualization (if chart exists)
             if (chartElement) {
@@ -94,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper function to format result data
     function formatResultData(data) {
+        console.log("DATA RESULT", data)
         if (typeof data === "object" && data !== null) {
             return (
                 `<ul>` +

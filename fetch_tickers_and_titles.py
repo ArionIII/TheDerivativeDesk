@@ -2,6 +2,12 @@ import requests
 import pandas as pd
 from config import logger
 
+import os
+import datetime
+
+# Global variable to store the last fetch day
+last_fetch_date = None
+
 indices = {
     "S&P 500": {
         "url": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
@@ -108,31 +114,62 @@ indices = {
     },
 }
 
-# Fetch tickers and titles for a specific index
+
 def fetch_index_tickers(index_name):
     """
-    Fetch the tickers and titles for a given index.
+    Fetch the tickers and titles for a given index. Fetches from the web
+    only if the day of the month is a multiple of 3 and it hasn't run today.
+    Otherwise, it reads the data from a CSV file.
     """
-    index_data = indices.get(index_name)
-    if not index_data:
-        raise ValueError(f"Unsupported index: {index_name}")
+    global last_fetch_date
 
-    try:
-        response = requests.get(index_data["url"])
-        logger.info(f"Fetching data for {index_name} from {index_data['url']}")
-        if response.status_code == 200:
-            tables = pd.read_html(response.text)
-            index_table = tables[index_data["table_idx"]]
-            tickers = index_table[[index_data["symbol_col"], index_data["name_col"]]].dropna()
-            return {
-                row[index_data["symbol_col"]]: row[index_data["name_col"]]
-                for _, row in tickers.iterrows()
-            }
-        else:
-            raise Exception(f"Failed to fetch data for {index_name}: {response.status_code}")
-    except Exception as e:
-        logger.error(f"Error fetching tickers for {index_name}: {e}")
-        return {}
+    # Get today's date
+    today = datetime.date.today()
+
+    # Check if the day is a multiple of 3 and if the function hasn't run today
+    if today.day % 3 == 0 and (last_fetch_date is None or last_fetch_date != today):
+        # Fetch data from the web
+        index_data = indices.get(index_name)
+        if not index_data:
+            raise ValueError(f"Unsupported index: {index_name}")
+
+        try:
+            response = requests.get(index_data["url"])
+            logger.info(f"Fetching data for {index_name} from {index_data['url']}")
+            if response.status_code == 200:
+                tables = pd.read_html(response.text)
+                index_table = tables[index_data["table_idx"]]
+                tickers = index_table[[index_data["symbol_col"], index_data["name_col"]]].dropna()
+
+                # Update the last fetch date
+                last_fetch_date = today
+
+                # Convert the fetched data to a dictionary
+                return {
+                    row[index_data["symbol_col"]]: row[index_data["name_col"]]
+                    for _, row in tickers.iterrows()
+                }
+            else:
+                raise Exception(f"Failed to fetch data for {index_name}: {response.status_code}")
+        except Exception as e:
+            logger.error(f"Error fetching tickers for {index_name}: {e}")
+            return {}
+
+    else:
+        # Load data from the CSV file
+        try:
+            csv_path = "static/data/combined_tickers.csv"
+            logger.info(f"Loading data from CSV: {csv_path}")
+            tickers_df = pd.read_csv(csv_path)
+
+            # Directly convert the DataFrame to a dictionary
+            tickers_dict = tickers_df.set_index("Ticker")["Title"].to_dict()
+            logger.info("Tickers loaded from CSV successfully.")
+            return tickers_dict
+        except Exception as e:
+            logger.error(f"Error loading tickers from CSV: {e}")
+            return {}
+
 
 # Combine tickers from all indices into a single dictionary
 def combine_tickers_and_titles():

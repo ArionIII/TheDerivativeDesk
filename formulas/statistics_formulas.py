@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import norm, t
 from scipy.stats import binom, poisson
+from config import logger
 import math
 
 def calculate_mean(dataset):
@@ -273,3 +274,86 @@ def calculate_t_distribution(value, degrees_freedom):
         return ({"Probability": probability})
     except Exception as e:
         return ({"error": str(e)}), 400
+
+def calculate_moving_averages(time_series, window_size):
+    logger.info(f"Calculating moving averages for time series: {time_series}")
+    try:
+        time_series = list(map(float, time_series))  # Convert to float
+        window_size = int(window_size)  # Convert window_size to integer
+        logger.info(f"Window Size: {window_size}")
+        smoothed = [[
+            sum(time_series[i:i + window_size]) / window_size 
+            for i in range(len(time_series) - window_size + 1)
+        ]]
+        logger.info(f"Smoothed Time Series: {smoothed}")
+        return {"Smoothed Time Series": smoothed}
+    except Exception as e:
+        logger.error(f"Error in calculate_moving_averages: {e}")
+        return {"error": str(e)}, 400
+
+def calculate_exponential_smoothing(time_series, smoothing_factor):
+    try:
+        time_series = list(map(float, time_series))  # Convert to float
+        smoothed = []
+        for i, value in enumerate(time_series):
+            if i == 0:
+                smoothed.append(value)  # Initialize with the first value
+            else:
+                smoothed.append(smoothing_factor * value + (1 - smoothing_factor) * smoothed[i-1])
+        return {"Smoothed Time Series": smoothed}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def calculate_autocorrelation(time_series, lag_order=1):
+    try:
+        time_series = list(map(float, time_series))  # Convert to float
+        n = len(time_series)
+        mean = sum(time_series) / n
+        lagged_series = time_series[lag_order:]
+        original_series = time_series[:-lag_order]
+        numerator = sum(
+            (original_series[i] - mean) * (lagged_series[i] - mean) 
+            for i in range(len(lagged_series))
+        )
+        denominator = sum((x - mean) ** 2 for x in time_series)
+        autocorrelation = numerator / denominator
+        return {"Autocorrelation": autocorrelation}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def calculate_transition_matrices(state_sequence, num_states):
+    try:
+        state_sequence = list(map(int, state_sequence))  # Convert to int
+        num_states = int(num_states)
+        matrix = [[0] * num_states for _ in range(num_states)]
+        for i in range(len(state_sequence) - 1):
+            current_state = state_sequence[i]
+            next_state = state_sequence[i+1]
+            matrix[current_state-1][next_state-1] += 1
+
+        for row in matrix:
+            row_sum = sum(row)
+            if row_sum > 0:
+                for i in range(len(row)):
+                    row[i] /= row_sum
+        return {"Transition Matrix": matrix}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def simulate_random_walk(num_steps, num_simulations, step_size=1):
+    try:
+        num_steps = int(num_steps)
+        num_simulations = int(num_simulations)
+        step_size = float(step_size)
+        simulations = []
+        for _ in range(num_simulations):
+            position = 0
+            walk = [position]
+            for _ in range(num_steps):
+                step = random.choice([-step_size, step_size])
+                position += step
+                walk.append(position)
+            simulations.append(walk)
+        return {"Simulation Paths": simulations}
+    except Exception as e:
+        return {"error": str(e)}, 400

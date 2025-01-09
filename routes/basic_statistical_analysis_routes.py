@@ -2,7 +2,7 @@ import csv
 from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger, parse_csv
+from config import logger, parse_csv, parse_inputs
 from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
 
 # Blueprints for the three sub-categories
@@ -81,48 +81,6 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
-
-
-def parse_inputs(data_source, inputs_config):
-    """
-    Parse and validate the inputs based on the provided configuration.
-
-    Args:
-        data_source: Request data (form or JSON).
-        inputs_config: List of input configurations.
-
-    Returns:
-        A dictionary of parsed parameters.
-    """
-    params = {}
-    for input_field in inputs_config:
-        input_id = input_field["id"]
-        input_type = input_field["type"]
-        optional = input_field.get("optional", False)
-
-        if input_id in data_source:
-            raw_value = data_source[input_id]
-            logger.info(f"Parsing input {input_id}: {raw_value}")
-            if raw_value:
-                if input_type == "file":
-                    logger.info("Processing file input")
-                    # Handle CSV file upload
-                    file_data = request.files[input_id] if request.files else None
-                    if file_data:
-                        params[input_id] = parse_csv(file_data)
-                elif input_type == "array":
-                    logger.info("Processing array input")
-                    params[input_id] = parse_array(raw_value)
-                elif input_type == "number":
-                    logger.info("Processing number input")
-                    params[input_id] = float(raw_value)
-                else:
-                    params[input_id] = raw_value
-            elif not optional:
-                raise ValueError(f"Missing required input: {input_id}")
-
-    return params
-
 
 def parse_array(raw_value):
     """
