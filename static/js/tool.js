@@ -95,18 +95,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper function to format result data
     function formatResultData(data) {
-        console.log("DATA RESULT", data)
+        console.log("DATA RESULT", data);
         if (typeof data === "object" && data !== null) {
             return (
                 `<ul>` +
-                Object.values(data)
-                    .map((value) => {
-                        if (Array.isArray(value) && value.length > 1) {
-                            return `<li>${value[0]}: <strong>${value[1]}</strong></li>`;
+                Object.entries(data) // Utiliser Object.entries pour accéder aux clés et aux valeurs
+                    .map(([key, value]) => {
+                        if (Array.isArray(value)) {
+                            // Si la valeur est un tableau, afficher la clé et chaque élément du tableau
+                            return `
+                                <li>${key}:
+                                    <ul>
+                                        ${value.map((item) => `<li>${item}</li>`).join("")}
+                                    </ul>
+                                </li>`;
                         } else if (typeof value === "object" && value !== null) {
-                            return `<li>${formatResultData(value)}</li>`;
+                            // Si la valeur est un objet, appeler récursivement la fonction
+                            return `<li>${key}: ${formatResultData(value)}</li>`;
                         } else {
-                            return `<li>${value !== null ? value : "N/A"}</li>`;
+                            // Afficher les clés avec des valeurs simples
+                            return `<li>${key}: <strong>${value !== null ? value : "N/A"}</strong></li>`;
                         }
                     })
                     .join("") +
@@ -115,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return `<p>${data}</p>`;
     }
+    
 
     // Manage mutual exclusivity for CSV inputs with data_target
     const csvInputs = document.querySelectorAll('input[type="file"][data_target]');

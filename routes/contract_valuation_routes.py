@@ -48,7 +48,7 @@ def handle_value_forward_contracts(tool_key):
             )
 
             logger.info(f"Calculation successful for tool: {tool_key}, result: {result}")
-            return jsonify({"result": result})
+            return jsonify(result)
 
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
@@ -84,7 +84,7 @@ def handle_delivery_timing_decision(tool_key):
             result = calculation_function(cost_of_carry, convenience_yield)
 
             logger.info(f"Calculation successful for tool: {tool_key}, result: {result}")
-            return jsonify({"result": result})
+            return jsonify(result)
 
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")

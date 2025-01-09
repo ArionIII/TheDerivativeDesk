@@ -48,7 +48,7 @@ def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
             # Execute the function and return results
             result = calculation_function(**params)
             logger.warning(f"Result: {result}")
-            return jsonify({"result": result})
+            return jsonify(result)
 
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")

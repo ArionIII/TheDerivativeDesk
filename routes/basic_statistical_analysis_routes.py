@@ -73,7 +73,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
             # Execute the function and return results
             result = calculation_function(**params)
-            return jsonify({"result": result})
+            return jsonify(result)
 
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
@@ -81,32 +81,6 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
-
-def parse_array(raw_value):
-    """
-    Parse an array input, supporting nested arrays or flat arrays.
-
-    Args:
-        raw_value: Raw input value (string or list).
-
-    Returns:
-        Parsed array.
-    """
-    if isinstance(raw_value, list):
-        return raw_value
-    if "[" in raw_value and "]" in raw_value:
-        # Parse nested lists
-        try:
-            return [
-                [float(x.strip()) for x in inner_list.strip("[]").split(",") if x.strip()]
-                for inner_list in raw_value.strip("[]").split("],[")
-            ]
-        except ValueError as e:
-            logger.error(f"Error parsing nested array: {raw_value}, Error: {e}")
-            raise ValueError(f"Invalid format for nested array input: {raw_value}")
-    else:
-        # Parse flat lists
-        return [float(x.strip()) for x in raw_value.strip("[]").split(",") if x.strip()]
 
 
 # Routes for Descriptive Statistics

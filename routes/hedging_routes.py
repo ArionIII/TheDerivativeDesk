@@ -48,7 +48,7 @@ def handle_basics_hedging_tool(tool_key):
 
             # Execute the function and return results
             result = calculation_function(**params)
-            return jsonify({"result": result})
+            return jsonify(result)
         
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
@@ -84,7 +84,7 @@ def handle_equity_hedging_tool(tool_key):
 
             # Execute the function and return results
             result = calculation_function(**params)
-            return jsonify({"result": result})
+            return jsonify(result)
         
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")

@@ -53,7 +53,7 @@ def handle_tool_request(tool_name):
             result = calculation_function(**params)
             logger.info(f"Calculation successful for tool: {tool_name}, result: {result}")
 
-            return jsonify({"result": result})
+            return jsonify(result)
 
         except Exception as e:
             logger.error(f"Error in tool {tool_name}: {e}")
