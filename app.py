@@ -18,8 +18,9 @@ from routes.basic_statistical_analysis_routes import descriptive_statistics_rout
 from routes.time_series_and_modeling_routes import time_series_and_modeling_routes
 from routes.simulation_and_bayesian_analysis_routes import simulation_and_bayesian_analysis_routes
 from routes.linear_algebra_and_advanced_calculation_routes import linear_algebra_and_advanced_calculations_routes
-
+from routes.interest_rates_fundamentals_routes import interest_rate_fundamentals_routes
 from routes.stock_routes import stocks_routes, stock_chart_routes
+from configurations.sub_config.interest_rates.interest_rate_sub_categories_config import tool_category_interest_rates_routes
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -52,6 +53,8 @@ app.register_blueprint(stock_chart_routes)
 app.register_blueprint(time_series_and_modeling_routes)
 app.register_blueprint(simulation_and_bayesian_analysis_routes)
 app.register_blueprint(linear_algebra_and_advanced_calculations_routes)
+app.register_blueprint(interest_rate_fundamentals_routes)
+app.register_blueprint(tool_category_interest_rates_routes)
 
 # Route pour la page d'accueil
 @app.route("/")
@@ -104,6 +107,10 @@ def futures_forwards():
 def statistics():
     return render_template("statistics.html")
 
+# Route pour la page interest rates
+@app.route("/tools/interest-rates")
+def interest_rates():
+    return render_template("interest_rates.html")
 
 
 @app.context_processor
