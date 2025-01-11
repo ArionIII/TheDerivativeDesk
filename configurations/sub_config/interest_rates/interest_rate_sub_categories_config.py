@@ -9,11 +9,10 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "description": "Perform fundamental interest rate calculations, including rate conversions, bond pricing, and basic sensitivity analysis.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Continuous Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/interest-rates/continuous-compounding-rate"},
-            {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/interest-rates/bond-pricing"},
-            {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/interest-rates/determining-zero-rates"},
-            {"title": "Duration", "description": "Compute Macaulay and Modified Duration for bonds.", "url": "/tools/interest-rates/duration"},
-            {"title": "Convexity", "description": "Analyze convexity as a measure of interest rate risk.", "url": "/tools/interest-rates/convexity"},
+            {"title": "Continuous Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rate-analysis/continuous-compounding-rate"},
+            {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/basic-interest-rate-analysis/bond-pricing"},
+            {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rate-analysis/determining-zero-rates"},
+            {"title": "Duration and Convexity", "description": "Compute Macaulay, Modified Duration for bonds & Convexity.", "url": "/tools/basic-interest-rate-analysis/duration-and-convexity"},
         ],
     },
     # Term Structure Construction
@@ -22,9 +21,9 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "description": "Construct term structures of interest rates using various market instruments.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Zero Rate Curve", "description": "Determine zero rates from market data.", "url": "/tools/interest-rates/zero-rate-curve"},
-            {"title": "Extend LIBOR Curve with Swap Rates", "description": "Extend the LIBOR curve using swap rates.", "url": "/tools/interest-rates/extending-libor-curve-with-swap-rates"},
-            {"title": "Extend LIBOR Curve with FRA", "description": "Extend the LIBOR curve using forward rate agreements (FRA).", "url": "/tools/interest-rates/extending-libor-curve-with-fra"},
+            {"title": "Zero Rate Curve", "description": "Determine zero rates from market data.", "url": "/tools/term-structure-construction/zero-rate-curve"},
+            {"title": "Extend LIBOR Curve with Swap Rates", "description": "Extend the LIBOR curve using swap rates.", "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates"},
+            {"title": "Extend LIBOR Curve with FRA", "description": "Extend the LIBOR curve using forward rate agreements (FRA).", "url": "/tools/term-structure-construction/extending-libor-curve-with-fra"},
         ],
     },
     # Forward Rate Agreements (FRA)

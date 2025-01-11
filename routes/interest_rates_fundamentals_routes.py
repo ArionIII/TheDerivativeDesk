@@ -14,7 +14,7 @@ TOOL_FUNCTIONS = {
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,
     "extending-libor-curve-with-fra": extending_libor_curve_with_fra,
     "payoff-of-fra": payoff_of_fra,
-    "duration-and-convexity": duration_and_convexity,
+    "duration": duration_and_convexity,
 }
 
 # Generic Request Handler
@@ -42,10 +42,10 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
     return render_template("base_tool.html", tool=tool_config)
 
 # Routes
-@interest_rate_fundamentals_routes.route("/tools/basic_interest_rate_analysis/<tool_key>", methods=["GET", "POST"])
+@interest_rate_fundamentals_routes.route("/tools/basic-interest-rate-analysis/<tool_key>", methods=["GET", "POST"])
 def handle_basic_interest_rate_analysis_tool(tool_key):
-    return handle_interest_rate_tool_request(tool_key, "basic_interest_rate_analysis")
+    return handle_interest_rate_tool_request(tool_key, "basic-interest-rate-analysis")
 
-@interest_rate_fundamentals_routes.route("/tools/term_structure_construction/<tool_key>", methods=["GET", "POST"])
+@interest_rate_fundamentals_routes.route("/tools/term-structure-construction/<tool_key>", methods=["GET", "POST"])
 def handle_term_structure_construction_tool(tool_key):
-    return handle_interest_rate_tool_request(tool_key, "term_structure_construction")
+    return handle_interest_rate_tool_request(tool_key, "term-structure-construction")
