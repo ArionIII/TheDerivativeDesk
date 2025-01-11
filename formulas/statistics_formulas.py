@@ -7,6 +7,7 @@ from scipy.stats import norm, t
 from scipy.stats import binom, poisson
 from config import logger
 import math
+import random
 
 def calculate_mean(dataset):
     """
@@ -281,10 +282,10 @@ def calculate_moving_averages(time_series, window_size):
         time_series = list(map(float, time_series))  # Convert to float
         window_size = int(window_size)  # Convert window_size to integer
         logger.info(f"Window Size: {window_size}")
-        smoothed = [[
+        smoothed = [
             sum(time_series[i:i + window_size]) / window_size 
             for i in range(len(time_series) - window_size + 1)
-        ]]
+        ]
         logger.info(f"Smoothed Time Series: {smoothed}")
         return {"Smoothed Time Series": smoothed}
     except Exception as e:
@@ -355,5 +356,81 @@ def simulate_random_walk(num_steps, num_simulations, step_size=1):
                 walk.append(position)
             simulations.append(walk)
         return {"Simulation Paths": simulations}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+# Monte Carlo Simulations
+def perform_monte_carlo_simulations(num_simulations, random_seed=None):
+    try:
+        # Ensure num_simulations is an integer
+        num_simulations = int(num_simulations)
+        
+        if random_seed is not None:
+            random.seed(random_seed)
+        
+        # Generate random outcomes
+        outcomes = [random.random() for _ in range(num_simulations)]
+        return {"Simulation Results": outcomes}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+# Bayesian Updating
+def perform_bayesian_updating(prior, likelihood, evidence):
+    try:
+        updated_probability = (likelihood * prior) / evidence
+        return {"Updated Probability": updated_probability}
+    except Exception as e:
+        return {"error": str(e)}, 400
+    
+def calculate_matrix_multiplication(matrix_a, matrix_b):
+    try:
+        a = np.array(matrix_a)
+        b = np.array(matrix_b)
+        result = np.matmul(a, b)
+        return {"Matrix Product": result.tolist()}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def calculate_inverse_matrix(matrix):
+    try:
+        mat = np.array(matrix)
+        inverse = np.linalg.inv(mat)
+        return {"Inverse Matrix": inverse.tolist()}
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def perform_svd(matrix):
+    try:
+        mat = np.array(matrix)
+        u, sigma, v_transposed = np.linalg.svd(mat)
+        return {
+            "U Matrix": u.tolist(),
+            "Sigma (Singular Values)": sigma.tolist(),
+            "V Transposed": v_transposed.tolist(),
+        }
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def perform_pca(data_matrix):
+    try:
+        data = np.array(data_matrix)
+        mean_centered = data - np.mean(data, axis=0)
+        u, s, v = np.linalg.svd(mean_centered, full_matrices=False)
+        explained_variance = (s**2) / (len(data) - 1)
+        return {
+            "Principal Components": v.tolist(),
+            "Explained Variance": explained_variance.tolist(),
+        }
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+def calculate_eigenvalues_eigenvectors(matrix):
+    try:
+        mat = np.array(matrix)
+        eigenvalues, eigenvectors = np.linalg.eig(mat)
+        return {
+            "Eigenvalues": eigenvalues.tolist(),
+            "Eigenvectors": eigenvectors.tolist(),
+        }
     except Exception as e:
         return {"error": str(e)}, 400

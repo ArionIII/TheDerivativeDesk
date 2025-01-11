@@ -99,7 +99,7 @@ STATISTICS_TOOL_CATEGORIES = {
         "tools": [
             {"title": "Matrix Multiplication", "description": "Compute the product of matrices.", "url": "/tools/linear-algebra-tools/matrix-multiplication"},
             {"title": "Inverse Matrices", "description": "Calculate the inverse of a matrix.", "url": "/tools/linear-algebra-tools/inverse-matrices"},
-            {"title": "Singular Value Decomposition (SVD)", "description": "Perform SVD for dimensionality reduction and feature extraction.", "url": "/tools/linear-algebra-tools/svd"},
+            {"title": "Singular Value Decomposition (SVD)", "description": "Perform SVD for dimensionality reduction and feature extraction.", "url": "/tools/linear-algebra-tools/singular-value-decomposition"},
         ],
     },
     # Advanced Calculations
@@ -108,8 +108,8 @@ STATISTICS_TOOL_CATEGORIES = {
         "description": "Apply advanced mathematical tools like PCA, eigenvalues, and eigenvectors.",
         "parent_category": "statistics",
         "tools": [
-            {"title": "Principal Component Analysis (PCA)", "description": "Conduct PCA for feature extraction and data compression.", "url": "/tools/advanced-calculations/pca"},
-            {"title": "Eigenvalues and Eigenvectors", "description": "Compute eigenvalues and eigenvectors for matrix transformations.", "url": "/tools/advanced-calculations/eigenvalues"},
+            {"title": "Principal Component Analysis (PCA)", "description": "Conduct PCA for feature extraction and data compression.", "url": "/tools/advanced-calculations/principal-component-analysis"},
+            {"title": "Eigenvalues and Eigenvectors", "description": "Compute eigenvalues and eigenvectors for matrix transformations.", "url": "/tools/advanced-calculations/eigenvalues-eigenvectors"},
         ],
     },
 }

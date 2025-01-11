@@ -16,6 +16,9 @@ from flask import session
 from config import Config
 from routes.basic_statistical_analysis_routes import descriptive_statistics_routes, inferential_statistics_routes, probability_tools_routes
 from routes.time_series_and_modeling_routes import time_series_and_modeling_routes
+from routes.simulation_and_bayesian_analysis_routes import simulation_and_bayesian_analysis_routes
+from routes.linear_algebra_and_advanced_calculation_routes import linear_algebra_and_advanced_calculations_routes
+
 from routes.stock_routes import stocks_routes, stock_chart_routes
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -47,6 +50,8 @@ app.register_blueprint(probability_tools_routes)
 app.register_blueprint(stocks_routes)
 app.register_blueprint(stock_chart_routes)
 app.register_blueprint(time_series_and_modeling_routes)
+app.register_blueprint(simulation_and_bayesian_analysis_routes)
+app.register_blueprint(linear_algebra_and_advanced_calculations_routes)
 
 # Route pour la page d'accueil
 @app.route("/")
