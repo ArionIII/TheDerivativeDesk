@@ -118,6 +118,7 @@ def parse_inputs(data_source, inputs_config):
                 elif input_type == "array":
                     logger.info("Processing array input")
                     params[input_id] = parse_array(raw_value)
+                    logger.info('processed array input')
                 elif input_type == "number":
                     logger.info("Processing number input")
                     params[input_id] = float(raw_value)

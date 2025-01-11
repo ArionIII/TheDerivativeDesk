@@ -8,13 +8,14 @@ interest_rate_fundamentals_routes = Blueprint("interest_rate_fundamentals_routes
 # Tool Functions
 TOOL_FUNCTIONS = {
     "continuous-compounding-rate": continuous_compounding_rate,
+    "m-to-continuous-compounding-rate": m_compounding_rate,
     "zero-rate-curve": zero_rate_curve,
     "bond-pricing": bond_pricing,
     "determining-zero-rates": determining_zero_rates,
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,
     "extending-libor-curve-with-fra": extending_libor_curve_with_fra,
     "payoff-of-fra": payoff_of_fra,
-    "duration": duration_and_convexity,
+    "duration-and-convexity": duration_and_convexity,
 }
 
 # Generic Request Handler
@@ -30,10 +31,13 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
         try:
             data_source = request.form if request.content_type.startswith("multipart/form-data") else request.json
             params = parse_inputs(data_source, tool_config["inputs"])
+            if tool_key not in TOOL_FUNCTIONS:
+                logger.error(f'{tool_key} not in tool functions list : {TOOL_FUNCTIONS}')
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
                 return "Calculation logic not implemented", 500
             result = calculation_function(**params)
+            logger.info("result :", result)
             return jsonify(result)
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
