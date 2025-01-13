@@ -33,20 +33,30 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "description": "Analyze and value forward rate agreements.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Payoff of FRA", "description": "Calculate the payoff of a forward rate agreement.", "url": "/tools/interest-rates/payoff-of-fra"},
-            {"title": "Valuation of FRA", "description": "Evaluate the value of forward rate agreements.", "url": "/tools/interest-rates/valuation-of-fra"},
+            {"title": "Payoff of FRA", "description": "Calculate the payoff of a forward rate agreement.", "url": "/tools/forward-rate-agreements/payoff-of-fra"},
+            {"title": "Valuation of FRA", "description": "Evaluate the value of forward rate agreements.", "url": "/tools/forward-rate-agreements/valuation-of-fra"},
+            {"title": "Forward Rate Calculation", "description": "Calculate forward rates from spot rates or zero rates.", "url": "/tools/forward-rate-agreements/forward-rate-calculation"},
+            {"title": "FRA Break-Even Rate", "description": "Determine the break-even interest rate for an FRA.", "url": "/tools/forward-rate-agreements/fra-break-even-rate"},
+            {"title": "Hedging with FRA", "description": "Analyze hedging strategies using forward rate agreements to manage interest rate risks.", "url": "/tools/forward-rate-agreements/hedging-with-fra"},
         ],
     },
-    # Repo Market Analysis
-    "repo-market": {
-        "title": "Repo Market Analysis",
-        "description": "Study repurchase agreements and their implications in the fixed income market.",
+    # Interest Rate Derivatives
+    "swaps-and-interest-rate-derivatives": {
+        "title": "Interest Rate Derivatives",
+        "description": "Explore interest rate derivatives including swaps, futures, and swaptions.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Repo Market Analysis", "description": "Analyze the terms and conditions of repurchase agreements.", "url": "/tools/interest-rates/repo-market"},
+            {"title": "Interest Rate Swap Cash Flows", "description": "Calculate the cash flows of fixed-for-floating interest rate swaps.", "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-cash-flows"},
+            {"title": "Interest Rate Swap Valuation", "description": "Compute the present value of interest rate swaps using market curves.", "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-valuation"},
+            {"title": "Pricing Interest Rate Futures", "description": "Price interest rate futures such as Eurodollar futures based on market interest rates.", "url": "/tools/swaps-and-interest-rate-derivatives/pricing-interest-rate-futures"},
+            {"title": "Swap Spread Analysis", "description": "Analyze the spread between swap rates and government yields.", "url": "/tools/swaps-and-interest-rate-derivatives/swap-spread-analysis"},
+            {"title": "Swaption Valuation", "description": "Value options on interest rate swaps using Black’s model.", "url": "/tools/swaps-and-interest-rate-derivatives/swaption-valuation"},
+            {"title": "Basis Swap Analysis", "description": "Evaluate basis swaps where both legs are floating rates with different benchmarks.", "url": "/tools/swaps-and-interest-rate-derivatives/basis-swap-analysis"},
+            {"title": "Interest Rate Swap Delta Hedging", "description": "Analyze hedging strategies for interest rate swaps.", "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-delta-hedging"},
         ],
     },
 }
+
 
 @tool_category_interest_rates_routes.route("/tools/interest-rates/<category_key>")
 def render_interest_rates_tool_category(category_key):

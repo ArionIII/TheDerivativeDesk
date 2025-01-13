@@ -63,8 +63,6 @@ def zero_rate_curve(input_rates, rate_type, maturities, space_between_payments=N
     except Exception as e:
         return {"error": str(e)}, 400
 
-
-
 def bond_pricing(face_value, coupon_rate, maturity, market_rate):
     try:
         price = sum(
@@ -96,8 +94,6 @@ def determining_zero_rates(bond_prices, maturities, face_values):
         return {"Zero Rates": zero_rates}
     except Exception as e:
         return {"error": str(e)}, 400
-
-
 
 def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, maturities):
     try:
@@ -194,3 +190,59 @@ def duration_and_convexity(cash_flows, discount_rates, time_periods):
         return {"Duration": duration, "Convexity": convexity}
     except Exception as e:
         return {"error": str(e)}, 400
+
+
+def calculate_payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
+    payoff = notional_value * (settlement_rate - contract_rate) * time
+    return payoff
+
+def calculate_valuation_of_fra(forward_rate, contract_rate, notional_value, discount_factor):
+    valuation = notional_value * (forward_rate - contract_rate) * discount_factor
+    return valuation
+
+def calculate_forward_rate_calculation(spot_rates, times):
+    if len(spot_rates) != 2 or len(times) != 2:
+        raise ValueError("Exactly two spot rates and times are required.")
+    rate1, rate2 = spot_rates
+    time1, time2 = times
+    forward_rate = ((1 + rate2) ** time2 / (1 + rate1) ** time1) ** (1 / (time2 - time1)) - 1
+    return forward_rate
+
+def calculate_fra_break_even_rate(notional_value, forward_rate, time_to_settlement):
+    break_even_rate = forward_rate / time_to_settlement
+    return break_even_rate
+
+def calculate_interest_rate_swap_cash_flows(notional_value, fixed_rate, floating_rate, time_periods):
+    fixed_cash_flows = [notional_value * fixed_rate * t for t in time_periods]
+    floating_cash_flows = [notional_value * floating_rate * t for t in time_periods]
+    return fixed_cash_flows, floating_cash_flows
+
+def calculate_interest_rate_swap_valuation(fixed_rate, floating_rate, notional_value, discount_factors):
+    fixed_leg = sum([notional_value * fixed_rate * d for d in discount_factors])
+    floating_leg = sum([notional_value * floating_rate * d for d in discount_factors])
+    valuation = floating_leg - fixed_leg
+    return valuation
+
+def calculate_pricing_interest_rate_futures(settlement_price, tick_size, contract_value):
+    price = (100 - settlement_price) * contract_value / tick_size
+    return price
+
+def calculate_swap_spread_analysis(swap_rate, treasury_yield):
+    spread = swap_rate - treasury_yield
+    return spread
+
+def calculate_swaption_valuation(notional_value, volatility, time_to_maturity, strike_price, forward_rate):
+    from math import exp, sqrt, log
+    from scipy.stats import norm
+    d1 = (log(forward_rate / strike_price) + (volatility ** 2 / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+    d2 = d1 - volatility * sqrt(time_to_maturity)
+    swaption_value = notional_value * (forward_rate * norm.cdf(d1) - strike_price * norm.cdf(d2))
+    return swaption_value
+
+def calculate_basis_swap_analysis(notional_value, benchmark_rate1, benchmark_rate2):
+    spread = (benchmark_rate1 - benchmark_rate2) * notional_value
+    return spread
+
+def calculate_interest_rate_swap_delta_hedging(notional_value, duration, delta):
+    delta_hedging_position = notional_value * duration * delta
+    return delta_hedging_position
