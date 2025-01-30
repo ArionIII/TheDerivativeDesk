@@ -117,7 +117,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 15px 0; /* Ajoute un padding autour */
-    background-color: #270000; /* Couleur de fond modifiable */
+    background-color: var(--primary-color); /* Couleur de fond modifiable */
 }
 
 /* 🔹 Conteneur des suggestions */
