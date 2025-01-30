@@ -49,11 +49,11 @@ def get_random_stocks():
             info = stock.info
             current_price = info.get("currentPrice")
             history = stock.history(period="1mo", interval="1d")
-            a=0
-            if a==0:
-                logger.error(f"info : {info}")
-                logger.error(f"hitory : {history}")
-                a+=1
+            # a=0
+            # if a==0:
+            #     logger.error(f"info : {info}")
+            #     logger.error(f"hitory : {history}")
+            #     a+=1
             if history.empty:
                 continue
 

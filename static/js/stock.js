@@ -85,7 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         data-title="${stock.title}" 
                         data-ticker="${stock.ticker}" 
                         data-price="${stock.price}" 
-                        data-change="${stock.change}">
+                        data-change="${stock.change}"
+                        data-change_monthly="${stock.change_monthly}">
                         ${stock.title} (${stock.ticker})
                     </p>`
             )
@@ -96,9 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Hide suggestions
     const hideSuggestions = () => {
+        console.log("Hiding suggestions..."); // Debugging log
         suggestionsDiv.innerHTML = "";
         suggestionsDiv.classList.add("hidden");
     };
+
+    // Handle clicks outside of search input or suggestions
+    document.addEventListener("click", (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+            hideSuggestions();
+    }
+});
 
     // Search input event
     searchInput.addEventListener("input", async (e) => {
@@ -106,15 +115,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (searchTerm) {
             const suggestions = await fetchActions(searchTerm, 10); // Fetch more for suggestions
             renderSuggestions(suggestions);
+            setTimeout(() => {
+                document.addEventListener("click", outsideClickHandler);
+            }, 200);
         } else {
             hideSuggestions();
         }
     });
 
+    const outsideClickHandler = (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+            hideSuggestions();
+            document.removeEventListener("click", outsideClickHandler); // Nettoyer l'écouteur après fermeture
+        }
+    };
+
     // Handle suggestion click
     suggestionsDiv.addEventListener("click", (e) => {
         if (e.target.classList.contains("suggestion-item")) {
-            const { title, ticker, price, change } = e.target.dataset;
+            const { title, ticker, price, change, change_monthly } = e.target.dataset;
 
             // Replace the last action and shift others
             const currentActions = Array.from(actionsList.children)
@@ -133,7 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 ticker,
                 price: parseFloat(price),
                 change: parseFloat(change),
+                change_monthly: parseFloat(change_monthly)
             };
+            console.log("New action:", newAction); // Debugging log
 
             if (currentActions.length > 0) {
                 currentActions.pop(); // Remove the last action
@@ -143,7 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Reset search bar
             searchInput.value = "";
+
             hideSuggestions();
+            
         }
     });
 
@@ -213,6 +236,7 @@ window.openSeeMore = async (ticker) => {
         // 🔹 Show the modal
         const modal = document.getElementById("see-more-modal");
         modal.classList.add("show");
+        modal.style.display = "block"
         console.log("Modal displayed"); // Debugging log
     } else {
         console.error("Failed to fetch stock details. Data is null.");
@@ -309,6 +333,7 @@ const formatPercentage = (num) => {
         console.log("Closing modal..."); // Debugging log
         modal.classList.add("hidden");
         modal.style.display = "none";
+
     });
 
     // Close modal when clicking outside the content
@@ -317,6 +342,7 @@ const formatPercentage = (num) => {
             console.log("Clicked outside modal content, closing modal."); // Debugging log
             modal.classList.add("hidden");
             modal.style.display = "none";
+
         }
     });
 });
