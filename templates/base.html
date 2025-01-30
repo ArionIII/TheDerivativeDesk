@@ -14,8 +14,9 @@
 </head>
 <body class="light-mode">
     {% include 'navbar.html' %} <!-- Inclure la barre de navigation -->
-     <!-- User Actions -->
-     <div class="user-actions">
+
+    <!-- User Actions -->
+    <div class="user-actions">
         {% if not user_authenticated %}
             <a href="/login" class="btn-action">Login</a>
             <a href="/register" class="btn-action">Register</a>
@@ -27,11 +28,32 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- 🔹 Search Bar for Tools (juste en dessous, sans empilement) -->
+    <div class="search-bar-for-tools-container">
+        <div class="search-bar-for-tools">
+            <input 
+                type="text" 
+                name="q" 
+                id="search-input-tools"
+                placeholder="Search tools..." 
+                aria-label="Search tools"
+            >
+        </div>
+        <div class="suggestions-container-tools" id="suggestions-container-tools"></div>
+    </div>
+
     <main class="site-main">
         {% block content %}{% endblock %}
     </main>
+
     {% include 'footer.html' %} <!-- Inclure le footer -->
+
     <script src="/static/js/main.js"></script>
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
     {% block scripts %}
     {% endblock %}
 </body>

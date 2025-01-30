@@ -156,3 +156,60 @@ body {
     margin: 0; /* Supprime les marges par défaut pour un meilleur alignement */
     font-size: 1.25rem;
 }
+
+/* Réduit l'espace entre le titre/ticker et le prix */
+.action-info h4 {
+    margin-bottom: 5px; /* Diminue l'espace en dessous du titre */
+}
+
+/* Réduit l'espace entre "Price" et le changement journalier */
+.action-info p {
+    margin-bottom: 3px; /* Réduit l'espace entre tous les paragraphes */
+}
+
+/* Supprime l'espace après le dernier élément */
+.action-info p:last-of-type {
+    margin-bottom: 0;
+}
+
+
+/* GRAPHS */
+.graphs-section {
+    margin-top: 20px;
+}
+
+.graphs-container {
+    display: flex;
+    flex-wrap: wrap; /* Permet de passer à la ligne si nécessaire */
+    justify-content: space-between; /* Répartit les graphes sur la largeur */
+    gap: 20px;
+}
+
+.graph-box {
+    width: 48%; /* Ajuste la largeur pour qu'ils soient côte à côte */
+    min-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.graph-box img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsive: Empile les graphes verticalement sur petits écrans */
+@media (max-width: 768px) {
+    .graphs-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .graph-box {
+        width: 80%; /* Largeur augmentée pour s'adapter aux petits écrans */
+    }
+}

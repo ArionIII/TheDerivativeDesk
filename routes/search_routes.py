@@ -59,6 +59,7 @@ def search():
 
 @search_routes.route("/suggest", methods=["GET"])
 def suggest():
+    logger.info("Handling suggestion request")
     query = request.args.get("q", "").strip().lower()
 
     if not query:
@@ -102,5 +103,6 @@ def suggest():
 
     # Sort suggestions by relevance
     suggestions = sorted(suggestions, key=lambda x: x["name"])
-
+    logger.info(f"Returning {len(suggestions)} suggestions")
+    logger.info(suggestions)
     return jsonify(suggestions)

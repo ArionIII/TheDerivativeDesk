@@ -33,4 +33,11 @@
 
     /* Buttons */
     --button-padding: 5px 10px; /* Padding inside buttons */
+    --btn-bg: #D48806; /* Golden Amber */
+    --btn-hover-bg: #B36B00; /* Rich Copper */
+    --btn-text: #FDF6E3; /* Warm Light Beige */
+    
+    
+    
+
 }

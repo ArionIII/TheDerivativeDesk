@@ -128,3 +128,10 @@ def parse_inputs(data_source, inputs_config):
                 raise ValueError(f"Missing required input: {input_id}")
 
     return params
+
+# Pour extraire les valeurs du result sans prendre en compte la display_value
+def extract_values(results):
+    """
+    Extrait uniquement les valeurs numériques du dictionnaire sans la display_value.
+    """
+    return {key: value[1] for key, value in results.items()}
