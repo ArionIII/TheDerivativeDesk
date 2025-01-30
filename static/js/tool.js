@@ -67,7 +67,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            results.innerHTML = formatResultData(resultData);
+            const graphs = {};
+            const cleanResultData = {};
+            Object.keys(resultData).forEach(key => {
+                if (key.startsWith("graph_")) {
+                    graphs[key] = resultData[key];  // Stocke les graphes dans un objet séparé
+                } else {
+                    cleanResultData[key] = resultData[key];  // Garde les autres valeurs
+                }
+            });
+
+            if (Object.keys(graphs).length > 0) {
+                console.log("Graphs:", graphs);
+                insertGraphs(graphs);
+            }
+
+            results.innerHTML = formatResultData(cleanResultData);
             console.log("Results:", resultData);
 
             // Update visualization (if chart exists)
@@ -93,15 +108,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Fetch graphs for tool
-    document.addEventListener("DOMContentLoaded", async () => {
-        const graphs = document.querySelectorAll(".graph-box img");
+    function insertGraphs(graphs) {
+        Object.keys(graphs).forEach((key, index) => {
+            const graphUrl = graphs[key];  // URL de l'image du graph
+            const graphImage = document.getElementById(`graph-${index + 1}`); // ID basé sur le loop.index
     
-        graphs.forEach((img, index) => {
-            const graphId = index + 1; // Correspond à loop.index dans Jinja
-            img.src = `/api/get-graph?graph_id=${graphId}&tool={{ tool.url }}`;
+            if (graphImage) {
+                graphImage.src = graphUrl; // Met à jour l'image avec l'URL correcte
+                graphImage.alt = `Graph ${index + 1}`; // Ajoute une description alternative
+            } else {
+                console.warn(`Graph image element with ID 'graph-${index + 1}' not found.`);
+            }
         });
-    });
+    }
     
 
     // Helper function to format result data

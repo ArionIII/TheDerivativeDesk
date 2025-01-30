@@ -175,17 +175,13 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Independent Variables (\( X_k \))", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
             {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"}
         ],
-        "outputs": ["Coefficients", "Intercept", "R-Squared Value"],
+        "outputs": ["Coefficients", "Intercept", "R-Squared Value", "Mean Squared Error"],
         "graphs": [
         {
-            "name": "Regression Residuals",
-            "label_x": "Predicted Values",
-            "label_y": "Residuals"
+            "name": "Estimated Coefficients",
         },
         {
             "name": "Observed vs Predicted",
-            "label_x": "Observed",
-            "label_y": "Predicted"
         }
     ]
     },

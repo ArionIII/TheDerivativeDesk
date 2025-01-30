@@ -180,13 +180,13 @@ body {
 
 .graphs-container {
     display: flex;
-    flex-direction: column; /* Affichage vertical */
-    align-items: flex-end; /* Alignement à droite */
+    flex-wrap: wrap; /* Permet de passer à la ligne si nécessaire */
+    justify-content: space-between; /* Répartit les graphes sur la largeur */
     gap: 20px;
 }
 
 .graph-box {
-    width: 45%; /* Réduit la largeur pour ne pas envahir la page */
+    width: 48%; /* Ajuste la largeur pour qu'ils soient côte à côte */
     min-height: 300px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -200,4 +200,16 @@ body {
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+/* Responsive: Empile les graphes verticalement sur petits écrans */
+@media (max-width: 768px) {
+    .graphs-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .graph-box {
+        width: 80%; /* Largeur augmentée pour s'adapter aux petits écrans */
+    }
 }

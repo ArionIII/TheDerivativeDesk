@@ -2,8 +2,10 @@ import csv
 from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger, parse_csv, parse_inputs
+from config import logger, parse_csv, parse_inputs, extract_values
 from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
+from graph_generation.get_graph import GRAPH_FUNCTIONS
+
 
 # Blueprints for the three sub-categories
 descriptive_statistics_routes = Blueprint("descriptive_statistics_routes", __name__)
@@ -70,10 +72,29 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             if not calculation_function:
                 logger.error(f"No calculation logic for tool: {tool_key}")
                 return "Calculation logic not implemented", 500
-
-            # Execute the function and return results
+            
             result = calculation_function(**params)
-            return jsonify(result)
+            result_graph = extract_values(result)
+            graph_input = params | result_graph
+            logger.info(f'graph inputs : {graph_input}')
+
+            if tool_key in GRAPH_FUNCTIONS:
+                logger.info(f"Generating graphs for tool: {tool_key}")
+                n_graphs = len(GRAPH_FUNCTIONS[tool_key])
+                logger.info(f"Number of graphs: {n_graphs}")
+                graphs = []
+                for i in range(n_graphs):
+                    graph_function = GRAPH_FUNCTIONS[tool_key][i+1]
+                    logger.info(f"Graph function: {graph_function}")
+                    graph = graph_function(graph_input)
+                    graphs.append(graph)
+            graphs_output = {f'graph_{i+1}': graph for i, graph in enumerate(graphs)}
+            logger.info(f"Graphs: {graphs}")
+            # Execute the function and return results
+
+            final_result = result | graphs_output
+
+            return jsonify(final_result)
 
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
