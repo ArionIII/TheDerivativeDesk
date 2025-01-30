@@ -1,15 +1,23 @@
+/* ========== NAVBAR STYLING ========== */
+
 .site-header {
     background-color: var(--secondary-color);
     color: var(--primary-color);
     padding: var(--header-padding);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
+/* Logo */
 .logo h1 a {
     color: var(--primary-color);
     text-decoration: none;
     font-family: var(--font-family);
 }
 
+/* Navigation */
 .main-navigation .nav-list {
     list-style: none;
     display: flex;
@@ -22,104 +30,93 @@
     color: var(--primary-color);
     text-decoration: none;
     font-family: var(--font-family);
+    padding: 10px;
 }
 
 .main-navigation .nav-list li a:hover {
     color: var(--primary-color-hover);
 }
 
-/* Search Bar Container */
+/* ========== SEARCH BAR ========== */
+
 .search-bar {
+    position: relative;
     display: flex;
-    justify-content: center; /* Center the search bar horizontally */
     align-items: center;
-    margin: 10px 20px; /* Add spacing around the bar */
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
 }
 
-/* Search Bar Form */
+/* Search Input */
 .navbar-search {
     display: flex;
     align-items: center;
-    width: 100%; /* Full width for the container */
-    max-width: 600px; /* Restrict max width for better readability */
-    background-color: #fff; /* Background for the search bar */
-    border: 1px solid #ddd; /* Border for the search bar */
-    border-radius: 8px; /* Rounded corners */
-    overflow: hidden; /* Prevent content overflow */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Input Field */
 .navbar-search input {
-    flex: 1; /* Take up remaining space */
-    padding: 10px 15px; /* Spacing inside the input */
-    font-size: 1rem; /* Readable font size */
-    border: none; /* Remove default border */
-    outline: none; /* Remove outline on focus */
-    color: #333; /* Text color */
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    color: #333;
 }
 
-/* Placeholder Styling */
+/* Placeholder */
 .navbar-search input::placeholder {
-    color: #aaa; /* Subtle placeholder text color */
+    color: #aaa;
 }
 
 /* Search Button */
 .navbar-search button {
-    padding: 10px 20px; /* Add padding for clickable area */
-    background-color: var(--primary-color); /* Use primary color */
-    color: #fff; /* White text for contrast */
-    border: none; /* Remove border */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Search Button Hover Effect */
 .navbar-search button:hover {
-    background-color: var(--primary-color-hover); /* Slightly darker on hover */
+    background-color: var(--primary-color-hover);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .navbar-search {
-        max-width: 100%; /* Full width on smaller screens */
-    }
-}
+/* ========== SUGGESTIONS DROPDOWN ========== */
 
-
-/* Ensure the search bar container is positioned correctly */
-.search-bar {
-    position: relative; /* Set a reference for absolute positioning of suggestions */
-}
-
-/* Suggestions container: Default hidden state */
 .suggestions-container {
-    display: none; /* Completely hide the container initially */
+    display: none;
     position: absolute;
-    top: 100%; /* Place it right below the search bar */
+    top: calc(100% + 4px);
     left: 0;
-    right: 0;
-    background: #fff; /* White background for contrast */
-    border: 1px solid #ccc; /* Light border */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    border-radius: 8px; /* Rounded corners */
-    z-index: 1000; /* Ensure it appears above other elements */
-    max-height: 300px; /* Limit height for scrollable results */
-    overflow-y: auto; /* Enable scrolling if results exceed container height */
-    padding: 10px 0; /* Padding inside the container */
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px 0;
 }
 
-/* Show container when it has content */
+/* Show container when active */
 .suggestions-container.active {
-    display: block; /* Only show the container when it has suggestions */
+    display: block !important;
 }
 
-/* Suggestion item styling */
+/* Individual Suggestion */
 .suggestion-item {
-    padding: 10px 15px; /* Adjust padding for better spacing */
+    padding: 10px 15px;
     display: flex;
-    flex-direction: column; /* Align title and description */
-    gap: 5px; /* Space between title and description */
+    flex-direction: column;
+    gap: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -127,37 +124,37 @@
 /* Highlight matching text */
 .suggestion-item .highlight {
     font-weight: bold;
-    color: #FF8C00; /* Highlight color */
+    color: #FF8C00;
 }
 
-/* Title styling */
+/* Title */
 .suggestion-item a {
     font-weight: bold;
-    color: #333; /* Darker text for visibility */
+    color: #333;
     text-decoration: none;
     font-size: 1rem;
 }
 
-/* Description styling */
+/* Description */
 .suggestion-item p {
     margin: 0;
     font-size: 0.9rem;
-    color: #777; /* Muted text for descriptions */
+    color: #777;
 }
 
-/* Hover effect */
+/* Hover Effect */
 .suggestion-item:hover {
-    background-color: #f9f9f9; /* Light gray background */
-    transform: translateY(-2px); /* Subtle lift */
+    background-color: #f9f9f9;
+    transform: translateY(-2px);
 }
 
-/* Scrollbar styling */
+/* Scrollbar Styling */
 .suggestions-container::-webkit-scrollbar {
     width: 8px;
 }
 
 .suggestions-container::-webkit-scrollbar-thumb {
-    background: #ccc; /* Scroll thumb color */
+    background: #ccc;
     border-radius: 8px;
 }
 
@@ -165,7 +162,8 @@
     background: #bbb;
 }
 
-/* User Actions */
+/* ========== USER ACTIONS ========== */
+
 .user-actions {
     display: flex;
     gap: 10px;
@@ -204,4 +202,11 @@
 .user-name {
     font-weight: bold;
     color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-search {
+        max-width: 100%;
+    }
 }

@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestionsContainer.classList.add("suggestions-container");
     searchContainer.appendChild(suggestionsContainer);
 
+    console.log("searchInput found:", searchInput);
+    console.log("searchContainer found:", searchContainer);
+    console.log("suggestionsContainer added:", suggestionsContainer);
+
     searchInput.addEventListener("input", async (e) => {
         const query = e.target.value.trim();
 
@@ -18,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(`/suggest?q=${encodeURIComponent(query)}`);
             const suggestions = await response.json();
-
+            console.log("suggestions found:", suggestions);
             if (suggestions.length > 0) {
                 // Populate suggestions
                 suggestionsContainer.innerHTML = suggestions
@@ -41,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .join("");
 
+                console.log("suggestionsContainer HTML:", suggestionsContainer.innerHTML);
                 suggestionsContainer.classList.add("active"); // Show container
+                console.log("suggestionsContainer classes:", suggestionsContainer.classList);
+                
             } else {
                 suggestionsContainer.innerHTML = ""; // No suggestions
                 suggestionsContainer.classList.remove("active"); // Hide container
