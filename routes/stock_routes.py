@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib
 from fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
+import time
 
 matplotlib.use("Agg")
 # Blueprint for stock data
@@ -70,6 +71,9 @@ def get_random_stocks():
                     "change": change if change is not None else "N/A",
                     "change_monthly": change_monthly if change_monthly is not None else "N/A",
                 })
+            
+            else:
+                time.sleep(0.5)
 
             # Si on a assez de tickers valides, on arrête la boucle
             if len(valid_stocks) >= num_stocks:
