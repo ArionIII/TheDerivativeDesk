@@ -229,7 +229,7 @@ def get_stock_details(ticker):
             "enterprise_to_revenue": info.get("enterpriseToRevenue", "N/A"),
             "enterprise_to_ebitda": info.get("enterpriseToEbitda", "N/A"),
         }
-
+        logger.warning(f"stock_details : {stock_details}")
         return jsonify({"details": stock_details})
     except Exception as e:
         logger.error(f"Error fetching stock details for {ticker}: {e}")

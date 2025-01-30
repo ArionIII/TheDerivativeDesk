@@ -156,34 +156,79 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load initial actions
     loadActions();
 
-    // Modal handling
-    window.openSeeMore = async (ticker) => {
-        console.log(`Fetching details for ${ticker}`); // Debugging log
-        const stockDetails = await fetchStockDetails(ticker);
-    
-        if (stockDetails) {
-            document.getElementById("modal-action-title").textContent = `${stockDetails.name} (${stockDetails.ticker})`;
-            document.getElementById("stock-sector").textContent = `Sector: ${stockDetails.sector || "N/A"}`;
-            document.getElementById("stock-industry").textContent = `Industry: ${stockDetails.industry || "N/A"}`;
-            document.getElementById("stock-market-cap").textContent = `Market Cap: ${stockDetails.market_cap || "N/A"}`;
-            document.getElementById("stock-52-week-high").textContent = `52-Week High: $${stockDetails["52_week_high"] || "N/A"}`;
-            document.getElementById("stock-52-week-low").textContent = `52-Week Low: $${stockDetails["52_week_low"] || "N/A"}`;
-            document.getElementById("stock-volume").textContent = `Volume: ${stockDetails.volume || "N/A"}`;
-    
-            // Render the chart
-            const ctx = document.getElementById("detailed-stock-chart").getContext("2d");
-            renderChart(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
-    
-            // Show the modal
-            const modal = document.getElementById("see-more-modal");
-            modal.classList.add("show");
-            console.log("Modal displayed"); // Debugging log
-        } else {
-            console.error("Failed to fetch stock details. Data is null.");
-            alert("Failed to fetch stock details. Please try again.");
-        }
-    };
-    
+// Modal handling
+window.openSeeMore = async (ticker) => {
+    console.log(`Fetching details for ${ticker}`); // Debugging log
+    const stockDetails = await fetchStockDetails(ticker);
+
+    if (stockDetails) {
+        // 🔹 Informations générales
+        document.getElementById("modal-action-title").textContent = `${stockDetails.name} (${stockDetails.ticker})`;
+        document.getElementById("stock-sector").textContent = `Sector: ${stockDetails.sector || "N/A"}`;
+        document.getElementById("stock-industry").textContent = `Industry: ${stockDetails.industry || "N/A"}`;
+        document.getElementById("stock-market-cap").textContent = `Market Cap: ${formatNumber(stockDetails.market_cap)}`;
+        document.getElementById("stock-exchange").textContent = `Exchange: ${stockDetails.exchange || "N/A"}`;
+        document.getElementById("stock-currency").textContent = `Currency: ${stockDetails.currency || "N/A"}`;
+        document.getElementById("stock-website").innerHTML = `<a href="${stockDetails.website}" target="_blank">${stockDetails.website}</a>`;
+
+        // 🔹 Prix et performances
+        document.getElementById("stock-current-price").textContent = `Current Price: $${stockDetails.current_price || "N/A"}`;
+        document.getElementById("stock-52-week-high").textContent = `52-Week High: $${stockDetails["52_week_high"] || "N/A"}`;
+        document.getElementById("stock-52-week-low").textContent = `52-Week Low: $${stockDetails["52_week_low"] || "N/A"}`;
+        document.getElementById("stock-day-high").textContent = `Day High: $${stockDetails.day_high || "N/A"}`;
+        document.getElementById("stock-day-low").textContent = `Day Low: $${stockDetails.day_low || "N/A"}`;
+        document.getElementById("stock-volume").textContent = `Volume: ${formatNumber(stockDetails.volume)}`;
+        document.getElementById("stock-average-volume").textContent = `Avg Volume (10d): ${formatNumber(stockDetails.average_volume_10d)}`;
+
+        // 🔹 Ratios financiers
+        document.getElementById("stock-pe-ratio").textContent = `P/E Ratio: ${stockDetails.pe_ratio || "N/A"}`;
+        document.getElementById("stock-forward-pe").textContent = `Forward P/E: ${stockDetails.forward_pe || "N/A"}`;
+        document.getElementById("stock-peg-ratio").textContent = `PEG Ratio: ${stockDetails.peg_ratio || "N/A"}`;
+        document.getElementById("stock-price-to-book").textContent = `P/B Ratio: ${stockDetails.price_to_book || "N/A"}`;
+        document.getElementById("stock-price-to-sales").textContent = `P/S Ratio: ${stockDetails.price_to_sales || "N/A"}`;
+
+        // 🔹 Rentabilité et marges
+        document.getElementById("stock-roa").textContent = `Return on Assets (ROA): ${formatPercentage(stockDetails.return_on_assets)}`;
+        document.getElementById("stock-roe").textContent = `Return on Equity (ROE): ${formatPercentage(stockDetails.return_on_equity)}`;
+        document.getElementById("stock-profit-margins").textContent = `Profit Margins: ${formatPercentage(stockDetails.profit_margins)}`;
+        document.getElementById("stock-operating-margins").textContent = `Operating Margins: ${formatPercentage(stockDetails.operating_margins)}`;
+        document.getElementById("stock-ebitda").textContent = `EBITDA: ${formatNumber(stockDetails.ebitda)}`;
+
+        // 🔹 Dividendes et Cashflow
+        document.getElementById("stock-dividend-yield").textContent = `Dividend Yield: ${formatPercentage(stockDetails.dividend_yield)}`;
+        document.getElementById("stock-dividend-rate").textContent = `Dividend Rate: $${stockDetails.dividend_rate || "N/A"}`;
+        document.getElementById("stock-payout-ratio").textContent = `Payout Ratio: ${formatPercentage(stockDetails.payout_ratio)}`;
+        document.getElementById("stock-free-cashflow").textContent = `Free Cash Flow: ${formatNumber(stockDetails.free_cashflow)}`;
+
+        // 🔹 Analyst Ratings
+        document.getElementById("stock-recommendation").textContent = `Recommendation: ${stockDetails.recommendation || "N/A"}`;
+        document.getElementById("stock-target-price").textContent = `Target Price: $${stockDetails.target_mean_price || "N/A"}`;
+        document.getElementById("stock-target-high").textContent = `Target High: $${stockDetails.target_high_price || "N/A"}`;
+        document.getElementById("stock-target-low").textContent = `Target Low: $${stockDetails.target_low_price || "N/A"}`;
+
+        // 🔹 Render the stock chart
+        const ctx = document.getElementById("detailed-stock-chart").getContext("2d");
+        renderChart(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
+
+        // 🔹 Show the modal
+        const modal = document.getElementById("see-more-modal");
+        modal.classList.add("show");
+        console.log("Modal displayed"); // Debugging log
+    } else {
+        console.error("Failed to fetch stock details. Data is null.");
+        alert("Failed to fetch stock details. Please try again.");
+    }
+};
+
+// 🔹 Utilitaires pour formater les nombres et pourcentages
+const formatNumber = (num) => {
+    return num !== "N/A" && num !== null ? num.toLocaleString() : "N/A";
+};
+
+const formatPercentage = (num) => {
+    return num !== "N/A" && num !== null ? `${(num * 100).toFixed(2)}%` : "N/A";
+};
+
 
     // Fetch stock details and chart data
     const fetchStockDetails = async (ticker) => {
