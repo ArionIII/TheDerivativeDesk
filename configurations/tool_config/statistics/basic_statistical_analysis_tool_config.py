@@ -172,10 +172,22 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Conduct multiple regression for multivariate datasets.",
         "url": "/tools/inferential-statistics/multiple-regression",
         "inputs": [
-            {"label": "Independent Variables (X)", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
+            {"label": "Independent Variables (\( X_k \))", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
             {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"}
         ],
         "outputs": ["Coefficients", "Intercept", "R-Squared Value"],
+        "graphs": [
+        {
+            "name": "Regression Residuals",
+            "label_x": "Predicted Values",
+            "label_y": "Residuals"
+        },
+        {
+            "name": "Observed vs Predicted",
+            "label_x": "Observed",
+            "label_y": "Predicted"
+        }
+    ]
     },
     "pdf": {
         "title": "Probability Density Function (PDF)",

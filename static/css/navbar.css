@@ -15,6 +15,7 @@
     color: var(--primary-color);
     text-decoration: none;
     font-family: var(--font-family);
+    margin-left: 30px;
 }
 
 /* Navigation */
@@ -24,6 +25,7 @@
     gap: var(--nav-gap);
     margin: 0;
     padding: 0;
+    margin-left: 10px;
 }
 
 .main-navigation .nav-list li a {
@@ -39,6 +41,7 @@
 
 
 /* ========== USER ACTIONS ========== */
+
 
 .user-actions {
     display: flex;

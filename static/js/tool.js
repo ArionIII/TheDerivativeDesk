@@ -93,6 +93,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Fetch graphs for tool
+    document.addEventListener("DOMContentLoaded", async () => {
+        const graphs = document.querySelectorAll(".graph-box img");
+    
+        graphs.forEach((img, index) => {
+            const graphId = index + 1; // Correspond à loop.index dans Jinja
+            img.src = `/api/get-graph?graph_id=${graphId}&tool={{ tool.url }}`;
+        });
+    });
+    
+
     // Helper function to format result data
     function formatResultData(data) {
         console.log("DATA RESULT", data);

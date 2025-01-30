@@ -92,6 +92,22 @@
         </div>
     </section>
 
+    <!-- Graph Visualization Section -->
+    {% if tool.graphs %}
+    <section class="graphs-section">
+        <h2>Visualizations</h2>
+        <div class="graphs-container">
+            {% for graph in tool.graphs %}
+            <div class="graph-box">
+                <h3>{{ graph.name }}</h3>
+                <img id="graph-{{ loop.index }}" src="/static/images/loading-spinner.gif" alt="Loading graph...">
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+
     <!-- Actions Section -->
     <section class="actions-section">
         <h2>Stocks</h2>

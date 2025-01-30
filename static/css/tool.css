@@ -172,3 +172,32 @@ body {
     margin-bottom: 0;
 }
 
+
+/* GRAPHS */
+.graphs-section {
+    margin-top: 20px;
+}
+
+.graphs-container {
+    display: flex;
+    flex-direction: column; /* Affichage vertical */
+    align-items: flex-end; /* Alignement à droite */
+    gap: 20px;
+}
+
+.graph-box {
+    width: 45%; /* Réduit la largeur pour ne pas envahir la page */
+    min-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.graph-box img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

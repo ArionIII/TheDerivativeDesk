@@ -1,3 +1,4 @@
+
 body {
     font-family: var(--font-family);
     line-height: 1.6;
@@ -7,17 +8,9 @@ body {
     color: var(--secondary-color);
 }
 
-.site-main {
-    padding: var(--padding-main);
-}
 
-.container {
-    width: 90%;
-    max-width: var(--container-max-width);
-    margin: 0 auto;
-}
 
-/* User Actions Section */
+/* 🔹 User Actions Section (Login/Register) */
 .user-actions {
     position: absolute;
     top: 20px;
@@ -27,72 +20,24 @@ body {
     gap: 15px;
 }
 
-.btn-action {
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: var(--btn-bg);
-    color: var(--btn-text);
-    border: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-action:hover {
-    background-color: var(--btn-hover-bg);
-    transform: translateY(-2px); /* Légère élévation pour effet dynamique */
-}
-
-
-/* Profile Section */
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.profile-picture {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 1px solid var(--primary-color);
-}
-
-.user-name {
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.btn-logout {
-    padding: 8px 12px;
-    text-decoration: none;
-    color: white;
-    background-color: var(--primary-color);
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: var(--primary-color-hover);
-}
-
-/* 🔹 Conteneur principal de la search bar */
+/* 🔹 Search Bar Placement */
 .search-bar-for-tools-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 15px auto; /* Centrer la search bar */
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 600px; /* Limite la largeur pour éviter qu'elle ne devienne trop grande */
+    position: absolute;
+    top: 90px; /* Positionne sous les boutons */
+    left: 64%; 
 }
 
 /* 🔹 Barre de recherche */
 .search-bar-for-tools {
     display: flex;
+    flex: 1;
     align-items: center;
-    width: 100%;
+    width: 100%; /* Prend tout l'espace disponible */
+    max-width: 600px; /* Optionnel, limite la largeur max */
+    margin-left: 15px; /* Décale légèrement vers la gauche */
+    margin-right: auto; /* Pousse la barre vers la droite */
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -100,32 +45,23 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .search-bar-for-tools input {
-    background-color: transparent; /* Garde la couleur de la search bar */
-    color: #333; /* Texte en couleur sombre pour la lisibilité */
     flex: 1;
     padding: 10px 15px;
     font-size: 1rem;
     border: none;
     outline: none;
+    background-color: transparent;
     color: #333;
-}
-
-.search-bar-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 15px 0; /* Ajoute un padding autour */
-    background-color: var(--primary-color); /* Couleur de fond modifiable */
 }
 
 /* 🔹 Conteneur des suggestions */
 .suggestions-container-tools {
     display: none;
     position: absolute;
-    top: calc(100% + 4px); /* Juste sous la search bar */
-    left: 0;
+    top: calc(100% + 4px);
+    right: 0;
     width: 100%;
     background: #fff;
     border: 1px solid #ccc;
@@ -164,7 +100,7 @@ body {
 
 /* 🔹 Effet Hover */
 .suggestion-item-tools:hover {
-    background-color: 	#DC8A3A	;
+    background-color: #E59D50; /* Couleur plus lisible */
 }
 
 /* 🔹 Scrollbar personnalisée */
