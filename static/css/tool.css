@@ -156,3 +156,19 @@ body {
     margin: 0; /* Supprime les marges par défaut pour un meilleur alignement */
     font-size: 1.25rem;
 }
+
+/* Réduit l'espace entre le titre/ticker et le prix */
+.action-info h4 {
+    margin-bottom: 5px; /* Diminue l'espace en dessous du titre */
+}
+
+/* Réduit l'espace entre "Price" et le changement journalier */
+.action-info p {
+    margin-bottom: 3px; /* Réduit l'espace entre tous les paragraphes */
+}
+
+/* Supprime l'espace après le dernier élément */
+.action-info p:last-of-type {
+    margin-bottom: 0;
+}
+

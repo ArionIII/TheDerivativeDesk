@@ -29,18 +29,20 @@ body {
 
 .btn-action {
     text-decoration: none;
-    padding: 8px 15px;
-    border: 1px solid var(--primary-color);
+    padding: 10px 20px;
     border-radius: 5px;
-    color: var(--primary-color);
-    background-color: white;
-    transition: all 0.3s ease;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-action:hover {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--btn-hover-bg);
+    transform: translateY(-2px); /* Légère élévation pour effet dynamique */
 }
+
 
 /* Profile Section */
 .user-profile {
@@ -74,3 +76,20 @@ body {
 .btn-logout:hover {
     background-color: var(--primary-color-hover);
 }
+
+
+/* Réduit l'espace entre le titre/ticker et le prix */
+.action-info h4 {
+    margin-bottom: 5px; /* Diminue l'espace en dessous du titre */
+}
+
+/* Réduit l'espace entre "Price" et le changement journalier */
+.action-info p {
+    margin-bottom: 3px; /* Réduit l'espace entre tous les paragraphes */
+}
+
+/* Supprime l'espace après le dernier élément */
+.action-info p:last-of-type {
+    margin-bottom: 0;
+}
+

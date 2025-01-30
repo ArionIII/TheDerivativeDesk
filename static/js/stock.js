@@ -36,7 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             </h4>
                             <p>Price: $${action.price}</p>
                             <p style="color: ${action.change > 0 ? "green" : "red"};">
-                                Change: ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%
+                                Change (1d): ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%
+                            </p>
+                            <p style="color: ${action.change_monthly > 0 ? "green" : "red"};">
+                                Change (30d): ${action.change_monthly > 0 ? "+" : ""}${(action.change_monthly * 100).toFixed(2)}%
                             </p>
                         </div>
                         <div class="action-chart">
@@ -159,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const stockDetails = await fetchStockDetails(ticker);
     
         if (stockDetails) {
-            console.log("Stock details:", stockDetails); // Debugging log
             document.getElementById("modal-action-title").textContent = `${stockDetails.name} (${stockDetails.ticker})`;
             document.getElementById("stock-sector").textContent = `Sector: ${stockDetails.sector || "N/A"}`;
             document.getElementById("stock-industry").textContent = `Industry: ${stockDetails.industry || "N/A"}`;
