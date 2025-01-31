@@ -46,7 +46,7 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
     return render_template("base_tool.html", tool=tool_config)
 
 # Routes
-@interest_rate_fundamentals_routes.route("/tools/basic-interest-rate-analysis/<tool_key>", methods=["GET", "POST"])
+@interest_rate_fundamentals_routes.route("/tools/basic-interest-rates-analysis/<tool_key>", methods=["GET", "POST"])
 def handle_basic_interest_rate_analysis_tool(tool_key):
     return handle_interest_rate_tool_request(tool_key, "basic-interest-rate-analysis")
 

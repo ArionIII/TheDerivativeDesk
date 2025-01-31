@@ -4,16 +4,16 @@ tool_category_interest_rates_routes = Blueprint("tool_category_interest_rates_ro
 
 INTEREST_RATES_TOOL_CATEGORIES = {
     # Basic Interest Rate Analysis
-    "basic-interest-rate-analysis": {
+    "basic-interest-rates-analysis": {
         "title": "Basic Interest Rate Analysis",
         "description": "Perform fundamental interest rate calculations, including rate conversions, bond pricing, and basic sensitivity analysis.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Continuous Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rate-analysis/continuous-compounding-rate"},
-            {"title": "m-Compounding to Continuous Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rate-analysis/m-to-continuous-compounding-rate"},
-            {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/basic-interest-rate-analysis/bond-pricing"},
-            {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rate-analysis/determining-zero-rates"},
-            {"title": "Duration and Convexity", "description": "Compute Macaulay, Modified Duration for bonds & Convexity.", "url": "/tools/basic-interest-rate-analysis/duration-and-convexity"},
+            {"title": "Continuous Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate"},
+            {"title": "m-Compounding to Continuous Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate"},
+            {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/basic-interest-rates-analysis/bond-pricing"},
+            {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rates-analysis/determining-zero-rates"},
+            {"title": "Duration and Convexity", "description": "Compute Macaulay, Modified Duration for bonds & Convexity.", "url": "/tools/basic-interest-rates-analysis/duration-and-convexity"},
         ],
     },
     # Term Structure Construction

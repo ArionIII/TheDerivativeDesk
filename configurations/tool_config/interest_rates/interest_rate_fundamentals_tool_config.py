@@ -72,7 +72,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "determining-zero-rates": {
     "title": "Determining Zero Rates",
     "description": "Calculate zero rates from coupon bond prices.",
-    "url": "/tools/basic-interest-rates-analysis/determining-zero-rates",
+    "url": "/tools/term-structure-construction/zero-rate-curve",
     "inputs": [
         {
             "label": "Bond Prices (comma-separated)", 
@@ -102,7 +102,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "extending-libor-curve-with-swap-rates": {
         "title": "Extend LIBOR Curve with Swap Rates",
         "description": "Use swap rates to extend the LIBOR curve.",
-        "url": "/tools/interest-rates/extending-libor-curve-with-swap-rates",
+        "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
         "inputs": [
             {"label": "Initial LIBOR Rates (comma-separated)", "id": "libor_rates", "type": "array", "placeholder": "e.g., [0.01, 0.015]", "optional": False},
             {"label": "Swap Rates (comma-separated)", "id": "swap_rates", "type": "array", "placeholder": "e.g., [0.02, 0.025, 0.03]", "optional": False},
@@ -113,7 +113,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "extending-libor-curve-with-fra": {
         "title": "Extend LIBOR Curve with FRA",
         "description": "Use FRA rates to extend the LIBOR curve.",
-        "url": "/tools/interest-rates/extending-libor-curve-with-fra",
+        "url": "/tools/term-structure-construction/extending-libor-curve-with-fra",
         "inputs": [
             {"label": "Initial LIBOR Rates (comma-separated)", "id": "libor_rates", "type": "array", "placeholder": "e.g., [0.01, 0.015]", "optional": False},
             {"label": "FRA Rates (comma-separated)", "id": "fra_rates", "type": "array", "placeholder": "e.g., [0.02, 0.022, 0.024]", "optional": False},
@@ -121,18 +121,18 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
         ],
         "outputs": ["Extended LIBOR Curve"],
     },
-    "payoff-of-fra": {
-        "title": "Payoff of FRA",
-        "description": "Calculate the payoff of a Forward Rate Agreement (FRA).",
-        "url": "/tools/interest-rates/payoff-of-fra",
-        "inputs": [
-            {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-            {"label": "Settlement Rate", "id": "settlement_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Time (Years)", "id": "time", "type": "number", "placeholder": "e.g., 0.5", "optional": False},
-        ],
-        "outputs": ["FRA Payoff"],
-    },
+    # "payoff-of-fra": {
+    #     "title": "Payoff of FRA",
+    #     "description": "Calculate the payoff of a Forward Rate Agreement (FRA).",
+    #     "url": "/tools/interest-rates/payoff-of-fra",
+    #     "inputs": [
+    #         {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
+    #         {"label": "Settlement Rate", "id": "settlement_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
+    #         {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
+    #         {"label": "Time (Years)", "id": "time", "type": "number", "placeholder": "e.g., 0.5", "optional": False},
+    #     ],
+    #     "outputs": ["FRA Payoff"],
+    # },
     "duration-and-convexity": {
         "title": "Duration and Convexity",
         "description": "Calculate the duration and convexity of a bond.",

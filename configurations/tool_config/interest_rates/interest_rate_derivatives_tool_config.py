@@ -65,7 +65,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "interest-rate-swap-cash-flows": {
         "title": "Interest Rate Swap Cash Flows",
         "description": "Calculate the cash flows of fixed-for-floating interest rate swaps.",
-        "url": "/tools/interest-rates/interest-rate-swap-cash-flows",
+        "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-cash-flows",
         "inputs": [
             {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
             {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
@@ -78,7 +78,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "interest-rate-swap-valuation": {
         "title": "Interest Rate Swap Valuation",
         "description": "Compute the present value of interest rate swaps using market curves.",
-        "url": "/tools/interest-rates/interest-rate-swap-valuation",
+        "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-valuation",
         "inputs": [
             {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
             {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
@@ -91,7 +91,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "pricing-interest-rate-futures": {
         "title": "Pricing Interest Rate Futures",
         "description": "Price interest rate futures such as Eurodollar futures based on market interest rates.",
-        "url": "/tools/interest-rates/pricing-interest-rate-futures",
+        "url": "/tools/swaps-and-interest-rate-derivatives/pricing-interest-rate-futures",
         "inputs": [
             {"label": "Current Market Rate (%)", "id": "market_rate", "type": "number", "placeholder": "e.g., 4", "optional": False},
             {"label": "Days to Maturity", "id": "days_to_maturity", "type": "number", "placeholder": "e.g., 90", "optional": False},
@@ -102,7 +102,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "swap-spread-analysis": {
         "title": "Swap Spread Analysis",
         "description": "Analyze the spread between swap rates and government yields.",
-        "url": "/tools/interest-rates/swap-spread-analysis",
+        "url": "/tools/swaps-and-interest-rate-derivatives/swap-spread-analysis",
         "inputs": [
             {"label": "Swap Rate", "id": "swap_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
             {"label": "Government Yield", "id": "government_yield", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
@@ -113,7 +113,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "swaption-valuation": {
         "title": "Swaption Valuation",
         "description": "Value options on interest rate swaps using Black’s model.",
-        "url": "/tools/interest-rates/swaption-valuation",
+        "url": "/tools/swaps-and-interest-rate-derivatives/swaption-valuation",
         "inputs": [
             {"label": "Strike Rate", "id": "strike_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
             {"label": "Volatility (%)", "id": "volatility", "type": "number", "placeholder": "e.g., 20", "optional": False},
@@ -126,7 +126,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "basis-swap-analysis": {
         "title": "Basis Swap Analysis",
         "description": "Evaluate basis swaps where both legs are floating rates with different benchmarks.",
-        "url": "/tools/interest-rates/basis-swap-analysis",
+        "url": "/tools/swaps-and-interest-rate-derivatives/basis-swap-analysis",
         "inputs": [
             {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
             {"label": "Benchmark 1 Rate", "id": "benchmark__rate_1", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
@@ -139,7 +139,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     "interest-rate-swap-delta-hedging": {
         "title": "Interest Rate Swap Delta Hedging",
         "description": "Analyze hedging strategies for interest rate swaps.",
-        "url": "/tools/interest-rates/interest-rate-swap-delta-hedging",
+        "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-delta-hedging",
         "inputs": [
             {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
             {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
