@@ -22,6 +22,7 @@ from routes.interest_rates_fundamentals_routes import interest_rate_fundamentals
 from routes.interest_rate_derivatives_routes import interest_rate_derivatives_routes
 from routes.stock_routes import stocks_routes, stock_chart_routes
 from configurations.sub_config.interest_rates.interest_rate_sub_categories_config import tool_category_interest_rates_routes
+import os
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -128,4 +129,5 @@ def inject_user():
 # Lancer le serveur Flask
 if __name__ == "__main__":
     logger.info("Starting the Flask application...")
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(debug=True, host='0.0.0.0', port=port)
