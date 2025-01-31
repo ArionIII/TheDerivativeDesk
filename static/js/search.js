@@ -73,14 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Populate suggestions
             suggestionsContainer.innerHTML = suggestions
-                .map(
-                    (s) =>
-                        `<div class="suggestion-item">
-                            <a href="${s.url}">${s.name}</a>
+            .map(
+                (s) =>
+                    `<a href="${s.url}" class="suggestion-item">
+                        <div>
+                            <strong>${s.name}</strong>
                             <p>${s.description}</p>
-                        </div>`
-                )
-                .join("");
+                        </div>
+                    </a>`
+            )
+            .join("");
+
 
         } catch (err) {
             console.error("Error fetching suggestions:", err);

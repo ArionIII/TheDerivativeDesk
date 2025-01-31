@@ -21,6 +21,9 @@ def calculate_median(dataset):
     """
     Calculate the median of a dataset.
     """
+    dataset = np.array([float(x) for x in dataset])
+    logger.warning(f"Calculating median for dataset: {dataset}")
+    logger.warning(f"Type of dataset: {type(dataset)}")
     median_value = np.median(dataset)
     return {"Median Value": median_value}
 

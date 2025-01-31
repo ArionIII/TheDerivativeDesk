@@ -15,7 +15,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/median",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/median.csv"},
         ],
         "outputs": ["Median Value"],
     },
@@ -188,7 +188,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "pdf": {
         "title": "Probability Density Function (PDF)",
         "description": "Calculate the PDF for continuous random variables.",
-        "url": "/tools/probability/pdf",
+        "url": "/tools/probability-tools/pdf",
         "inputs": [
             {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
             {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
@@ -199,7 +199,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "cdf": {
         "title": "Cumulative Distribution Function (CDF)",
         "description": "Compute the cumulative probability of random variables.",
-        "url": "/tools/probability/cdf",
+        "url": "/tools/probability-tools/cdf",
         "inputs": [
             {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
             {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
@@ -210,7 +210,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "z-score": {
         "title": "Z-Score Calculation",
         "description": "Find the Z-score to standardize data points.",
-        "url": "/tools/probability/z-score",
+        "url": "/tools/probability-tools/z-score",
         "inputs": [
             {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
             {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
@@ -221,7 +221,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "binomial-distribution": {
         "title": "Binomial Distribution",
         "description": "Analyze binomial random variables and probabilities.",
-        "url": "/tools/probability/binomial-distribution",
+        "url": "/tools/probability-tools/binomial-distribution",
         "inputs": [
             {"label": "Number of Trials (n)", "id": "num_trials", "type": "number", "placeholder": "e.g., 10"},
             {"label": "Probability of Success (p)", "id": "prob_success", "type": "number", "placeholder": "e.g., 0.5"},
@@ -232,7 +232,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "poisson-distribution": {
         "title": "Poisson Distribution",
         "description": "Evaluate Poisson-distributed random events.",
-        "url": "/tools/probability/poisson-distribution",
+        "url": "/tools/probability-tools/poisson-distribution",
         "inputs": [
             {"label": "Number of Events (k)", "id": "num_events", "type": "number", "placeholder": "e.g., 3"},
             {"label": "Average Rate (λ)", "id": "rate", "type": "number", "placeholder": "e.g., 5"}
@@ -242,7 +242,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "normal-distribution": {
         "title": "Normal Distribution",
         "description": "Compute probabilities for normally distributed variables.",
-        "url": "/tools/probability/normal-distribution",
+        "url": "/tools/probability-tools/normal-distribution",
         "inputs": [
             {"label": "Value (x)", "id": "value", "type": "number", "placeholder": "e.g., 1.5"},
             {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
@@ -253,7 +253,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "t-distribution": {
         "title": "T-Distribution",
         "description": "Work with T-distributed data for small sample sizes.",
-        "url": "/tools/probability/t-distribution",
+        "url": "/tools/probability-tools/t-distribution",
         "inputs": [
             {"label": "Value (t)", "id": "value", "type": "number", "placeholder": "e.g., 2.5"},
             {"label": "Degrees of Freedom (df)", "id": "degrees_freedom", "type": "number", "placeholder": "e.g., 10"}
