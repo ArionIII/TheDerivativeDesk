@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger, parse_csv, parse_inputs
+from config import logger, parse_csv_and_xlsx, parse_inputs
 from configurations.tool_config.statistics.time_series_and_modeling_tool_config import TIME_SERIES_AND_MODELING_TOOL_CONFIG
 
 # Blueprint for Time Series and Modeling
@@ -14,6 +14,7 @@ TOOL_FUNCTIONS = ({
     "transition-matrices": calculate_transition_matrices,
     "random-walk-simulation": simulate_random_walk,
     "AR-MA-ARMA-previsions": forecast_series,
+    "log-returns-calculator": compute_log_returns_csv_xlsx,
 })
 
 

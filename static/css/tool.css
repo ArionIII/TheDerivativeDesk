@@ -130,18 +130,19 @@ body {
 /*TODO : Améliorer en bas car c'est trop particulier selon les écrans */
 
 .note-section {
-    position: absolute; /* Permet de positionner la boîte par rapport à son conteneur parent */
-    top: 400px; /* Décale légèrement depuis le haut de .input-section */
-    width: 250px; /* Largeur fixe pour une apparence cohérente */
-    background-color: #fbf8f1; /* Très clair, blanc crème */
-    border: 2px solid #e6e6e6; /* Bordure douce, gris clair */
-    border-radius: 8px; /* Coins arrondis pour une apparence moderne */
-    padding: 40px; /* Espace intérieur généreux */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre subtile pour donner un effet de relief */
-    font-size: 1rem; /* Taille de texte agréable pour lecture */
-    color: #4a4a4a; /* Couleur de texte gris foncé pour contraste */
-    line-height: 1.6; /* Espace entre les lignes pour une meilleure lisibilité */
-    z-index: 10; /* S'assure que la note est au-dessus des autres éléments */
+    position: absolute; /* Positionnement absolu */
+    top: 400px; /* Distance depuis le haut */
+    right: 0; /* Aligner à droite */
+    width: 250px; /* Largeur fixe */
+    background-color: #fbf8f1; /* Blanc crème */
+    border: 2px solid #e6e6e6; /* Bordure douce */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 40px; /* Espace intérieur */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    font-size: 1rem; /* Taille de texte */
+    color: #4a4a4a; /* Texte gris foncé */
+    line-height: 1.6; /* Espacement des lignes */
+    z-index: 10; /* Superposition */
 }
 
 .note-section h3 {

@@ -82,8 +82,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 insertGraphs(graphs);
             }
 
-            results.innerHTML = formatResultData(cleanResultData);
-            console.log("Results:", resultData);
+            if (isAllFiles(resultData)) {
+                results.innerHTML = `<p class="success">Your files were successfully downloaded.</p>`;
+                downloadFiles(resultData);
+                console.log("Files:", resultData);
+            } else {
+                results.innerHTML = formatResultData(resultData);
+                console.log("Results:", resultData);
+            }
 
             // Update visualization (if chart exists)
             if (chartElement) {
@@ -185,6 +191,29 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
+
+    // Handle download button click
+    function isAllFiles(data) {
+        return Object.values(data).every(value => 
+            typeof value === "string" && value.startsWith("static/outputs/")
+        );
+    }
+
+    function downloadFiles(files) {
+        Object.values(files).forEach(fileUrl => {
+            const fullUrl = window.location.origin + "/" + fileUrl.replace(/^\/+/, "");  // Supprime les "/" en trop
+    
+            console.log("Downloading file:", fullUrl);
+    
+            const link = document.createElement("a");
+            link.href = fullUrl;
+            link.download = fileUrl.split("/").pop(); // Extraire uniquement le nom du fichier
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+    
 
     // Validate form inputs
     function validateForm() {

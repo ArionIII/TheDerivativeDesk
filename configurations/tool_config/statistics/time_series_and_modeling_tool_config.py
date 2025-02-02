@@ -1,4 +1,23 @@
 TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
+    "log-returns-calculator": {
+    "title": "Log Returns Calculator",
+    "description": "Compute log returns for time series in a CSV file.",
+    "url": "/tools/time-series-analysis/log-returns-calculator",
+    "inputs": [
+        {"label": "Time Series Data", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
+        {
+            "label": "CSV File",
+            "id": "csv_file",
+            "type": "file",
+            "accept": ".csv",
+            "data_target": "dataset",
+            "optional": True,
+            "template": "/static/templates/sample_time_series.csv"
+        }
+    ],
+    "outputs": ["CSV File with Log Returns"],
+    "note": "You will automatically download a CSV file AND a XLSX file with the log returns of the input time series."
+},
     "moving-averages": {
         "title": "Moving Averages",
         "description": "Calculate moving averages for time series smoothing.",
