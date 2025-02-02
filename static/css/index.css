@@ -1,11 +1,10 @@
 .hero {
-    width: 100%; /* Full viewport width */
-    padding: 60px 20px; /* Spacious padding */
-    background-color: var(--primary-color); /* Background color from variables */
-    color: var(--secondary-color); /* Text color from variables */
+    width: 100%;
+    padding: 60px 20px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     text-align: center;
 }
-
 .hero h2 {
     font-size: 3rem; /* Large heading size for emphasis */
     margin-bottom: 20px; /* Space below the heading */
@@ -245,4 +244,73 @@
     text-align: center;
     color: var(--secondary-color);
     border: 1px solid #ddd;
+}
+
+/* News Section */
+.hero-container {
+    display: flex;
+    justify-content: center; /* Centre le contenu */
+    align-items: center;
+    position: relative;
+    gap: 50px; /* Espace entre le texte et la boîte de news */
+}
+
+.hero-text {
+    max-width: 700px; /* Assure un bon centrage du texte */
+    flex-grow: 1; /* Permet au texte de rester centré */
+    text-align: center; /* Centre le texte */
+}
+
+.news-box {
+    width: 300px;
+    height: 450px;
+    background-color: #fbf8f1;
+    border: 2px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+
+.news-box h3 {
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+}
+
+#news-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    list-style-type: none;
+}
+
+/* Responsive - Si écran trop petit, la boîte passe en dessous */
+@media (max-width: 1024px) {
+    .hero-container {
+        flex-direction: column; /* La boîte passe en dessous */
+        align-items: center;
+    }
+
+    .news-box {
+        margin-top: 20px;
+    }
+}
+
+#news-container li {
+    padding: 5px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+#news-container li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+#news-container li a:hover {
+    text-decoration: underline;
 }

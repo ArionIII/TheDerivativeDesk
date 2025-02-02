@@ -7,7 +7,7 @@ from io import BytesIO
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib
-from fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
+from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
 import time
 
 matplotlib.use("Agg")

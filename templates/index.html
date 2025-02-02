@@ -9,12 +9,23 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="hero">
-    <h2>Your One-Stop Solution for Financial Derivatives</h2>
-    <p>Explore our tools and learn more about derivatives.</p>
-    <div class="cta-buttons">
-        <a href="/tools" class="btn-primary">Explore Tools</a>
-    </div>
+    <div class="hero-container">
+        <div class="hero-text">
+            <h2>Your One-Stop Solution for Financial Derivatives</h2>
+            <p>Explore our tools and learn more about derivatives.</p>
+            <div class="cta-buttons">
+                <a href="/tools" class="btn-primary">Explore Tools</a>
+            </div>
+        </div>
+<!-- 
+         News Box moved inside the flex container 
+        <div class="news-box">
+            <h3>Latest Market News</h3>
+            <ul id="news-container"></ul>
+        </div>
+    </div> -->
 </section>
+
 
 <!-- Features Section -->
 <section class="features">
@@ -78,4 +89,10 @@
     <p>Create an account to save your progress and access personalized tools.</p>
     <a href="/register" class="btn-primary">Sign Up Now</a>
 </section>
+
+<script src="/static/js/news.js"></script>
+
 {% endblock %}
+
+
+
