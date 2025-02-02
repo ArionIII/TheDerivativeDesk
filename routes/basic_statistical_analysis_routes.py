@@ -55,24 +55,26 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
     if request.method == "POST":
         try:
             # Determine source of data: form or JSON
-            data_source = request.form if request.content_type.startswith("multipart/form-data") else request.json
+            logger.info(request.content_type)
+            data_source = request.files if request.content_type.startswith("multipart/form-data") else request.json
             logger.info("Received data:")
+            logger.info('data source')
             logger.info(data_source)
 
             params = parse_inputs(data_source, tool_config["inputs"])
             logger.info("Parsed parameters:")
             logger.info(params)
-
+            logger.error(params)
             if "csv_file" in params:
                 logger.info("Processing CSV file")
                 params = {"dataset": params["csv_file"]}
-
+            logger.error(params)
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
                 logger.error(f"No calculation logic for tool: {tool_key}")
                 return "Calculation logic not implemented", 500
-            
+            logger.error('moment before result')
             result = calculation_function(**params)
             result_graph = extract_values(result)
             graph_input = params | result_graph

@@ -12,7 +12,7 @@ SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG = {
     "bayesian-updating": {
         "title": "Bayesian Updating",
         "description": "Update beliefs using Bayesian probabilities.",
-        "url": "tools/bayesian-analysis/bayesian-updating",
+        "url": "/tools/bayesian-analysis/bayesian-updating",
         "inputs": [
             {"label": "Prior Probability", "id": "prior", "type": "number", "placeholder": "e.g., 0.6", "optional": False},
             {"label": "Likelihood", "id": "likelihood", "type": "number", "placeholder": "e.g., 0.8", "optional": False},

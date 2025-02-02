@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Object.entries(inputData).forEach(([key, value]) => {
                 requestPayload.append(key, value);
             });
-
+            console.log("Request payload:", requestPayload);
             // Send data to the server for calculation
             const response = await fetch(window.location.pathname, {
                 method: "POST",

@@ -35,7 +35,7 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
     "transition-matrices": {
         "title": "Transition Matrices",
         "description": "Construct and analyze transition matrices for Markov Chains.",
-        "url": "/tools/markov-chains/transition-matrices",
+        "url": "/tools/markov-chains-and-random-walks/transition-matrices",
         "inputs": [
             {"label": "State Sequence", "id": "state_sequence", "type": "array", "placeholder": "e.g., [1,2,1,3,1,2]", "optional": False},
             {"label": "Number of States", "id": "num_states", "type": "number", "placeholder": "e.g., 3", "optional": False},
@@ -46,7 +46,7 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
     "random-walks": {
         "title": "Simulation of Random Walks",
         "description": "Simulate random walks and analyze their outcomes.",
-        "url": "/tools/simulation/random-walk",
+        "url": "/tools/markov-chains-and-random-walks/random-walks",
         "inputs": [
             {"label": "Number of Steps", "id": "num_steps", "type": "number", "placeholder": "e.g., 100", "optional": False},
             {"label": "Number of Simulations", "id": "num_simulations", "type": "number", "placeholder": "e.g., 50", "optional": False},
