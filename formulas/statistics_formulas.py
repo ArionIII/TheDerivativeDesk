@@ -8,6 +8,13 @@ from scipy.stats import binom, poisson
 from config import logger
 import math
 import random
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller, acf, pacf
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import os
+import openpyxl
 
 def calculate_mean(dataset):
     """
@@ -279,15 +286,15 @@ def calculate_t_distribution(value, degrees_freedom):
     except Exception as e:
         return ({"error": str(e)}), 400
 
-def calculate_moving_averages(time_series, window_size):
-    logger.info(f"Calculating moving averages for time series: {time_series}")
+def calculate_moving_averages(dataset, window_size):
+    logger.info(f"Calculating moving averages for time series: {dataset}")
     try:
-        time_series = list(map(float, time_series))  # Convert to float
+        dataset = list(map(float, dataset))  # Convert to float
         window_size = int(window_size)  # Convert window_size to integer
         logger.info(f"Window Size: {window_size}")
         smoothed = [
-            sum(time_series[i:i + window_size]) / window_size 
-            for i in range(len(time_series) - window_size + 1)
+            sum(dataset[i:i + window_size]) / window_size 
+            for i in range(len(dataset) - window_size + 1)
         ]
         logger.info(f"Smoothed Time Series: {smoothed}")
         return {"Smoothed Time Series": smoothed}
@@ -295,11 +302,11 @@ def calculate_moving_averages(time_series, window_size):
         logger.error(f"Error in calculate_moving_averages: {e}")
         return {"error": str(e)}, 400
 
-def calculate_exponential_smoothing(time_series, smoothing_factor):
+def calculate_exponential_smoothing(dataset, smoothing_factor):
     try:
-        time_series = list(map(float, time_series))  # Convert to float
+        dataset = list(map(float, dataset))  # Convert to float
         smoothed = []
-        for i, value in enumerate(time_series):
+        for i, value in enumerate(dataset):
             if i == 0:
                 smoothed.append(value)  # Initialize with the first value
             else:
@@ -308,18 +315,18 @@ def calculate_exponential_smoothing(time_series, smoothing_factor):
     except Exception as e:
         return {"error": str(e)}, 400
 
-def calculate_autocorrelation(time_series, lag_order=1):
+def calculate_autocorrelation(dataset, lag_order=1):
     try:
-        time_series = list(map(float, time_series))  # Convert to float
-        n = len(time_series)
-        mean = sum(time_series) / n
-        lagged_series = time_series[lag_order:]
-        original_series = time_series[:-lag_order]
+        dataset = list(map(float, dataset))  # Convert to float
+        n = len(dataset)
+        mean = sum(dataset) / n
+        lagged_series = dataset[lag_order:]
+        original_series = dataset[:-lag_order]
         numerator = sum(
             (original_series[i] - mean) * (lagged_series[i] - mean) 
             for i in range(len(lagged_series))
         )
-        denominator = sum((x - mean) ** 2 for x in time_series)
+        denominator = sum((x - mean) ** 2 for x in dataset)
         autocorrelation = numerator / denominator
         return {"Autocorrelation": autocorrelation}
     except Exception as e:
@@ -437,3 +444,144 @@ def calculate_eigenvalues_eigenvectors(matrix):
         }
     except Exception as e:
         return {"error": str(e)}, 400
+
+def determine_best_model(dataset):
+    """
+    Détermine si la série suit un modèle AR, MA ou ARMA et trouve les meilleurs paramètres (p, q).
+    """
+    # 1. Vérifier la stationnarité (ADF Test)
+    result = adfuller(dataset)
+    is_stationary = result[1] < 0.05  # p-value < 0.05 → série stationnaire
+    
+    if not is_stationary:
+        dataset = pd.Series(dataset)
+        print("La série n'est pas stationnaire. On applique une différenciation.")
+        dataset = dataset.diff().dropna().tolist()  # Appliquer la différenciation pour stationnariser
+
+    # 2. Calculer ACF et PACF
+    lag_acf = acf(dataset, nlags=10)
+    lag_pacf = pacf(dataset, nlags=10)
+
+    # 3. Déterminer p et q en regardant où l'ACF/PACF coupent brusquement
+    p = np.argmax(lag_pacf < 0.2)  # PACF coupe → AR(p)
+    q = np.argmax(lag_acf < 0.2)   # ACF coupe → MA(q)
+    
+    # Si aucun des deux ne coupe net, tester ARMA avec plusieurs valeurs
+    best_aic = np.inf
+    best_order = (p, 0, q)  # Default: ARMA(p, q)
+    
+    for p_try in range(4):  # Tester jusqu'à AR(3)
+        for q_try in range(4):  # Tester jusqu'à MA(3)
+            try:
+                model = ARIMA(dataset, order=(p_try, 0, q_try))
+                result = model.fit()
+                if result.aic < best_aic:
+                    best_aic = result.aic
+                    best_order = (p_try, 0, q_try)
+            except:
+                continue
+    
+    print(f"Modèle sélectionné : ARMA{best_order} (basé sur AIC={best_aic})")
+    return (best_order, best_aic)
+
+
+
+def forecast_series(dataset, n_previsions, temporal_step):
+    """
+    Applique le modèle ARMA optimal et prédit les prochaines valeurs en utilisant un index numérique.
+    """
+    # Vérifier que temporal_step est un entier valide
+    try:
+        temporal_step = int(temporal_step)
+        n_previsions = int(n_previsions)
+    except ValueError:
+        logger.error(f"Invalid format: temporal_step={temporal_step}, n_previsions={n_previsions}")
+        return {"error": "Temporal Step and Number of Predictions must be integers."}, 400
+
+    # Générer un index numérique basé sur temporal_step
+    start_index = 0  # Index de départ
+    time_index = np.arange(start_index, start_index + len(dataset) * temporal_step, temporal_step)
+
+    # Convertir dataset en Pandas Series avec un index numérique
+    dataset = pd.Series(dataset, index=time_index)
+    logger.info(f"Dataset transformed into numerical index with step {temporal_step}.")
+
+    # Trouver le meilleur modèle (AR, MA, ARMA)
+    best_order, best_aic = determine_best_model(dataset)
+    model = ARIMA(dataset, order=best_order)
+    logger.info("Model has been chosen")
+    result = model.fit()
+    logger.info("Model has been fitted")
+
+    # 🛠 Correction du problème avec forecast_index
+    last_index = time_index[-1]  # Dernier point observé
+    forecast_index = np.arange(last_index + temporal_step, last_index + (n_previsions + 1) * temporal_step, temporal_step)
+
+    # Vérification des valeurs de forecast_index
+    if forecast_index[0] <= last_index:
+        logger.error(f"Invalid forecast index: {forecast_index}")
+        return {"error": "Forecast index must start after the last observed index."}, 400
+
+    # Faire la prévision
+    forecast = result.forecast(steps=n_previsions)
+    forecast_series = pd.Series(forecast, index=forecast_index)
+
+    logger.info("Forecast has been made")
+    logger.info("End AR-MA-ARMA")
+
+    return forecast_series.to_dict()  # Retourner en format dict pour API
+
+def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics/"):
+    """
+    Compute log returns for a given dataset and save results in both CSV and XLSX formats.
+
+    Parameters:
+    - dataset: A list of numbers (single series) or a dictionary of lists (multiple series).
+    - output_path: Path to save the resulting CSV and XLSX files.
+
+    Returns:
+    - A tuple (csv_path, xlsx_path) containing the paths to the saved files.
+    """
+    try:
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
+
+        if isinstance(dataset, list):
+            # Cas d'une seule colonne : convertir en DataFrame
+            df = pd.DataFrame({"Series": dataset})
+            df["Log_Returns"] = np.log(df["Series"] / df["Series"].shift(1))
+        elif isinstance(dataset, dict):
+            # Aligner toutes les colonnes sur la même longueur
+            max_length = max(len(v) for v in dataset.values())
+            dataset_aligned = {
+                key: v + [np.nan] * (max_length - len(v)) for key, v in dataset.items()
+            }
+            df = pd.DataFrame(dataset_aligned)
+
+            # Calcul des log-returns
+            log_returns = np.log(df / df.shift(1))
+
+            # Réintégrer les noms des colonnes en haut du fichier
+            df_output = pd.DataFrame(columns=df.columns)  # Créer un header
+            df_output = pd.concat([df_output, log_returns], ignore_index=True)
+        else:
+            raise ValueError("Invalid dataset format. Expected list or dict of lists.")
+
+        # Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
+        df_output.dropna(inplace=True, how="all")
+
+        # Générer un nom de fichier unique
+        random_file_name = f"log_returns_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        logger.info(f"Log returns saved to: {csv_path} and {xlsx_path}")
+        return csv_path, xlsx_path
+    except Exception as e:
+        raise ValueError(f"Error computing log returns: {e}")

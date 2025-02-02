@@ -1,12 +1,31 @@
 TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
+    "log-returns-calculator": {
+    "title": "Log Returns Calculator",
+    "description": "Compute log returns for time series in a CSV file.",
+    "url": "/tools/time-series-analysis/log-returns-calculator",
+    "inputs": [
+        {"label": "Time Series Data", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
+        {
+            "label": "CSV File",
+            "id": "csv_file",
+            "type": "file",
+            "accept": ".csv",
+            "data_target": "dataset",
+            "optional": True,
+            "template": "/static/templates/sample_time_series.csv"
+        }
+    ],
+    "outputs": ["CSV File with Log Returns"],
+    "note": "You will automatically download a CSV file AND a XLSX file with the log returns of the input time series."
+},
     "moving-averages": {
         "title": "Moving Averages",
         "description": "Calculate moving averages for time series smoothing.",
         "url": "/tools/time-series-analysis/moving-averages",
         "inputs": [
-            {"label": "Time Series Data", "id": "time_series", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
+            {"label": "Time Series Data", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
             {"label": "Window Size", "id": "window_size", "type": "number", "placeholder": "e.g., 3", "optional": False},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "time_series", "optional": True},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True, "template": "/static/templates/median.csv"},
         ],
         "outputs": ["Smoothed Time Series"],
     },
@@ -32,6 +51,42 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
         ],
         "outputs": ["Autocorrelation Values"],
     },
+    "AR-MA-ARMA-previsions": {
+    "title": "AR, MA, ARMA Predictions",
+    "description": "Automatically determine the best model (AR, MA, or ARMA) and generate future predictions.",
+    "url": "/tools/time-series-analysis/AR-MA-ARMA-previsions",
+    "inputs": [
+        {
+            "label": "Time Series Data",
+            "id": "dataset",
+            "type": "array",
+            "placeholder": "e.g., [1,2,3,4,5,6]",
+            "optional": False
+        },
+        {
+            "label": "Number of Predictions",
+            "id": "n_previsions",
+            "type": "number",
+            "placeholder": "e.g., 10",
+            "optional": False
+        },
+        {"label": "Temporal Step", "id": "temporal_step", "type": "number", "placeholder": "1, 7, 30, 90, 365...", "optional": False},
+        {
+            "label": "CSV File",
+            "id": "csv_file",
+            "type": "file",
+            "accept": ".csv",
+            "data_target": "dataset",
+            "optional": True,
+            "template": "/static/templates/median.csv"
+        }
+    ],
+    "outputs": [
+        "Predicted Time Series",
+        "Best Model Selected (AR, MA, or ARMA)",
+        "Model Parameters (p, q)"
+    ]
+},
     "transition-matrices": {
         "title": "Transition Matrices",
         "description": "Construct and analyze transition matrices for Markov Chains.",

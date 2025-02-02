@@ -4,7 +4,7 @@ import os
 import csv
 from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
-
+import pandas as pd
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue
@@ -46,23 +46,77 @@ class Config:
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your_jwt_secret_key")
 
-def parse_csv(file):
+def parse_csv_and_xlsx(file):
     """
-    Parse CSV file content into a list of numbers.
-    Expects a single column or comma-separated values.
+    Parse CSV or XLSX file content into a list of numbers (if single column)
+    or into a dictionary of lists (if multiple columns).
+
+    Automatically detects:
+    - The file type (CSV or XLSX).
+    - The separator (",", ";", or tab "\t") for CSV files.
+    - Whether to skip the header by checking if the first row contains strings.
+
+    Parameters:
+    - file: The uploaded file.
+
+    Returns:
+    - List of floats if it's a single-column file.
+    - Dictionary {column_name: list of floats} if multiple columns.
     """
     try:
-        file_content = file.read().decode('utf-8')  # Decode file content
-        reader = csv.reader(StringIO(file_content))
-        values = []
-        for row in reader:
-            # Assume single-column or comma-separated values
-            values.extend(float(x.strip()) for x in row if x.strip())
-        return values
+        # Déterminer le format du fichier
+        filename = file.filename.lower()
+        file_extension = os.path.splitext(filename)[1]  # Récupérer l'extension du fichier
+
+        if file_extension == ".csv":
+            # Lire le contenu du fichier CSV
+            file_content = file.read().decode('utf-8')
+
+            # Détecter automatiquement le séparateur
+            first_line = file_content.split("\n")[0]
+            separator = "," if "," in first_line else ";" if ";" in first_line else "\t"
+            logger.info(f"Detected separator: {separator}")
+
+            # Charger le fichier avec pandas
+            df = pd.read_csv(StringIO(file_content), sep=separator, header=None)
+
+        elif file_extension in [".xls", ".xlsx"]:
+            # Charger le fichier XLSX avec pandas
+            df = pd.read_excel(file, header=None, engine="openpyxl")
+
+        else:
+            raise ValueError("Unsupported file format. Only CSV and XLSX are allowed.")
+
+        # Vérifier si la première ligne contient des strings (header) ou seulement des nombres
+        first_row = df.iloc[0].astype(str)  # Convertir en string pour test
+        contains_strings = any(not value.replace(".", "", 1).isdigit() for value in first_row)
+        logger.info(f"Contains strings: {contains_strings}")
+
+        # Si la première ligne contient des strings, on la considère comme un header et on la saute
+        if contains_strings:
+            if file_extension == ".csv":
+                df = pd.read_csv(StringIO(file_content), sep=separator, header=0)
+            elif file_extension in [".xls", ".xlsx"]:
+                df = pd.read_excel(file, header=0, engine="openpyxl")
+
+        logger.info(f"Loaded Data:\n{df}")
+
+        # Remplacer les virgules par des points pour conversion correcte
+        df = df.applymap(lambda x: x.replace(",", ".") if isinstance(x, str) else x)
+        df = df.astype(float)
+
+        # Si une seule colonne, retourner une liste de nombres
+        if df.shape[1] == 1:
+            return df.iloc[:, 0].dropna().tolist()
+
+        # Si plusieurs colonnes, retourner un dictionnaire {nom_colonne: liste de valeurs}
+        return {col: df[col].dropna().tolist() for col in df.columns}
+
     except Exception as e:
-        logger.error(f"Error parsing CSV: {e}")
-        raise ValueError("Invalid CSV content")
-    
+        logger.error(f"Error parsing file: {e}")
+        raise ValueError("Invalid file content")
+
+
 def parse_array(raw_value):
     """
     Parse an array input, supporting nested arrays or flat arrays.
@@ -116,7 +170,7 @@ def parse_inputs(data_source, inputs_config):
                     # Handle CSV file upload
                     file_data = request.files[input_id] if request.files else None
                     if file_data:
-                        params[input_id] = parse_csv(file_data)
+                        params[input_id] = parse_csv_and_xlsx(file_data)
                 elif input_type == "array":
                     logger.info("Processing array input")
                     params[input_id] = parse_array(raw_value)

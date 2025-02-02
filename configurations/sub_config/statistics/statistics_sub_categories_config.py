@@ -54,14 +54,36 @@ STATISTICS_TOOL_CATEGORIES = {
     },
     # Time Series Analysis
     "time-series-analysis": {
-        "title": "Time Series Analysis",
-        "description": "Analyze trends in temporal data using techniques like moving averages and autocorrelation.",
-        "parent_category": "statistics",
-        "tools": [
-            {"title": "Moving Averages", "description": "Calculate moving averages for time series smoothing.", "url": "/tools/time-series-analysis/moving-averages"},
-            {"title": "Exponential Smoothing", "description": "Perform exponential smoothing for forecasting.", "url": "/tools/time-series-analysis/exponential-smoothing"},
-            {"title": "Autocorrelation", "description": "Analyze the correlation of a time series with its own lags.", "url": "/tools/time-series-analysis/autocorrelation"},
-        ],
+    "title": "Time Series Analysis",
+    "description": "Analyze trends in temporal data using techniques like moving averages and autocorrelation.",
+    "parent_category": "statistics",
+    "tools": [
+        {
+            "title": "Moving Averages",
+            "description": "Calculate moving averages for time series smoothing.",
+            "url": "/tools/time-series-analysis/moving-averages"
+        },
+        {
+            "title": "Exponential Smoothing",
+            "description": "Perform exponential smoothing for forecasting.",
+            "url": "/tools/time-series-analysis/exponential-smoothing"
+        },
+        {
+            "title": "Autocorrelation",
+            "description": "Analyze the correlation of a time series with its own lags.",
+            "url": "/tools/time-series-analysis/autocorrelation"
+        },
+        {
+            "title": "AR, MA, ARMA Predictions",
+            "description": "Automatically determine the best model (AR, MA, or ARMA) and generate future predictions.",
+            "url": "/tools/time-series-analysis/AR-MA-ARMA-previsions"
+        },
+        {
+            "title": "Log Returns Calculator",
+            "description": "Compute log returns for time series in a CSV file.",
+            "url": "/tools/time-series-analysis/log-returns-calculator"
+        }
+    ]
     },
     # Markov Chains and Random Walks
     "markov-chains-and-random-walks": {
