@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
 from routes.futures_forward_routes import forwards_routes, futures_routes
 from routes.hedging_routes import hedging_basics_routes, equity_hedging_routes
@@ -23,6 +23,8 @@ from routes.interest_rate_derivatives_routes import interest_rate_derivatives_ro
 from routes.stock_routes import stocks_routes, stock_chart_routes
 from configurations.sub_config.interest_rates.interest_rate_sub_categories_config import tool_category_interest_rates_routes
 import os
+from web_parsing.news_rss_parser import get_news_from_rss
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -94,11 +96,6 @@ def tools():
 def blog():
     return render_template("blog.html")
 
-# Route pour la page d'apprentissage
-@app.route("/learn")
-def learn():
-    return render_template("learn.html")
-
 # Route pour la page futures-forwards
 @app.route("/tools/futures-forwards")
 def futures_forwards():
@@ -125,6 +122,21 @@ def inject_user():
         } if "user_id" in session else None
     }
 
+@app.route("/news", methods=["GET"])
+def news_page():
+    """Affiche la page HTML avec la liste des news."""
+    return render_template("news.html")  # NE RENVOIE QUE DU HTML
+
+@app.route("/api/news", methods=["GET"])
+def get_news():
+    """Retourne les news au format JSON pour le JavaScript."""
+    logger.info("Fetching news from app...")
+    news = get_news_from_rss()
+    logger.info("News fetched successfully.")
+
+    response = jsonify(news)
+    response.headers["Content-Type"] = "application/json"
+    return response
 
 # Lancer le serveur Flask
 if __name__ == "__main__":

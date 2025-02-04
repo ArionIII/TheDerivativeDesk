@@ -1,11 +1,10 @@
 .hero {
-    width: 100%; /* Full viewport width */
-    padding: 60px 20px; /* Spacious padding */
-    background-color: var(--primary-color); /* Background color from variables */
-    color: var(--secondary-color); /* Text color from variables */
+    width: 100%;
+    padding: 60px 20px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     text-align: center;
 }
-
 .hero h2 {
     font-size: 3rem; /* Large heading size for emphasis */
     margin-bottom: 20px; /* Space below the heading */
@@ -245,4 +244,19 @@
     text-align: center;
     color: var(--secondary-color);
     border: 1px solid #ddd;
+}
+
+/* News Section */
+.hero-container {
+    display: flex;
+    justify-content: center; /* Centre le contenu */
+    align-items: center;
+    position: relative;
+    gap: 50px; /* Espace entre le texte et la boîte de news */
+}
+
+.hero-text {
+    max-width: 700px; /* Assure un bon centrage du texte */
+    flex-grow: 1; /* Permet au texte de rester centré */
+    text-align: center; /* Centre le texte */
 }
