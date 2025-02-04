@@ -96,11 +96,6 @@ def tools():
 def blog():
     return render_template("blog.html")
 
-# Route pour la page d'apprentissage
-@app.route("/learn")
-def learn():
-    return render_template("learn.html")
-
 # Route pour la page futures-forwards
 @app.route("/tools/futures-forwards")
 def futures_forwards():
@@ -128,10 +123,20 @@ def inject_user():
     }
 
 @app.route("/news", methods=["GET"])
+def news_page():
+    """Affiche la page HTML avec la liste des news."""
+    return render_template("news.html")  # NE RENVOIE QUE DU HTML
+
+@app.route("/api/news", methods=["GET"])
 def get_news():
+    """Retourne les news au format JSON pour le JavaScript."""
+    logger.info("Fetching news from app...")
     news = get_news_from_rss()
-    logger.warning(news)
-    return jsonify(news)
+    logger.info("News fetched successfully.")
+
+    response = jsonify(news)
+    response.headers["Content-Type"] = "application/json"
+    return response
 
 # Lancer le serveur Flask
 if __name__ == "__main__":
