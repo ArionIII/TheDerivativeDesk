@@ -46,7 +46,7 @@ def get_random_stocks():
 
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
-            time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
+            # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
             info = stock.info
 
             # Vérification que l'info existe
@@ -108,7 +108,7 @@ def get_stock_chart(ticker):
             return jsonify({"error": f"Chart for {ticker} already generated"}), 409
 
         stock = yf.Ticker(ticker)
-        time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
+        # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
         history = stock.history(period="1mo", interval="1d")
 
         if history.empty:
@@ -150,10 +150,10 @@ def get_stock_chart(ticker):
         # Sauvegarde et envoi de l'image
         buffer = BytesIO()
         fig.savefig(buffer, format="png")
-        fig.savefig(f"static/debug/{ticker}_debug_chart.png")
+        # fig.savefig(f"static/debug/{ticker}_debug_chart.png")
         buffer.seek(0)
 
-        time.sleep(1)  # Ajout d'un délai pour éviter des conflits
+        # time.sleep(1)  # Ajout d'un délai pour éviter des conflits
         plt.close(fig)  # Fermeture propre du graphe
 
         return send_file(buffer, mimetype="image/png")
