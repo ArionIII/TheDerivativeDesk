@@ -26,7 +26,7 @@ body {
     max-width: 600px; /* Limite la largeur pour éviter qu'elle ne devienne trop grande */
     position: absolute;
     top: 90px; /* Positionne sous les boutons */
-    left: 64%; 
+    left: 67%; 
 }
 
 /* 🔹 Barre de recherche */
