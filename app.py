@@ -24,7 +24,7 @@ from routes.stock_routes import stocks_routes, stock_chart_routes
 from configurations.sub_config.interest_rates.interest_rate_sub_categories_config import tool_category_interest_rates_routes
 import os
 from web_parsing.news_rss_parser import get_news_from_rss
-
+from routes.stock_routes import stock_news_routes
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -61,6 +61,7 @@ app.register_blueprint(linear_algebra_and_advanced_calculations_routes)
 app.register_blueprint(interest_rate_fundamentals_routes)
 app.register_blueprint(tool_category_interest_rates_routes)
 app.register_blueprint(interest_rate_derivatives_routes)
+app.register_blueprint(stock_news_routes)
 
 # Route pour la page d'accueil
 @app.route("/")

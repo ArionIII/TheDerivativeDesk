@@ -9,13 +9,15 @@ from matplotlib.dates import DateFormatter
 import matplotlib
 import time
 from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
-
+import feedparser
 
 matplotlib.use("Agg")
+GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={ticker}+stock&hl=en-US&gl=US&ceid=US:en"
 
 # Blueprints
 stocks_routes = Blueprint("stocks_routes", __name__)
 stock_chart_routes = Blueprint("stock_chart_routes", __name__)
+stock_news_routes = Blueprint("stock_news_routes", __name__)
 
 # Fetch available tickers
 ALL_TICKERS = combine_tickers_and_titles()
@@ -298,3 +300,37 @@ def get_stock_details(ticker):
         logger.error(f"Error fetching stock details for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
 
+
+
+@stock_news_routes.route("/api/stock-news/<ticker>", methods=["GET"])
+def get_stock_news(ticker):
+    """
+    Fetch news articles related to a given stock ticker from Google News RSS.
+    """
+    try:
+        formatted_ticker = ticker.upper()
+        rss_url = GOOGLE_NEWS_RSS_URL.format(ticker=formatted_ticker)
+        
+        logger.info(f"Fetching news for {formatted_ticker} from {rss_url}")
+
+        feed = feedparser.parse(rss_url)
+
+        if not feed.entries:
+            logger.warning(f"No news found for {formatted_ticker}")
+            return jsonify({"error": "No news found"}), 404
+
+        news_articles = []
+        for entry in feed.entries[:10]:  # Limit to 10 articles
+            news_articles.append({
+                "title": entry.title,
+                "link": entry.link,
+                "published": entry.published,
+                "summary": entry.summary,
+                "source": entry.get("source", {}).get("title", "Unknown Source"),
+            })
+
+        return jsonify({"news": news_articles})
+
+    except Exception as e:
+        logger.error(f"Error fetching news for {ticker}: {e}")
+        return jsonify({"error": str(e)}), 500
