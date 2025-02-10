@@ -47,35 +47,35 @@ def get_random_stocks():
         valid_stocks = []
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
+            logger.info(stock)
             info = stock.info
-            current_price = info.get("currentPrice")
-            history = stock.history(period="1mo", interval="1d")
-            # a=0
-            # if a==0:
-            #     logger.error(f"info : {info}")
-            #     logger.error(f"hitory : {history}")
-            #     a+=1
-            if history.empty:
+            # logger.info(info)
+
+            # Vérifier si Yahoo Finance retourne une erreur de données
+            if "quoteType" not in info or "regularMarketVolume" not in info:
+                logger.warning(f"Skipping {ticker}: No valid market data found.")
                 continue
 
-            if current_price:  
-                previous_close = info.get("previousClose", None)
-                first_price = history.iloc[0]["Close"]
-                change = (current_price - previous_close) / previous_close if previous_close else None
-                change_monthly = (current_price - first_price) / first_price if first_price else None
+            current_price = info.get("currentPrice")
+            history = stock.history(period="1mo", interval="1d")
 
-                valid_stocks.append({
-                    "ticker": ticker,
-                    "title": ALL_TICKERS.get(ticker, "Unknown"),
-                    "price": current_price,
-                    "change": change if change is not None else "N/A",
-                    "change_monthly": change_monthly if change_monthly is not None else "N/A",
-                })
-            
-            else:
-                time.sleep(0.5)
+            if history.empty:
+                logger.warning(f"Skipping {ticker}: No historical data available.")
+                continue
 
-            # Si on a assez de tickers valides, on arrête la boucle
+            previous_close = info.get("previousClose", None)
+            first_price = history.iloc[0]["Close"] if not history.empty else None
+            change = (current_price - previous_close) / previous_close if previous_close else None
+            change_monthly = (current_price - first_price) / first_price if first_price else None
+
+            valid_stocks.append({
+                "ticker": ticker,
+                "title": ALL_TICKERS.get(ticker, "Unknown"),
+                "price": current_price,
+                "change": change if change is not None else "N/A",
+                "change_monthly": change_monthly if change_monthly is not None else "N/A",
+            })
+
             if len(valid_stocks) >= num_stocks:
                 break
 
@@ -92,38 +92,43 @@ def get_random_stocks():
 @stock_chart_routes.route("/api/stock-chart/<ticker>", methods=["GET"])
 def get_stock_chart(ticker):
     try:
-        # Fetch historical data
         stock = yf.Ticker(ticker)
-        history = stock.history(period="1mo", interval="1d", timeout=2)
+        history = stock.history(period="1mo", interval="1d")
 
         if history.empty:
-            logger.warning(f"No data available for ticker {ticker}")
+            logger.warning(f"No data available for {ticker}")
             return jsonify({"error": f"No data available for {ticker}"}), 404
+
+        # Vérifier que 'Close' existe
+        if "Close" not in history:
+            logger.warning(f"No 'Close' price available for {ticker}")
+            return jsonify({"error": f"No 'Close' price available for {ticker}"}), 404
 
         # Plotting
         plt.figure(figsize=(4.5, 2.3))
         plt.plot(history.index, history["Close"], label=f"{ticker} Price", color="#007bff", linewidth=2)
+        logger.error(history["Close"])
         plt.title(f"{ticker} - Last 1 Month")
         plt.xlabel("Date")
         plt.ylabel("Price (USD)")
+        plt.ylim(history["Close"].min() * 0.95, history["Close"].max() * 1.05)
         plt.grid(alpha=0.3)
-        # plt.legend()
         ax = plt.gca()
         ax.xaxis.set_major_formatter(DateFormatter('%d'))
-        # plt.xticks(rotation=45, fontsize=8)
-        # plt.yticks(fontsize=8)
 
-
-        # Save plot to buffer
         buffer = BytesIO()
         plt.savefig(buffer, format="png")
+        plt.savefig(f"static/debug/{ticker}_debug_chart.png")
         buffer.seek(0)
+        # plt.show()
         plt.close()
 
         return send_file(buffer, mimetype="image/png")
+
     except Exception as e:
         logger.error(f"Error generating chart for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 
 @stocks_routes.route("/api/stock-details/<ticker>", methods=["GET"])

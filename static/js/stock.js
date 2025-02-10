@@ -61,39 +61,70 @@ document.addEventListener("DOMContentLoaded", () => {
     // Attach loaders to chart images
     const attachChartLoaders = () => {
         const charts = document.querySelectorAll(".chart-img");
-
+    
         charts.forEach((chart) => {
             const img = new Image();
             img.src = chart.dataset.src;
-
+    
             img.onload = () => {
-                chart.src = img.src; // Replace placeholder once loaded
+                console.log(`Image loaded successfully for ${chart.dataset.src}`);
+                chart.src = img.src;
             };
-
+    
             img.onerror = () => {
-                chart.src = "/static/images/error-placeholder.png"; // Fallback image if loading fails
+                console.error(`Error loading image for ${chart.dataset.src}`);
+                chart.src = "/static/images/error-placeholder.png"; // Fallback image
             };
         });
     };
+    
 
     // Render search suggestions
     const renderSuggestions = (stocks) => {
-        suggestionsDiv.innerHTML = stocks
-            .map(
-                (stock) =>
-                    `<p class="suggestion-item" 
-                        data-title="${stock.title}" 
-                        data-ticker="${stock.ticker}" 
-                        data-price="${stock.price}" 
-                        data-change="${stock.change}"
-                        data-change_monthly="${stock.change_monthly}">
-                        ${stock.title} (${stock.ticker})
-                    </p>`
-            )
-            .join("");
-
+        suggestionsDiv.innerHTML = ""; // Effacer les anciennes suggestions
+    
+        stocks.forEach((stock) => {
+            const item = document.createElement("p");
+            item.classList.add("suggestion-item");
+            item.dataset.title = stock.title;
+            item.dataset.ticker = stock.ticker;
+            item.dataset.price = stock.price;
+            item.dataset.change = stock.change;
+            item.dataset.change_monthly = stock.change_monthly;
+            item.innerHTML = `<strong>🛠️ ${stock.title} (${stock.ticker})</strong>`;
+    
+            item.addEventListener("click", () => {
+                console.log(`Clicked suggestion: ${stock.ticker}`);
+                selectStock(stock);
+            });
+    
+            suggestionsDiv.appendChild(item);
+        });
+    
         suggestionsDiv.classList.remove("hidden");
     };
+    const selectStock = (stock) => {
+        console.log("Selected stock:", stock);
+        const newAction = {
+            title: stock.title,
+            ticker: stock.ticker,
+            price: parseFloat(stock.price),
+            change: parseFloat(stock.change),
+            change_monthly: parseFloat(stock.change_monthly),
+        };
+    
+        const currentActions = Array.from(actionsList.children)
+            .map((child) => JSON.parse(child.dataset.action || "{}"))
+            .filter((action) => action && action.ticker); // Vérifie que l'objet est valide
+    
+        currentActions.pop(); // Supprime le dernier élément
+        const updatedActions = [newAction, ...currentActions];
+        renderActions(updatedActions);
+    
+        searchInput.value = "";
+        hideSuggestions();
+    };
+    
 
     // Hide suggestions
     const hideSuggestions = () => {
@@ -231,7 +262,8 @@ window.openSeeMore = async (ticker) => {
 
         // 🔹 Render the stock chart
         const ctx = document.getElementById("detailed-stock-chart").getContext("2d");
-        renderChart(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
+        ensureChartRender(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
+
 
         // 🔹 Show the modal
         const modal = document.getElementById("see-more-modal");
@@ -271,15 +303,18 @@ const formatPercentage = (num) => {
     let activeChart = null; // Stocke l'instance active du graphique
 
     const renderChart = (ctx, dates, prices, volumes) => {
-        console.log("Dates:", dates);
-        console.log("Prices:", prices);
-        console.log("Volumes:", volumes);
-
+        console.log("Rendering chart...");
+    
+        if (!dates || !prices || !volumes || dates.length === 0 || prices.length === 0 || volumes.length === 0) {
+            console.error("Chart data is missing or empty. Skipping chart rendering.");
+            return;
+        }
+    
         // Détruire l'ancien graphique si nécessaire
         if (activeChart) {
             activeChart.destroy();
         }
-
+    
         // Créer un nouveau graphique
         activeChart = new Chart(ctx, {
             type: "bar",
@@ -327,6 +362,20 @@ const formatPercentage = (num) => {
             },
         });
     };
+    const ensureChartRender = (ctx, dates, prices, volumes) => {
+        if (!Array.isArray(dates) || !Array.isArray(prices) || dates.length === 0 || prices.length === 0) {
+            console.error(`Skipping chart rendering: Missing data for ${ctx.canvas.id}`);
+            ctx.canvas.parentNode.innerHTML = "<p style='color:red;'>Chart unavailable</p>";
+            return;
+        }
+    
+        setTimeout(() => {
+            renderChart(ctx, dates, prices, volumes);
+        }, 500);
+    };
+    
+    
+    
 
     // Close modal
     closeModalBtn.addEventListener("click", () => {
