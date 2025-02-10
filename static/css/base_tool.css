@@ -242,11 +242,3 @@ body {
 .btn-download:hover {
     background-color: #0056b3;
 }
-
-.chart-img {
-    max-width: 100px; /* Ajuste selon la taille désirée */
-    max-height: 60px; /* Ajuste selon la taille désirée */
-    width: auto;
-    height: auto;
-    object-fit: contain;
-}
