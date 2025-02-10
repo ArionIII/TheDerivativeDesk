@@ -7,21 +7,17 @@ from io import BytesIO
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib
-from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
 import time
+from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
+
 
 matplotlib.use("Agg")
-# Blueprint for stock data
+
+# Blueprints
 stocks_routes = Blueprint("stocks_routes", __name__)
 stock_chart_routes = Blueprint("stock_chart_routes", __name__)
 
-
-# Example list of S&P 500 tickers (can be replaced with a dynamic fetch)
-SP500_TICKERS = [
-    "AAPL", "MSFT", "GOOG", "AMZN", "TSLA", "META", "NVDA", "JNJ", "XOM", "PG",  # Add more tickers
-]
-
-#TODO : Pas utile de fetch a chaque fois, autant s'output un csv 1 fois par semaine ou autre.
+# Fetch available tickers
 ALL_TICKERS = combine_tickers_and_titles()
 
 @stocks_routes.route("/api/stocks", methods=["GET"])
@@ -39,41 +35,49 @@ def get_random_stocks():
                 if search_term in ticker.lower() or search_term in title.lower()
             ]
         else:
-            possible_tickers = list(ALL_TICKERS.keys())  # Tous les tickers disponibles
-        
-        selected_tickers = random.sample(possible_tickers, min(len(possible_tickers), num_stocks * 3))
+            possible_tickers = list(ALL_TICKERS.keys())
 
-        # Filtrer les tickers valides (avec un prix réel)
+        if not possible_tickers:
+            logger.warning("No stocks found matching the search criteria.")
+            return jsonify({"error": "No stocks found"}), 404
+
+        selected_tickers = random.sample(possible_tickers, min(len(possible_tickers), num_stocks * 3))
         valid_stocks = []
+
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
-            logger.info(stock)
+            time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
             info = stock.info
-            # logger.info(info)
 
-            # Vérifier si Yahoo Finance retourne une erreur de données
-            if "quoteType" not in info or "regularMarketVolume" not in info:
+            # Vérification que l'info existe
+            if not info or "quoteType" not in info or "regularMarketVolume" not in info:
                 logger.warning(f"Skipping {ticker}: No valid market data found.")
                 continue
 
+            # Récupération des valeurs avec vérification
             current_price = info.get("currentPrice")
+            previous_close = info.get("previousClose")
             history = stock.history(period="1mo", interval="1d")
 
-            if history.empty:
+            if history.empty or "Close" not in history:
                 logger.warning(f"Skipping {ticker}: No historical data available.")
                 continue
 
-            previous_close = info.get("previousClose", None)
             first_price = history.iloc[0]["Close"] if not history.empty else None
-            change = (current_price - previous_close) / previous_close if previous_close else None
-            change_monthly = (current_price - first_price) / first_price if first_price else None
+
+            # Vérification avant de calculer les pourcentages
+            change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
+            change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
+            if not change or not change_monthly:
+                logger.warning(f"Skipping {ticker}: Invalid price change data.")
+                continue
 
             valid_stocks.append({
                 "ticker": ticker,
                 "title": ALL_TICKERS.get(ticker, "Unknown"),
                 "price": current_price,
-                "change": change if change is not None else "N/A",
-                "change_monthly": change_monthly if change_monthly is not None else "N/A",
+                "change": change if isinstance(change, float) else "N/A",
+                "change_monthly": change_monthly if isinstance(change_monthly, float) else "N/A",
             })
 
             if len(valid_stocks) >= num_stocks:
@@ -89,46 +93,74 @@ def get_random_stocks():
         return jsonify({"error": str(e)}), 500
 
 
+
+# Cache pour éviter les doublons
+generated_charts = set()
+
 @stock_chart_routes.route("/api/stock-chart/<ticker>", methods=["GET"])
 def get_stock_chart(ticker):
     try:
+        global generated_charts
+
+        # Empêcher les doublons
+        if ticker in generated_charts:
+            logger.warning(f"Skipping duplicate chart for {ticker}")
+            return jsonify({"error": f"Chart for {ticker} already generated"}), 409
+
         stock = yf.Ticker(ticker)
+        time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
         history = stock.history(period="1mo", interval="1d")
 
         if history.empty:
             logger.warning(f"No data available for {ticker}")
             return jsonify({"error": f"No data available for {ticker}"}), 404
 
-        # Vérifier que 'Close' existe
-        if "Close" not in history:
+        # Vérification de la colonne "Close"
+        if "Close" not in history or history["Close"].isna().all():
             logger.warning(f"No 'Close' price available for {ticker}")
             return jsonify({"error": f"No 'Close' price available for {ticker}"}), 404
 
-        # Plotting
-        plt.figure(figsize=(4.5, 2.3))
-        plt.plot(history.index, history["Close"], label=f"{ticker} Price", color="#007bff", linewidth=2)
-        logger.error(history["Close"])
-        plt.title(f"{ticker} - Last 1 Month")
-        plt.xlabel("Date")
-        plt.ylabel("Price (USD)")
-        plt.ylim(history["Close"].min() * 0.95, history["Close"].max() * 1.05)
-        plt.grid(alpha=0.3)
-        ax = plt.gca()
+        # Vérification des valeurs min/max
+        min_price = history["Close"].min()
+        max_price = history["Close"].max()
+        if min_price is None or max_price is None or min_price == max_price:
+            logger.warning(f"Invalid price range for {ticker}")
+            return jsonify({"error": f"Invalid price range for {ticker}"}), 404
+
+        # Empêcher les graphes avec une échelle 0-1
+        if max_price - min_price < 0.01:
+            logger.warning(f"Skipping {ticker} chart: Insufficient price variation (min={min_price}, max={max_price})")
+            return jsonify({"error": f"Price variation too small for {ticker}"}), 404
+
+        # Création propre du graphique
+        plt.close('all')  # Nettoyage avant de créer un nouveau graphe
+        fig, ax = plt.subplots(figsize=(4.5, 2.3))  # Création propre de la figure
+        
+        ax.plot(history.index, history["Close"], label=f"{ticker} Price", color="#007bff", linewidth=2)
+        ax.set_title(f"{ticker} - Last 1 Month")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price (USD)")
+        ax.set_ylim(min_price * 0.95, max_price * 1.05)
+        ax.grid(alpha=0.3)
         ax.xaxis.set_major_formatter(DateFormatter('%d'))
 
+        # Ajout au cache
+        generated_charts.add(ticker)
+
+        # Sauvegarde et envoi de l'image
         buffer = BytesIO()
-        plt.savefig(buffer, format="png")
-        plt.savefig(f"static/debug/{ticker}_debug_chart.png")
+        fig.savefig(buffer, format="png")
+        fig.savefig(f"static/debug/{ticker}_debug_chart.png")
         buffer.seek(0)
-        # plt.show()
-        plt.close()
+
+        time.sleep(1)  # Ajout d'un délai pour éviter des conflits
+        plt.close(fig)  # Fermeture propre du graphe
 
         return send_file(buffer, mimetype="image/png")
 
     except Exception as e:
         logger.error(f"Error generating chart for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
-
 
 
 @stocks_routes.route("/api/stock-details/<ticker>", methods=["GET"])
@@ -238,7 +270,7 @@ def get_stock_details(ticker):
             "enterprise_to_revenue": info.get("enterpriseToRevenue", "N/A"),
             "enterprise_to_ebitda": info.get("enterpriseToEbitda", "N/A"),
         }
-        logger.warning(f"stock_details : {stock_details}")
+        # logger.warning(f"stock_details : {stock_details}")
         return jsonify({"details": stock_details})
     except Exception as e:
         logger.error(f"Error fetching stock details for {ticker}: {e}")
