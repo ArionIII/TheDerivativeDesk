@@ -22,24 +22,67 @@ ALL_TICKERS = combine_tickers_and_titles()
 @stocks_routes.route("/api/stocks", methods=["GET"])
 def get_random_stocks():
     """
-    Fetch random stocks data from ALL_TICKERS.
-    - Si c'est une recherche (search_term != ""), on renvoie juste les tickers et titres.
-    - Sinon, on fait toutes les vérifications et renvoie les prix et variations.
+    Fetch stock data from ALL_TICKERS.
+    - Si c'est une recherche rapide (search_term != "" et detailed=False), on renvoie juste les tickers et titres.
+    - Si `detailed=True`, on récupère uniquement le stock demandé avec toutes ses données.
+    - Sinon, on retourne une sélection aléatoire de stocks avec leurs données complètes.
     """
     search_term = request.args.get("search", "").lower()
     num_stocks = int(request.args.get("limit", 4))
+    detailed = request.args.get("detailed", "false").lower() == "true"
 
     try:
-        if search_term:
+        if search_term and not detailed:
+            logger.info(f"Searching for stocks matching: {search_term} (Quick Search Mode)")
             # **⚡ Mode recherche rapide : ne renvoyer que tickers et titres**
             possible_tickers = [
                 {"ticker": ticker, "title": title}
                 for ticker, title in ALL_TICKERS.items()
                 if search_term in ticker.lower() or search_term in title.lower()
             ]
+            logger.info(f"Found {len(possible_tickers)} matching stocks")
             return jsonify({"stocks": possible_tickers[:num_stocks]})
 
+        if detailed:
+            search_term = request.args.get("search", "").upper()
+            if not search_term or search_term not in ALL_TICKERS:
+                logger.warning(f"Invalid detailed search: No valid ticker found for '{search_term}'")
+                return jsonify({"error": "Invalid ticker for detailed search"}), 400
+
+            logger.info(f"Fetching detailed data for stock: {search_term}")
+
+            stock = yf.Ticker(search_term)
+            info = stock.info
+
+            if not info or "quoteType" not in info or "regularMarketVolume" not in info:
+                logger.warning(f"Skipping {search_term}: No valid market data found.")
+                return jsonify({"error": "No valid market data available"}), 404
+
+            current_price = info.get("currentPrice")
+            previous_close = info.get("previousClose")
+            history = stock.history(period="1mo", interval="1d")
+
+            if history.empty or "Close" not in history:
+                logger.warning(f"Skipping {search_term}: No historical data available.")
+                return jsonify({"error": "No historical data available"}), 404
+
+            first_price = history.iloc[0]["Close"] if not history.empty else None
+
+            change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
+            change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
+
+            stock_data = {
+                "ticker": search_term,
+                "title": ALL_TICKERS.get(search_term, "Unknown"),
+                "price": current_price,
+                "change": change if isinstance(change, float) else "N/A",
+                "change_monthly": change_monthly if isinstance(change_monthly, float) else "N/A",
+            }
+
+            return jsonify({"stocks": [stock_data]})
+
         # **🔹 Mode normal : sélection aléatoire avec toutes les vérifications**
+        logger.info(f"Fetching random stocks data ({num_stocks} stocks)")
         possible_tickers = list(ALL_TICKERS.keys())
         selected_tickers = random.sample(possible_tickers, min(len(possible_tickers), num_stocks * 3))
         valid_stocks = []
@@ -65,10 +108,6 @@ def get_random_stocks():
             change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
             change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
 
-            if not change or not change_monthly:
-                logger.warning(f"Skipping {ticker}: Invalid price change data.")
-                continue
-
             valid_stocks.append({
                 "ticker": ticker,
                 "title": ALL_TICKERS.get(ticker, "Unknown"),
@@ -85,6 +124,7 @@ def get_random_stocks():
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 
 

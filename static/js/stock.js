@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(`/api/stocks?search=${searchTerm}&limit=${limit}`);
             if (!response.ok) throw new Error("Failed to fetch stocks");
             const data = await response.json();
+            console.log(data)
             return data.stocks || [];
         } catch (error) {
             console.error("Error fetching stocks:", error);
@@ -111,23 +112,35 @@ document.addEventListener("DOMContentLoaded", () => {
         suggestionsDiv.classList.remove("hidden");
     };
 
-    
+
     const selectStock = async (stock) => {
         console.log("Selected stock:", stock);
     
-        // 🔹 Récupérer les détails du stock (prix, variations, etc.)
-        const stockDetails = await fetchStockDetails(stock.ticker);
+        // Vérifier si le stock est déjà affiché
+        const existingStock = Array.from(actionsList.children)
+            .some((child) => JSON.parse(child.dataset.action || "{}").ticker === stock.ticker);
     
-        if (!stockDetails) {
-            console.error("Failed to fetch details for", stock.ticker);
+        if (existingStock) {
+            console.log(`Stock ${stock.ticker} already exists, skipping.`);
             return;
         }
     
+        // 🔹 Récupérer les détails du stock avec `detailed=true`
+        const response = await fetch(`/api/stocks?search=${stock.ticker}&limit=1&detailed=true`);
+        const data = await response.json();
+        
+        if (!data.stocks || data.stocks.length === 0) {
+            console.error(`Failed to fetch detailed data for ${stock.ticker}`);
+            return;
+        }
+    
+        const stockDetails = data.stocks[0];
+    
         // 🔹 Construire l'objet avec des valeurs correctes
         const newAction = {
-            title: stock.title,
-            ticker: stock.ticker,
-            price: stockDetails.current_price !== null && !isNaN(stockDetails.current_price) ? stockDetails.current_price : "N/A",
+            title: stockDetails.title,
+            ticker: stockDetails.ticker,
+            price: stockDetails.price !== null && !isNaN(stockDetails.price) ? stockDetails.price : "N/A",
             change: stockDetails.change !== null && !isNaN(stockDetails.change) ? stockDetails.change : "N/A",
             change_monthly: stockDetails.change_monthly !== null && !isNaN(stockDetails.change_monthly) ? stockDetails.change_monthly : "N/A",
         };
@@ -144,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.value = "";
         hideSuggestions();
     };
+    
     
     
 
