@@ -128,19 +128,10 @@ def get_random_stocks():
 
 
 
-# Cache pour éviter les doublons
-generated_charts = set()
 
 @stock_chart_routes.route("/api/stock-chart/<ticker>", methods=["GET"])
 def get_stock_chart(ticker):
     try:
-        global generated_charts
-
-        # Empêcher les doublons
-        # if ticker in generated_charts:
-        #     logger.warning(f"Skipping duplicate chart for {ticker}")
-        #     return jsonify({"error": f"Chart for {ticker} already generated"}), 409
-
         stock = yf.Ticker(ticker)
         # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
         history = stock.history(period="1mo", interval="1d")
@@ -177,9 +168,6 @@ def get_stock_chart(ticker):
         ax.set_ylim(min_price * 0.95, max_price * 1.05)
         ax.grid(alpha=0.3)
         ax.xaxis.set_major_formatter(DateFormatter('%d'))
-
-        # Ajout au cache
-        generated_charts.add(ticker)
 
         # Sauvegarde et envoi de l'image
         buffer = BytesIO()
