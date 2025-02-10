@@ -151,7 +151,7 @@ def get_stock_chart(ticker):
         # Sauvegarde et envoi de l'image
         buffer = BytesIO()
         fig.savefig(buffer, format="png")
-        fig.savefig(f"static/debug/{ticker}_debug_chart.png")
+        # fig.savefig(f"static/debug/{ticker}_debug_chart.png")
         buffer.seek(0)
 
         # time.sleep(1)  # Ajout d'un délai pour éviter des conflits
