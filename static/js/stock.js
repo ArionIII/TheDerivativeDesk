@@ -69,14 +69,17 @@ document.addEventListener("DOMContentLoaded", () => {
             img.onload = () => {
                 console.log(`Image loaded successfully for ${chart.dataset.src}`);
                 chart.src = img.src;
+                chart.classList.remove("error-chart"); // Enlève la classe si l'image est chargée correctement
             };
     
             img.onerror = () => {
                 console.error(`Error loading image for ${chart.dataset.src}`);
                 chart.src = "/static/images/error-placeholder.png"; // Fallback image
+                chart.classList.add("error-chart"); // Ajoute la classe CSS spéciale
             };
         });
     };
+    
     
 
     // Render search suggestions

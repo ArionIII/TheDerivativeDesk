@@ -50,6 +50,7 @@ def get_random_stocks():
             info = stock.info
 
             # Vérification que l'info existe
+            
             if not info or "quoteType" not in info or "regularMarketVolume" not in info:
                 logger.warning(f"Skipping {ticker}: No valid market data found.")
                 continue
