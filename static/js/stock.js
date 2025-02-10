@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(`/api/stocks?search=${searchTerm}&limit=${limit}`);
             if (!response.ok) throw new Error("Failed to fetch stocks");
             const data = await response.json();
+            console.log(data)
             return data.stocks || [];
         } catch (error) {
             console.error("Error fetching stocks:", error);
@@ -23,77 +24,142 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Render actions on the page
     const renderActions = (actions) => {
-        actionsList.innerHTML = actions
-            .map(
-                (action) =>
-                    `<li class="action-item" data-action='${JSON.stringify(action)}'>
-                        <div class="action-info">
-                            <h4>
-                                ${action.title} (${action.ticker})
-                                <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
-                            </h4>
-                            <p>Price: $${action.price}</p>
-                            <p style="color: ${action.change > 0 ? "green" : "red"};">
-                                Change (1d): ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%
-                            </p>
-                            <p style="color: ${action.change_monthly > 0 ? "green" : "red"};">
-                                Change (30d): ${action.change_monthly > 0 ? "+" : ""}${(action.change_monthly * 100).toFixed(2)}%
-                            </p>
-                        </div>
-                        <div class="action-chart">
-                            <img 
-                                src="/static/images/loading-spinner.gif" 
-                                data-src="/api/stock-chart/${action.ticker}" 
-                                alt="${action.ticker} chart" 
-                                class="chart-img"
-                            />
-                        </div>
-                    </li>`
-            )
-            .join("");
-
-        // Attach lazy loading to the charts
-        attachChartLoaders();
+        actionsList.innerHTML = ""; // Efface l'ancienne liste avant de rerendre
+        
+        actions.forEach(action => {
+            const actionItem = document.createElement("li");
+            actionItem.classList.add("action-item");
+            actionItem.dataset.action = JSON.stringify(action);
+    
+            actionItem.innerHTML = `
+                <div class="action-info">
+                    <h4>
+                        ${action.title} (${action.ticker})
+                        <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
+                    </h4>
+                    <p>Price: $${action.price !== null && !isNaN(action.price) ? action.price : "N/A"}</p>
+                    <p style="color: ${action.change > 0 ? "green" : "red"};">
+                        Change (1d): ${action.change !== null && !isNaN(action.change) ? (action.change * 100).toFixed(2) + "%" : "N/A"}
+                    </p>
+                    <p style="color: ${action.change_monthly > 0 ? "green" : "red"};">
+                        Change (30d): ${action.change_monthly !== null && !isNaN(action.change_monthly) ? (action.change_monthly * 100).toFixed(2) + "%" : "N/A"}
+                    </p>
+                </div>
+                <div class="action-chart">
+                    <img 
+                        src="/static/images/loading-spinner.gif" 
+                        data-src="/api/stock-chart/${action.ticker}" 
+                        alt="${action.ticker} chart" 
+                        class="chart-img"
+                    />
+                </div>
+            `;
+    
+            actionsList.appendChild(actionItem);
+        });
+    
+        attachChartLoaders(); // Charge les graphiques correctement après le rendu
     };
+    
 
     // Attach loaders to chart images
     const attachChartLoaders = () => {
         const charts = document.querySelectorAll(".chart-img");
-
+    
         charts.forEach((chart) => {
             const img = new Image();
             img.src = chart.dataset.src;
-
+    
             img.onload = () => {
-                chart.src = img.src; // Replace placeholder once loaded
+                console.log(`Image loaded successfully for ${chart.dataset.src}`);
+                chart.src = img.src;
+                chart.classList.remove("error-chart"); // Enlève la classe si l'image est chargée correctement
             };
-
+    
             img.onerror = () => {
-                chart.src = "/static/images/error-placeholder.png"; // Fallback image if loading fails
+                console.error(`Error loading image for ${chart.dataset.src}`);
+                chart.src = "/static/images/error-placeholder.png"; // Fallback image
+                chart.classList.add("error-chart"); // Ajoute la classe CSS spéciale
             };
         });
     };
+    
+    
 
     // Render search suggestions
     const renderSuggestions = (stocks) => {
-        suggestionsDiv.innerHTML = stocks
-            .map(
-                (stock) =>
-                    `<p class="suggestion-item" 
-                        data-title="${stock.title}" 
-                        data-ticker="${stock.ticker}" 
-                        data-price="${stock.price}" 
-                        data-change="${stock.change}"
-                        data-change_monthly="${stock.change_monthly}">
-                        ${stock.title} (${stock.ticker})
-                    </p>`
-            )
-            .join("");
-
+        suggestionsDiv.innerHTML = ""; // Effacer les anciennes suggestions
+    
+        stocks.forEach((stock) => {
+            const item = document.createElement("p");
+            item.classList.add("suggestion-item");
+            item.dataset.title = stock.title;
+            item.dataset.ticker = stock.ticker;
+            item.dataset.price = stock.price;
+            item.dataset.change = stock.change;
+            item.dataset.change_monthly = stock.change_monthly;
+            item.innerHTML = `<strong>🛠️ ${stock.title} (${stock.ticker})</strong>`;
+    
+            item.addEventListener("click", () => {
+                console.log(`Clicked suggestion: ${stock.ticker}`);
+                selectStock(stock);
+            });
+    
+            suggestionsDiv.appendChild(item);
+        });
+    
         suggestionsDiv.classList.remove("hidden");
     };
+
+
+    const selectStock = async (stock) => {
+        console.log("Selected stock:", stock);
+    
+        // Vérifier si le stock est déjà affiché
+        const existingStock = Array.from(actionsList.children)
+            .some((child) => JSON.parse(child.dataset.action || "{}").ticker === stock.ticker);
+    
+        if (existingStock) {
+            console.log(`Stock ${stock.ticker} already exists, skipping.`);
+            return;
+        }
+    
+        // 🔹 Récupérer les détails du stock avec `detailed=true`
+        const response = await fetch(`/api/stocks?search=${stock.ticker}&limit=1&detailed=true`);
+        const data = await response.json();
+        
+        if (!data.stocks || data.stocks.length === 0) {
+            console.error(`Failed to fetch detailed data for ${stock.ticker}`);
+            return;
+        }
+    
+        const stockDetails = data.stocks[0];
+    
+        // 🔹 Construire l'objet avec des valeurs correctes
+        const newAction = {
+            title: stockDetails.title,
+            ticker: stockDetails.ticker,
+            price: stockDetails.price !== null && !isNaN(stockDetails.price) ? stockDetails.price : "N/A",
+            change: stockDetails.change !== null && !isNaN(stockDetails.change) ? stockDetails.change : "N/A",
+            change_monthly: stockDetails.change_monthly !== null && !isNaN(stockDetails.change_monthly) ? stockDetails.change_monthly : "N/A",
+        };
+    
+        const currentActions = Array.from(actionsList.children)
+            .map((child) => JSON.parse(child.dataset.action || "{}"))
+            .filter((action) => action && action.ticker);
+    
+        currentActions.pop(); // Supprime le dernier élément
+        const updatedActions = [newAction, ...currentActions];
+    
+        renderActions(updatedActions);
+    
+        searchInput.value = "";
+        hideSuggestions();
+    };
+    
+    
+    
 
     // Hide suggestions
     const hideSuggestions = () => {
@@ -159,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (currentActions.length > 0) {
                 currentActions.pop(); // Remove the last action
                 const updatedActions = [newAction, ...currentActions];
-                renderActions(updatedActions);
+                // renderActions(updatedActions);
             }
 
             // Reset search bar
@@ -231,7 +297,8 @@ window.openSeeMore = async (ticker) => {
 
         // 🔹 Render the stock chart
         const ctx = document.getElementById("detailed-stock-chart").getContext("2d");
-        renderChart(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
+        ensureChartRender(ctx, stockDetails.chart_data.dates, stockDetails.chart_data.prices, stockDetails.chart_data.volumes);
+
 
         // 🔹 Show the modal
         const modal = document.getElementById("see-more-modal");
@@ -271,15 +338,18 @@ const formatPercentage = (num) => {
     let activeChart = null; // Stocke l'instance active du graphique
 
     const renderChart = (ctx, dates, prices, volumes) => {
-        console.log("Dates:", dates);
-        console.log("Prices:", prices);
-        console.log("Volumes:", volumes);
-
+        console.log("Rendering chart...");
+    
+        if (!dates || !prices || !volumes || dates.length === 0 || prices.length === 0 || volumes.length === 0) {
+            console.error("Chart data is missing or empty. Skipping chart rendering.");
+            return;
+        }
+    
         // Détruire l'ancien graphique si nécessaire
         if (activeChart) {
             activeChart.destroy();
         }
-
+    
         // Créer un nouveau graphique
         activeChart = new Chart(ctx, {
             type: "bar",
@@ -327,6 +397,20 @@ const formatPercentage = (num) => {
             },
         });
     };
+    const ensureChartRender = (ctx, dates, prices, volumes) => {
+        if (!Array.isArray(dates) || !Array.isArray(prices) || dates.length === 0 || prices.length === 0) {
+            console.error(`Skipping chart rendering: Missing data for ${ctx.canvas.id}`);
+            ctx.canvas.parentNode.innerHTML = "<p style='color:red;'>Chart unavailable</p>";
+            return;
+        }
+    
+        setTimeout(() => {
+            renderChart(ctx, dates, prices, volumes);
+        }, 500);
+    };
+    
+    
+    
 
     // Close modal
     closeModalBtn.addEventListener("click", () => {
