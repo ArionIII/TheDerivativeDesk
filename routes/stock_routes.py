@@ -69,10 +69,10 @@ def get_random_stocks():
             # Vérification avant de calculer les pourcentages
             change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
             change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
-            if not change or not change_monthly:
-                logger.warning(f"Skipping {ticker}: Invalid price change data.")
+            if not change or not change_monthly or not current_price or not previous_close:
+                logger.warning(f"Skipping {ticker}: Invalid price change data : {change, change_monthly, current_price, previous_close}.")
                 continue
-
+            
             valid_stocks.append({
                 "ticker": ticker,
                 "title": ALL_TICKERS.get(ticker, "Unknown"),
