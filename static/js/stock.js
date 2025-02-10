@@ -23,40 +23,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Render actions on the page
     const renderActions = (actions) => {
-        actionsList.innerHTML = actions
-            .map(
-                (action) =>
-                    `<li class="action-item" data-action='${JSON.stringify(action)}'>
-                        <div class="action-info">
-                            <h4>
-                                ${action.title} (${action.ticker})
-                                <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
-                            </h4>
-                            <p>Price: $${action.price}</p>
-                            <p style="color: ${action.change > 0 ? "green" : "red"};">
-                                Change (1d): ${action.change > 0 ? "+" : ""}${(action.change * 100).toFixed(2)}%
-                            </p>
-                            <p style="color: ${action.change_monthly > 0 ? "green" : "red"};">
-                                Change (30d): ${action.change_monthly > 0 ? "+" : ""}${(action.change_monthly * 100).toFixed(2)}%
-                            </p>
-                        </div>
-                        <div class="action-chart">
-                            <img 
-                                src="/static/images/loading-spinner.gif" 
-                                data-src="/api/stock-chart/${action.ticker}" 
-                                alt="${action.ticker} chart" 
-                                class="chart-img"
-                            />
-                        </div>
-                    </li>`
-            )
-            .join("");
-
-        // Attach lazy loading to the charts
-        attachChartLoaders();
+        actionsList.innerHTML = ""; // Efface l'ancienne liste avant de rerendre
+        
+        actions.forEach(action => {
+            const actionItem = document.createElement("li");
+            actionItem.classList.add("action-item");
+            actionItem.dataset.action = JSON.stringify(action);
+    
+            actionItem.innerHTML = `
+                <div class="action-info">
+                    <h4>
+                        ${action.title} (${action.ticker})
+                        <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
+                    </h4>
+                    <p>Price: $${action.price !== null && !isNaN(action.price) ? action.price : "N/A"}</p>
+                    <p style="color: ${action.change > 0 ? "green" : "red"};">
+                        Change (1d): ${action.change !== null && !isNaN(action.change) ? (action.change * 100).toFixed(2) + "%" : "N/A"}
+                    </p>
+                    <p style="color: ${action.change_monthly > 0 ? "green" : "red"};">
+                        Change (30d): ${action.change_monthly !== null && !isNaN(action.change_monthly) ? (action.change_monthly * 100).toFixed(2) + "%" : "N/A"}
+                    </p>
+                </div>
+                <div class="action-chart">
+                    <img 
+                        src="/static/images/loading-spinner.gif" 
+                        data-src="/api/stock-chart/${action.ticker}" 
+                        alt="${action.ticker} chart" 
+                        class="chart-img"
+                    />
+                </div>
+            `;
+    
+            actionsList.appendChild(actionItem);
+        });
+    
+        attachChartLoaders(); // Charge les graphiques correctement après le rendu
     };
+    
 
     // Attach loaders to chart images
     const attachChartLoaders = () => {
@@ -106,27 +110,41 @@ document.addEventListener("DOMContentLoaded", () => {
     
         suggestionsDiv.classList.remove("hidden");
     };
-    const selectStock = (stock) => {
+
+    
+    const selectStock = async (stock) => {
         console.log("Selected stock:", stock);
+    
+        // 🔹 Récupérer les détails du stock (prix, variations, etc.)
+        const stockDetails = await fetchStockDetails(stock.ticker);
+    
+        if (!stockDetails) {
+            console.error("Failed to fetch details for", stock.ticker);
+            return;
+        }
+    
+        // 🔹 Construire l'objet avec des valeurs correctes
         const newAction = {
             title: stock.title,
             ticker: stock.ticker,
-            price: parseFloat(stock.price),
-            change: parseFloat(stock.change),
-            change_monthly: parseFloat(stock.change_monthly),
+            price: stockDetails.current_price !== null && !isNaN(stockDetails.current_price) ? stockDetails.current_price : "N/A",
+            change: stockDetails.change !== null && !isNaN(stockDetails.change) ? stockDetails.change : "N/A",
+            change_monthly: stockDetails.change_monthly !== null && !isNaN(stockDetails.change_monthly) ? stockDetails.change_monthly : "N/A",
         };
     
         const currentActions = Array.from(actionsList.children)
             .map((child) => JSON.parse(child.dataset.action || "{}"))
-            .filter((action) => action && action.ticker); // Vérifie que l'objet est valide
+            .filter((action) => action && action.ticker);
     
         currentActions.pop(); // Supprime le dernier élément
         const updatedActions = [newAction, ...currentActions];
+    
         renderActions(updatedActions);
     
         searchInput.value = "";
         hideSuggestions();
     };
+    
     
 
     // Hide suggestions

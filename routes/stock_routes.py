@@ -19,43 +19,39 @@ stock_chart_routes = Blueprint("stock_chart_routes", __name__)
 
 # Fetch available tickers
 ALL_TICKERS = combine_tickers_and_titles()
-
 @stocks_routes.route("/api/stocks", methods=["GET"])
 def get_random_stocks():
     """
     Fetch random stocks data from ALL_TICKERS.
+    - Si c'est une recherche (search_term != ""), on renvoie juste les tickers et titres.
+    - Sinon, on fait toutes les vérifications et renvoie les prix et variations.
     """
     search_term = request.args.get("search", "").lower()
     num_stocks = int(request.args.get("limit", 4))
 
     try:
         if search_term:
+            # **⚡ Mode recherche rapide : ne renvoyer que tickers et titres**
             possible_tickers = [
-                ticker for ticker, title in ALL_TICKERS.items()
+                {"ticker": ticker, "title": title}
+                for ticker, title in ALL_TICKERS.items()
                 if search_term in ticker.lower() or search_term in title.lower()
             ]
-        else:
-            possible_tickers = list(ALL_TICKERS.keys())
+            return jsonify({"stocks": possible_tickers[:num_stocks]})
 
-        if not possible_tickers:
-            logger.warning("No stocks found matching the search criteria.")
-            return jsonify({"error": "No stocks found"}), 404
-
+        # **🔹 Mode normal : sélection aléatoire avec toutes les vérifications**
+        possible_tickers = list(ALL_TICKERS.keys())
         selected_tickers = random.sample(possible_tickers, min(len(possible_tickers), num_stocks * 3))
         valid_stocks = []
 
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
-            # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
             info = stock.info
 
-            # Vérification que l'info existe
-            
             if not info or "quoteType" not in info or "regularMarketVolume" not in info:
                 logger.warning(f"Skipping {ticker}: No valid market data found.")
                 continue
 
-            # Récupération des valeurs avec vérification
             current_price = info.get("currentPrice")
             previous_close = info.get("previousClose")
             history = stock.history(period="1mo", interval="1d")
@@ -66,13 +62,13 @@ def get_random_stocks():
 
             first_price = history.iloc[0]["Close"] if not history.empty else None
 
-            # Vérification avant de calculer les pourcentages
             change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
             change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
-            if not change or not change_monthly or not current_price or not previous_close:
-                logger.warning(f"Skipping {ticker}: Invalid price change data : {change, change_monthly, current_price, previous_close}.")
+
+            if not change or not change_monthly:
+                logger.warning(f"Skipping {ticker}: Invalid price change data.")
                 continue
-            
+
             valid_stocks.append({
                 "ticker": ticker,
                 "title": ALL_TICKERS.get(ticker, "Unknown"),
@@ -83,9 +79,6 @@ def get_random_stocks():
 
             if len(valid_stocks) >= num_stocks:
                 break
-
-        if len(valid_stocks) < num_stocks:
-            logger.warning(f"Only found {len(valid_stocks)} valid tickers out of {num_stocks} requested.")
 
         return jsonify({"stocks": valid_stocks[:num_stocks]}) 
 
