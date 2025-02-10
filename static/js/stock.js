@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (currentActions.length > 0) {
                 currentActions.pop(); // Remove the last action
                 const updatedActions = [newAction, ...currentActions];
-                renderActions(updatedActions);
+                // renderActions(updatedActions);
             }
 
             // Reset search bar
