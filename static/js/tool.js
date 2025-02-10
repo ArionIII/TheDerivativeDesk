@@ -194,10 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle download button click
     function isAllFiles(data) {
-        return Object.values(data).every(value => 
-            typeof value === "string" && value.startsWith("static/outputs/")
-        );
+        const filePaths = Object.values(data).filter(value => typeof value === "string");
+    
+        return filePaths.length > 0 && filePaths.every(value => value.startsWith("static/outputs/"));
     }
+    
+    
 
     function downloadFiles(files) {
         Object.values(files).forEach(fileUrl => {

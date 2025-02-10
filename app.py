@@ -25,6 +25,7 @@ from configurations.sub_config.interest_rates.interest_rate_sub_categories_confi
 import os
 from web_parsing.news_rss_parser import get_news_from_rss
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -60,6 +61,7 @@ app.register_blueprint(linear_algebra_and_advanced_calculations_routes)
 app.register_blueprint(interest_rate_fundamentals_routes)
 app.register_blueprint(tool_category_interest_rates_routes)
 app.register_blueprint(interest_rate_derivatives_routes)
+
 # Route pour la page d'accueil
 @app.route("/")
 def index():
@@ -68,7 +70,7 @@ def index():
 # Route pour la page "À propos"
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("under_construction.html")
 
 # Route pour la page "Contact"
 @app.route("/contact", methods=["GET", "POST"])
@@ -84,7 +86,7 @@ def contact():
         
         # Retourner une confirmation
         return render_template("contact.html", success=True)
-    return render_template("contact.html", success=False)
+    return render_template("under_construction.html", success=False)
 
 # Route pour les outils
 @app.route("/tools")
@@ -94,7 +96,7 @@ def tools():
 # Route pour le blog
 @app.route("/blog")
 def blog():
-    return render_template("blog.html")
+    return render_template("under_construction.html")
 
 # Route pour la page futures-forwards
 @app.route("/tools/futures-forwards")

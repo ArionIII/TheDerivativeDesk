@@ -24,7 +24,7 @@
             <div class="user-profile">
                 <img src="{{ user.profile_picture or '/static/images/default-profile.png' }}" alt="{{ user.first_name }}" class="profile-picture">
                 <span class="user-name">{{ user.first_name }}</span>
-                <a href="/logout" class="btn-logout">Logout</a>
+                <a href="/logout" class="btn-action">Logout</a>
             </div>
         {% endif %}
     </div>

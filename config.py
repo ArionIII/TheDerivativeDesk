@@ -46,6 +46,7 @@ class Config:
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your_jwt_secret_key")
 
+
 def parse_csv_and_xlsx(file):
     """
     Parse CSV or XLSX file content into a list of numbers (if single column)
