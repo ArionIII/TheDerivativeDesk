@@ -422,11 +422,21 @@ const formatPercentage = (num) => {
 
     // Close modal when clicking outside the content
     modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            console.log("Clicked outside modal content, closing modal."); // Debugging log
-            modal.classList.add("hidden");
-            modal.style.display = "none";
-
-        }
-    });
+    if (!modal.contains(e.target) || e.target === modal) {
+        console.log("Clicked outside modal content, closing modal."); // Debugging log
+        closeModal();
+    }
 });
+
+
+
+});
+
+function closeModal() {
+    console.log("Closing modal..."); // Debugging log
+    const modal = document.getElementById("see-more-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
+}
