@@ -187,3 +187,59 @@ canvas {
 .hidden {
     display: none;
 }
+
+/* SEE NEWS */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-content {
+    position: relative;
+    text-align: left;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-btn-see-news {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#see-news-modal {
+    left: 75%; /* Affiché à droite */
+    transform: translate(-25%, -50%);
+    width: 40%;
+}
+
+.news-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.news-item h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.news-item p {
+    font-size: 14px;
+    color: #666;
+}

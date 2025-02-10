@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h4>
                         ${action.title} (${action.ticker})
                         <button class="see-more-btn" onclick="openSeeMore('${action.ticker}')">See More</button>
+                        <button class="see-more-btn" onclick="openSeeNews('${action.ticker}')">See News</button>
                     </h4>
                     <p>Price: $${action.price !== null && !isNaN(action.price) ? action.price : "N/A"}</p>
                     <p style="color: ${action.change > 0 ? "green" : "red"};">
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         attachChartLoaders(); // Charge les graphiques correctement après le rendu
     };
+    
     
 
     // Attach loaders to chart images
@@ -427,6 +429,65 @@ const formatPercentage = (num) => {
         closeModal();
     }
 });
+
+
+    // SEE NEWS
+    // Modal for news
+    const newsModal = document.createElement("div");
+    newsModal.id = "see-news-modal";
+    newsModal.className = "modal hidden";
+    newsModal.innerHTML = `
+    <div class="modal-content">
+        <span class="close-btn-see-news" onclick="closeNewsModal()">&times;</span>
+        <h2 id="modal-news-title">Stock News</h2>
+        <div id="news-container"></div>
+        <button class="close-news-button" onclick="closeNewsModal()">Close</button>
+    </div>
+`;
+
+    document.body.appendChild(newsModal);
+
+    // Fetch stock news
+    const fetchStockNews = async (ticker) => {
+        try {
+            const response = await fetch(`/api/stock-news/${ticker}`);
+            if (!response.ok) throw new Error("Failed to fetch stock news");
+            const data = await response.json();
+            return data.news || [];
+        } catch (error) {
+            console.error("Error fetching stock news:", error);
+            return [];
+        }
+    };
+
+    // Open "See News" modal
+    window.openSeeNews = async (ticker) => {
+        console.log(`Fetching news for ${ticker}`); // Debugging log
+
+        const newsArticles = await fetchStockNews(ticker);
+        if (newsArticles.length === 0) {
+            document.getElementById("news-container").innerHTML = "<p>No news available.</p>";
+        } else {
+            document.getElementById("modal-news-title").textContent = `Latest News for ${ticker}`;
+            document.getElementById("news-container").innerHTML = newsArticles.map(article => `
+                <div class="news-item">
+                    <h3><a href="${article.link}" target="_blank">${article.title}</a></h3>
+                    <p><strong>${article.published}</strong></p>
+                    <p>${article.summary}</p>
+                </div>
+            `).join("");
+        }
+
+        newsModal.classList.remove("hidden");
+        newsModal.style.display = "block";
+    };
+
+    // Close "See News" modal
+    window.closeNewsModal = () => {
+        console.log("Closing news modal..."); // Debugging log
+        newsModal.classList.add("hidden");
+        newsModal.style.display = "none";
+    };
 
 
 
