@@ -137,9 +137,9 @@ def get_stock_chart(ticker):
         global generated_charts
 
         # Empêcher les doublons
-        if ticker in generated_charts:
-            logger.warning(f"Skipping duplicate chart for {ticker}")
-            return jsonify({"error": f"Chart for {ticker} already generated"}), 409
+        # if ticker in generated_charts:
+        #     logger.warning(f"Skipping duplicate chart for {ticker}")
+        #     return jsonify({"error": f"Chart for {ticker} already generated"}), 409
 
         stock = yf.Ticker(ticker)
         # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
