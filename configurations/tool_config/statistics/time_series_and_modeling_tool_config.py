@@ -28,7 +28,7 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
             {"label": "Window Size", "id": "window_size", "type": "number", "placeholder": "e.g., 3", "optional": False},
             {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True, "template": "/static/templates/comprehensive_basic_analysis.csv"},
         ],
-        "outputs": ["Smoothed Time Series"],
+        "outputs": ["CSV File with Smoothed Time Series"],
     },
     "exponential-smoothing": {
         "title": "Exponential Smoothing",
