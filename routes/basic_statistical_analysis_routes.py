@@ -63,16 +63,22 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
             # params = parse_inputs(data_source, tool_config["inputs"])
 
-
+            
             # Sur ce module on a qu'un binaire entre 1 file OU 1 form/json, mais faudra complexifier + tard
             if "json" in data_source and data_source["json"]:
                 logger.info("Processing JSON data")
                 params = data_source["json"]  
             if "form" in data_source and data_source["form"]:
+                parsed_values = []
                 logger.info("Processing form data")
-                dataset_value = data_source["form"]["dataset"] 
-                logger.info(dataset_value)
-                params = {"dataset" : parse_array(dataset_value)}
+                values = data_source["form"].values()
+                logger.info(values)
+                keys = data_source["form"].keys()
+                logger.info(keys)
+                for value in values :
+                    parsed_values.append(parse_array(value))
+                # dataset_value = data_source["form"]["dataset"] 
+                params = {k:v for k,v in zip(keys, parsed_values)}
             if "files" in data_source and data_source["files"]:
                 csv_value = data_source["files"].get('csv_file')
                 if isinstance(csv_value, FileStorage) and csv_value.filename:  # Vérifier si le fichier a un nom valide

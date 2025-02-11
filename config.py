@@ -134,34 +134,44 @@ def parse_array(raw_value):
     """
     logger.info('entering parse_array function')
     logger.info(raw_value)
+
+    # Cas ou c'est un nombre
+    if isinstance(raw_value, str):
+        try:
+            floating_str = float(raw_value)
+            return floating_str
+        except ValueError:
+            pass
+
+    # 🔹 Cas d'un texte normal (ex: "One-Sample", "Test Type")
+    if isinstance(raw_value, str) and not any(char in raw_value for char in "[],"):
+        logger.info("Recognized as a standard string, returning as is.")
+        return raw_value  # Ex: "One-Sample"
+
+    # 🔹 Vérification si c'est un JSON valide (ex: "[1,2,3]" ou "[[1,2],[3,4]]")
+    try:
+        parsed_json = json.loads(raw_value)  # Essayer de charger en JSON
+        if isinstance(parsed_json, list):
+            if all(isinstance(sublist, list) for sublist in parsed_json):  # Cas [[1,2],[3,4]]
+                logger.info("Recognized as a JSON-style list of lists, converting to nested float lists.")
+                return [[float(x) for x in sublist] for sublist in parsed_json]
+            else:  # Cas [1,2,3]
+                logger.info("Recognized as a JSON-style simple list, converting to float list.")
+                return [float(x) for x in parsed_json]
+    except json.JSONDecodeError:
+        logger.info("Not a JSON list, checking further.")
+
+    # 🔹 Cas où la valeur est une simple liste sous forme de string (ex: "1,2,3")
+    if "," in raw_value:
+        logger.info("Recognized as a CSV-style list, converting to float list.")
+        return [float(x.strip()) for x in raw_value.split(",") if x.strip()]
+    
+    # Cas ou c'est juste une simple liste
     if isinstance(raw_value, list):
         logger.info("Processing list input")
         return raw_value
-    # Si c'est une fake liste type "[1,2,3]"
-    try:
-        parsed_json = json.loads(raw_value)
-        if isinstance(parsed_json, list):
-            logger.info("Processing list input")
-            return json.loads(raw_value)
-    except json.JSONDecodeError:
-        pass
-
-    if "[" in raw_value and "]" in raw_value:
-        logger.info("Processing nested array input")
-        # Parse nested lists
-        try:
-            return [
-                [float(x.strip()) for x in inner_list.strip("[]").split(",") if x.strip()]
-                for inner_list in raw_value.strip("[]").split("],[")
-            ]
-        except ValueError as e:
-            logger.error(f"Error parsing nested array: {raw_value}, Error: {e}")
-            raise ValueError(f"Invalid format for nested array input: {raw_value}")
-    else:
-        # Parse flat lists
-        logger.info("Processing flat array input")
-        return [float(x.strip()) for x in raw_value.strip("[]").split(",") if x.strip()]
-
+   
+    return raw_value
 
 def parse_inputs(data_source, inputs_config):
     """

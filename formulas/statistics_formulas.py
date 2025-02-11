@@ -18,9 +18,6 @@ import openpyxl
 
 import numpy as np
 import scipy.stats as stats
-import logging
-
-logger = logging.getLogger(__name__)
 
 def calculate_mean(dataset):
     """
@@ -96,14 +93,19 @@ def t_test(sample_a, sample_b=None, test_type="One-Sample"):
     """
     Perform a t-test.
     """
+    logger.info(f"Performing {test_type} t-test")
     signi = "The test is significant at the 0.05 level."
     not_signi = "The test is not significant at the 0.05 level."
     if test_type == "One-Sample":
+        logger.info(f"Sample A: {sample_a}")
         t_stat, p_value = stats.ttest_1samp(sample_a, 0)  # Test against mean = 0
     elif test_type == "Two-Sample":
+        logger.info(f"Sample A: {sample_a}")
+        logger.info(f"Sample B: {sample_b}")
         t_stat, p_value = stats.ttest_ind(sample_a, sample_b, equal_var=False)
     else:
         raise ValueError("Invalid test type. Choose 'One-Sample' or 'Two-Sample'.")
+    logger.info(f"t-statistic: {t_stat}, p-value: {p_value}")
     return {"t_statistic" : ("t-Statistic :", t_stat), "p_value" : ("P-Value : ", f"{p_value} : {signi if p_value <= 0.05 else not_signi}")}
 
 
@@ -125,7 +127,13 @@ def chi_square_test(observed, expected):
     """
     Perform a chi-square test.
     """
+    logger.info(f"Observed Frequencies: {observed}")    
     chi_stat, p_value = stats.chisquare(f_obs=observed, f_exp=expected)
+    logger.info(f"Chi-Square Statistic: {chi_stat}, P-Value: {p_value}")
+    if isinstance(chi_stat, np.ndarray):
+        chi_stat = chi_stat.sum()  # Additionner toutes les valeurs si plusieurs catégories
+    if isinstance(p_value, np.ndarray):
+        p_value = p_value.sum()  # Additionner toutes les valeurs
     return {
     "chi_square_statistic": ("Chi-Square Statistic :", chi_stat), 
     "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")
@@ -142,7 +150,7 @@ def calculate_confidence_intervals(sample_mean, std_dev, sample_size, confidence
     margin_error = z_score * (std_dev / np.sqrt(sample_size))
     ci_lower = sample_mean - margin_error
     ci_upper = sample_mean + margin_error
-    return {"Confidence Interval": (ci_lower, ci_upper)}
+    return {"confidence_interval" : ("Confidence Interval :", (f"[{ci_lower} ; {ci_upper}"))}
 
 
 def anova(group_a, group_b, group_c=None):
