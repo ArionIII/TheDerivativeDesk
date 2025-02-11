@@ -204,7 +204,7 @@ canvas {
     border-radius: 8px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    overflow-y: auto; /* Permet le scroll si besoin */
+    /* overflow-y: auto; Permet le scroll si besoin */
 }
 
 /* Responsive : modals plus grandes sur grands écrans */
