@@ -38,14 +38,14 @@ def generate_coefficients_graph(data):
     fig, ax = plt.subplots()
     ax.bar(variable_labels, coefficients, color="blue", alpha=0.7)
     ax.axhline(0, color="red", linestyle="dashed")
-    ax.set_xlabel("Variables Indépendantes")
-    ax.set_ylabel("Valeur du Coefficient")
-    ax.set_title("Graphique des Coefficients Estimés")
+    ax.set_xlabel("Independent Variables")
+    ax.set_ylabel("Beta Coefficients")
+    ax.set_title("Graph of Betas")
 
     return save_plot(fig, generate_unique_filename("multiple_regression_1"))
 
 def generate_observed_vs_predicted_graph(data):
-    logger.info(f"Generating observed vs predicted graph with data: {data}")
+    logger.warning(f"Generating observed vs predicted graph with data: {data}")
     """Génère un graphique des valeurs observées vs prédictions."""
     independent_variables = np.array(data.get("independent_variables", []))
     dependent_variables = np.array(data.get("dependent_variables", []))
@@ -53,19 +53,35 @@ def generate_observed_vs_predicted_graph(data):
     logger.info(f"Dependent variables: {dependent_variables}")
     if independent_variables.size == 0 or dependent_variables.size == 0:
         raise ValueError("Missing observed or predicted values")
+    
+    # Vérifier et ajuster la forme de independent_variables
+    if independent_variables.shape[0] < independent_variables.shape[1]:  
+        # Si le nombre de lignes est inférieur au nombre de colonnes, on transpose
+        independent_variables = independent_variables.T
+
 
     # Calcul des valeurs prédites avec les coefficients et l'intercept
-    coefficients = np.array(data.get("coefficients", []))
-    intercept = data.get("intercept", 0)
-    predicted_values = independent_variables @ coefficients + intercept  # Produit matriciel
+    coefficients = np.array(data.get("coefficients", [])).flatten()
+    logger.warning(f"Coefficients: {coefficients}")
+    intercept = np.array(data.get("intercept", 0)).reshape(-1)
+    logger.warning(f"Intercept: {intercept}")
 
+    # Vérification manuelle des dimensions avant le produit matriciel
+    if independent_variables.shape[1] != coefficients.shape[0]:
+        raise ValueError(
+            f"Dimension mismatch: independent_variables has {independent_variables.shape[1]} columns, "
+            f"but coefficients has {coefficients.shape[0]} elements."
+        )
+
+    predicted_values = independent_variables @ coefficients + intercept  # Produit matriciellogg
+    logger.warning('Now plotting 2nd graph for multiple regression')
     # Création du graphique
     fig, ax = plt.subplots()
     ax.scatter(dependent_variables, predicted_values, color="green", label="Observed vs Predicted")
     ax.plot(dependent_variables, dependent_variables, color="red", linestyle="dashed", label="Perfect Fit")
-    ax.set_xlabel("Valeurs Observées")
-    ax.set_ylabel("Valeurs Prédites")
-    ax.set_title("Graphique Observed vs Predicted")
+    ax.set_xlabel("Observed Values")
+    ax.set_ylabel("Predicted Values")
+    ax.set_title("Graph Observed vs Predicted")
     ax.legend()
 
     return save_plot(fig, generate_unique_filename("multiple_regression_2"))
