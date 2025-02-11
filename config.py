@@ -73,7 +73,7 @@ def parse_csv_and_xlsx(file):
         # Déterminer le format du fichier
         filename = file.filename.lower()
         file_extension = os.path.splitext(filename)[1]  # Récupérer l'extension du fichier
-
+        logger.warning(filename)
         if file_extension == ".csv":
             logger.info("Loading CSV file")
             # Lire le contenu du fichier CSV
@@ -118,7 +118,8 @@ def parse_csv_and_xlsx(file):
             return df.iloc[:, 0].dropna().tolist()
 
         # Si plusieurs colonnes, retourner un dictionnaire {nom_colonne: liste de valeurs}
-        return {col: df[col].dropna().tolist() for col in df.columns}
+        return [df[col].dropna().tolist() for col in df.columns]
+
 
     except Exception as e:
         logger.error(f"Error parsing file: {e}")

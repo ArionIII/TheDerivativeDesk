@@ -56,7 +56,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
         try:
             params = parse_input_data(request, tool_config)
 
-            logger.error(params)
+            # logger.error(params)
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)
             if not calculation_function:
@@ -72,10 +72,10 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             if tool_key in GRAPH_FUNCTIONS:
                 result_graph = extract_values(result)
                 graph_input = params | result_graph
-                logger.info(f'graph inputs : {graph_input}')
+                logger.warning(f'graph inputs : {graph_input}')
                 logger.info(f"Generating graphs for tool: {tool_key}")
                 n_graphs = len(GRAPH_FUNCTIONS[tool_key])
-                logger.info(f"Number of graphs: {n_graphs}")
+                logger.warning(f"Number of graphs: {n_graphs}")
                 graphs = []
                 for i in range(n_graphs):
                     graph_function = GRAPH_FUNCTIONS[tool_key][i+1]
@@ -87,7 +87,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
             # Execute the function and return results
             final_result = result | graphs_output
-            logger.info(final_result)
+            logger.warning(final_result)
             return jsonify(convert_numpy_types(final_result))
 
         except Exception as e:
