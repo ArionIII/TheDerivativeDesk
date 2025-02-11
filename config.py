@@ -5,6 +5,8 @@ import csv
 from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
 import pandas as pd
+import json
+import numpy as np
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue
@@ -70,6 +72,7 @@ def parse_csv_and_xlsx(file):
         file_extension = os.path.splitext(filename)[1]  # Récupérer l'extension du fichier
 
         if file_extension == ".csv":
+            logger.info("Loading CSV file")
             # Lire le contenu du fichier CSV
             file_content = file.read().decode('utf-8')
 
@@ -82,12 +85,13 @@ def parse_csv_and_xlsx(file):
             df = pd.read_csv(StringIO(file_content), sep=separator, header=None)
 
         elif file_extension in [".xls", ".xlsx"]:
+            logger.info("Loading XLSX file")
             # Charger le fichier XLSX avec pandas
             df = pd.read_excel(file, header=None, engine="openpyxl")
 
         else:
             raise ValueError("Unsupported file format. Only CSV and XLSX are allowed.")
-
+        logger.warning(f"Loaded Data:\n{df}")
         # Vérifier si la première ligne contient des strings (header) ou seulement des nombres
         first_row = df.iloc[0].astype(str)  # Convertir en string pour test
         contains_strings = any(not value.replace(".", "", 1).isdigit() for value in first_row)
@@ -128,9 +132,22 @@ def parse_array(raw_value):
     Returns:
         Parsed array.
     """
+    logger.info('entering parse_array function')
+    logger.info(raw_value)
     if isinstance(raw_value, list):
+        logger.info("Processing list input")
         return raw_value
+    # Si c'est une fake liste type "[1,2,3]"
+    try:
+        parsed_json = json.loads(raw_value)
+        if isinstance(parsed_json, list):
+            logger.info("Processing list input")
+            return json.loads(raw_value)
+    except json.JSONDecodeError:
+        pass
+
     if "[" in raw_value and "]" in raw_value:
+        logger.info("Processing nested array input")
         # Parse nested lists
         try:
             return [
@@ -142,6 +159,7 @@ def parse_array(raw_value):
             raise ValueError(f"Invalid format for nested array input: {raw_value}")
     else:
         # Parse flat lists
+        logger.info("Processing flat array input")
         return [float(x.strip()) for x in raw_value.strip("[]").split(",") if x.strip()]
 
 
@@ -161,7 +179,6 @@ def parse_inputs(data_source, inputs_config):
         input_id = input_field["id"]
         input_type = input_field["type"]
         optional = input_field.get("optional", False)
-
         if input_id in data_source:
             raw_value = data_source[input_id]
             logger.info(f"Parsing input {input_id}: {raw_value}")
@@ -192,3 +209,46 @@ def extract_values(results):
     Extrait uniquement les valeurs numériques du dictionnaire sans la display_value.
     """
     return {key: value[1] for key, value in results.items()}
+
+
+
+def get_data_source(request):
+    """Détecte la source des données envoyées (JSON, form-data ou fichier)"""
+    if request.content_type.startswith("multipart/form-data"):
+        logger.info("📂 Requête multipart/form-data détectée")
+
+        # Récupérer les fichiers
+        files_data = request.files if request.files else {}
+
+        # Récupérer les champs textes envoyés dans le form-data
+        form_data = request.form.to_dict()  # Convertir en dict pour éviter ImmutableMultiDict
+
+        # Vérifier si un JSON est encodé dans un champ texte
+        json_data = {}
+        if "json_data" in form_data:
+            try:
+                json_data = json.loads(form_data["json_data"])
+            except json.JSONDecodeError:
+                logger.error("Erreur de parsing du JSON dans form-data")
+
+        return {"files": files_data, "json": json_data, "form": form_data}
+
+    elif request.is_json:
+        logger.info("Requête JSON détectée")
+        return {"files": None, "json": request.json, "form": {}}
+
+    else:
+        logger.warning("Type de requête inconnu")
+        return {"files": None, "json": {}, "form": {}}
+
+def convert_numpy_types(obj):
+    """Convertit les types NumPy en types standards pour éviter les erreurs JSON."""
+    if isinstance(obj, np.integer):  # Vérifie si c'est un int NumPy (ex: int32, int64)
+        return int(obj)  # Convertit en int standard
+    elif isinstance(obj, np.floating):  # Vérifie si c'est un float NumPy
+        return float(obj)  # Convertit en float standard
+    elif isinstance(obj, dict):  # Vérifie si c'est un dictionnaire et convertit récursivement
+        return {key: convert_numpy_types(value) for key, value in obj.items()}
+    elif isinstance(obj, list):  # Vérifie si c'est une liste et convertit récursivement
+        return [convert_numpy_types(item) for item in obj]
+    return obj  # Sinon, renvoie l'objet inchangé

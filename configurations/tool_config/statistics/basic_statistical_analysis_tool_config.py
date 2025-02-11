@@ -5,7 +5,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/mean",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Mean Value"],
     },
@@ -15,7 +15,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/median",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Median Value"],
     },
@@ -25,7 +25,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/mode",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,4]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Mode Value(s)"],
     },
@@ -35,7 +35,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/range",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Range Value"],
     },
@@ -45,7 +45,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/iqr",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["IQR Value"],
     },
@@ -55,7 +55,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/skewness",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Skewness Value"],
     },
@@ -65,9 +65,10 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/kurtosis",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
         ],
         "outputs": ["Kurtosis Value"],
+        "note": "We are using here Fisher's Kurtosis, which is the default in SciPy. This Kurtosis is centered around 0, which is different form Pearson's Kurtosis, which is centered around 3."
     },
     "comprehensive-basic-analysis": {
     "title": "Comprehensive Basic Analysis",
@@ -75,7 +76,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "url": "/tools/descriptive-analysis/comprehensive-basic-analysis",
     "inputs": [
         {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1, 2, 3, 4, 5]"},
-        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv"},
+        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv", "optional": True},
     ],
     "outputs": [
         "Mean Value",

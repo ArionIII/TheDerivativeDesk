@@ -16,13 +16,18 @@ import matplotlib.pyplot as plt
 import os
 import openpyxl
 
+import numpy as np
+import scipy.stats as stats
+import logging
+
+logger = logging.getLogger(__name__)
+
 def calculate_mean(dataset):
     """
     Calculate the mean of a dataset.
     """
     mean_value = np.mean(dataset)
-    return {"Mean Value": mean_value}
-
+    return {"mean_value": ("Mean Value :", str(mean_value))}
 
 def calculate_median(dataset):
     """
@@ -32,24 +37,22 @@ def calculate_median(dataset):
     logger.warning(f"Calculating median for dataset: {dataset}")
     logger.warning(f"Type of dataset: {type(dataset)}")
     median_value = np.median(dataset)
-    return {"Median Value": median_value}
-
+    return {"median_value": ("Median Value :", str(median_value))}
 
 def calculate_mode(dataset):
     """
     Calculate the mode of a dataset.
     """
-    mode_value = stats.mode(dataset)
-    return {"Mode Value(s)": mode_value.mode.tolist()}
-
+    mode_result = stats.mode(dataset, keepdims=True)  # keepdims=True pour éviter FutureWarning
+    mode_value = mode_result.mode.tolist()
+    return {"mode_values": ("Mode Value(s) :", str(mode_value))}
 
 def calculate_range(dataset):
     """
     Calculate the range of a dataset.
     """
     range_value = np.ptp(dataset)
-    return {"Range Value": range_value}
-
+    return {"range_value": ("Range Value :", str(range_value))}
 
 def calculate_iqr(dataset):
     """
@@ -57,38 +60,37 @@ def calculate_iqr(dataset):
     """
     q1, q3 = np.percentile(dataset, [25, 75])
     iqr_value = q3 - q1
-    return {"IQR Value": iqr_value}
-
+    return {"iqr_value": ("IQR Value :", str(iqr_value))}
 
 def calculate_skewness(dataset):
     """
     Calculate the skewness of a dataset.
     """
-    skewness_value = stats.skew(dataset)
-    return {"Skewness Value": skewness_value}
-
+    skewness_value = stats.skew(dataset, nan_policy="omit")
+    return {"skewness_value": ("Skewness Value :", str(skewness_value))}
 
 def calculate_kurtosis(dataset):
     """
     Calculate the kurtosis of a dataset.
     """
-    kurtosis_value = stats.kurtosis(dataset)
-    return {"Kurtosis Value": kurtosis_value}
+    kurtosis_value = stats.kurtosis(dataset, nan_policy="omit")
+    return {"kurtosis_value": ("Kurtosis Value :", str(kurtosis_value))}
 
 def perform_comprehensive_analysis(dataset):
     """
     Perform a full descriptive analysis on the dataset.
     """
     results = {
-        "mean_value": ("Mean Value : ", calculate_mean(dataset)["Mean Value"]),
-        "median_value": ("Median Value : ", calculate_median(dataset)["Median Value"]),
-        "mode_values": ("Mode Value(s) : ", calculate_mode(dataset)["Mode Value(s)"]),
-        "range_value": ("Range Value : ", calculate_range(dataset)["Range Value"]),
-        "iqr_value": ("IQR Value : ", calculate_iqr(dataset)["IQR Value"]),
-        "skewness_value": ("Skewness Value : ", calculate_skewness(dataset)["Skewness Value"]),
-        "kurtosis_value": ("Kurtosis Value : ", calculate_kurtosis(dataset)["Kurtosis Value"]),
+        "mean_value": calculate_mean(dataset)["mean_value"],
+        "median_value": calculate_median(dataset)["median_value"],
+        "mode_values": calculate_mode(dataset)["mode_values"],
+        "range_value": calculate_range(dataset)["range_value"],
+        "iqr_value": calculate_iqr(dataset)["iqr_value"],
+        "skewness_value": calculate_skewness(dataset)["skewness_value"],
+        "kurtosis_value": calculate_kurtosis(dataset)["kurtosis_value"],
     }
     return results
+
 
 def t_test(sample_a, sample_b=None, test_type="One-Sample"):
     """
