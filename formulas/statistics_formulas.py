@@ -12,6 +12,8 @@ import pandas as pd
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller, acf, pacf
 from statsmodels.tsa.arima.model import ARIMA
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_squared_error
 import matplotlib.pyplot as plt
 import os
 import openpyxl
@@ -227,31 +229,43 @@ def simple_regression(independent_variable, dependent_variable):
 def multiple_regression(independent_variables, dependent_variables):
     """
     Perform multiple linear regression analysis.
+    Supports:
+    - `independent_variables` as a list of lists (each containing `n` values).
+    - `dependent_variables` as a list of `n` values.
     """
-    # Ensure X is a 2D array
-    X = np.array(independent_variables)
-    y = np.array(dependent_variables)
 
-    if len(X.shape) == 1:
-        X = X.reshape(-1, 1)  # Convert to 2D if it's a single feature
-    
-    if len(y) != X.shape[0]:
-        raise ValueError("The number of rows in X must match the length of y.")
-    
-    # Using sklearn's LinearRegression
+    logger.warning(f"✅ Y length: {len(dependent_variables)}")
+    logger.warning(f"✅ X number of variables: {len(independent_variables)}")
+    for i, x_list in enumerate(independent_variables):
+        logger.warning(f"✅ Independent Variable {i+1} Length: {len(x_list)}")
+
+    # ✅ Transposer X pour qu'il soit sous forme (100,3) au lieu de (3,100)
+    X = np.array(independent_variables).T  # (100,3)
+
+    # ✅ Convertir `dependent_variables` en un vecteur (100,)
+    Y = np.array(dependent_variables)  # (100,)
+
+    logger.warning(f"📊 X shape: {X.shape}, Y shape: {Y.shape}")
+
+    # Vérifier que les dimensions correspondent
+    if X.shape[0] != Y.shape[0]:
+        raise ValueError(f"❌ Mismatch: X has {X.shape[0]} rows but Y has {Y.shape[0]} rows.")
+
+    # Régression multiple
     model = LinearRegression()
-    model.fit(X, y)
-    
+    model.fit(X, Y)
+
     predictions = model.predict(X)
-    r_squared = r2_score(y, predictions)
-    mse = mean_squared_error(y, predictions)
-    
+    r_squared = r2_score(Y, predictions)
+    mse = mean_squared_error(Y, predictions)
+
     return {
-        "coefficients": ("Coefficients ", model.coef_.tolist()),
-        "intercept": ("Intercept ", model.intercept_),
-        "r_squared": ("R-Squared ", r_squared),
-        "mean_squared_error": ("Mean Squared Error ", mse),
+        "coefficients": ("Coefficients :", model.coef_.tolist()),
+        "intercept": ("Intercept :", model.intercept_),
+        "r_squared": ("R-Squared :", r_squared),
+        "mean_squared_error": ("Mean Squared Error :", mse),
     }
+
 
 def calculate_pdf(value, mean, std_dev):
     try:
