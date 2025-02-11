@@ -135,23 +135,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (typeof data === "object" && data !== null) {
             return (
                 `<ul>` +
-                Object.entries(data) // Utiliser Object.entries pour accéder aux clés et aux valeurs
-                    .map(([key, value]) => {
-                        if (Array.isArray(value)) {
-                            // Si la valeur est un tableau, afficher la clé et chaque élément du tableau
-                            return `
-                                <li>${key}:
-                                    <ul>
-                                        ${value.map((item) => `<li>${item}</li>`).join("")}
-                                    </ul>
-                                </li>`;
-                        } else if (typeof value === "object" && value !== null) {
-                            // Si la valeur est un objet, appeler récursivement la fonction
-                            return `<li>${key}: ${formatResultData(value)}</li>`;
-                        } else {
-                            // Afficher les clés avec des valeurs simples
-                            return `<li>${key}: <strong>${value !== null ? value : "N/A"}</strong></li>`;
+                Object.values(data) // On récupère uniquement les valeurs des objets (sans afficher les clés)
+                    .map((value) => {
+                        if (Array.isArray(value) && value.length === 2) {
+                            // On suppose que chaque tableau contient ["display_name", valeur]
+                            return `<li><strong>${value[0]}</strong> ${value[1]}</li>`;
                         }
+                        return ""; // Ignorer les entrées qui ne correspondent pas au format attendu
                     })
                     .join("") +
                 `</ul>`
@@ -159,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return `<p>${data}</p>`;
     }
+    
     
 
     // Manage mutual exclusivity for CSV inputs with data_target

@@ -78,12 +78,11 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             result = calculation_function(**params)
 
             #Plotting the graphs if needed
-            result_graph = extract_values(result)
-            graph_input = params | result_graph
             graphs_output = {}
-            logger.info(f'graph inputs : {graph_input}')
-
             if tool_key in GRAPH_FUNCTIONS:
+                result_graph = extract_values(result)
+                graph_input = params | result_graph
+                logger.info(f'graph inputs : {graph_input}')
                 logger.info(f"Generating graphs for tool: {tool_key}")
                 n_graphs = len(GRAPH_FUNCTIONS[tool_key])
                 logger.info(f"Number of graphs: {n_graphs}")
