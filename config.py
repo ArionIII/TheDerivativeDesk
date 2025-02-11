@@ -107,20 +107,18 @@ def parse_csv_and_xlsx(file):
                 df = pd.read_excel(file, header=0, engine="openpyxl")
 
         logger.info(f"Loaded Data:\n{df}")
-
+        ##############################
         # Remplacer les virgules par des points pour conversion correcte
         df = df.applymap(lambda x: x.replace(",", ".") if isinstance(x, str) else x)
         df = df.astype(float)
 
         # Si une seule colonne, retourner une liste de nombres
         if df.shape[1] == 1:
-            return df.iloc[:, 0].dropna().tolist()
+            return ([], df.iloc[:, 0].dropna().tolist())
 
         # Si plusieurs colonnes, retourner un dictionnaire {nom_colonne: liste de valeurs}
         logger.warning('multiple columns')
         return (df.columns.tolist(), [df[col].dropna().tolist() for col in df.columns])
-
-
 
     except Exception as e:
         logger.error(f"Error parsing file: {e}")
@@ -308,37 +306,43 @@ def process_uploaded_files_with_target(data_source, tool_config):
 
 
 def parse_input_data(request, tool_config):
-    """
-    Gère les différentes sources de données : fichiers, formulaire et JSON.
-
-    Args:
-        request (Flask request): L'objet request contenant les données.
-        tool_config (list): Configuration des inputs.
-
-    Returns:
-        dict: Un dictionnaire contenant les données parsées.
-    """
     data_source = get_data_source(request)
     parsed_data = {}
 
     logger.warning("📥 Processing input data...")
     column_names = []
-    # 🔹 1️⃣ Parsing des fichiers (avec remplacement de `id` par `data_target`)
+    
+    # 🔹 1️⃣ Parsing des fichiers (prioritaires)
     if "files" in data_source and data_source["files"]:
         logger.warning("📂 Processing uploaded files...")
         column_names, parsed_files = process_uploaded_files_with_target(data_source, tool_config)
         logger.warning(f"✅ Parsed files: {parsed_files}")
+        
+        # Priorité aux fichiers : on écrase les valeurs existantes
         parsed_data.update(parsed_files)
+        logger.error('parsed data 1')
+        logger.error(parsed_data)
 
     # 🔹 2️⃣ Parsing du JSON
     if "json" in data_source and data_source["json"]:
-        parsed_data.update(data_source["json"])
+        for key, value in data_source["json"].items():
+            # Ajouter seulement si l'input n'a pas déjà été remplacé par un fichier
+            if key not in parsed_data:
+                parsed_data[key] = value
+        logger.error('parsed data 2', parsed_data)
 
     # 🔹 3️⃣ Parsing du formulaire (`form`)
     if "form" in data_source and data_source["form"]:
         parsed_values = [parse_array(value) for value in data_source["form"].values()]
         parsed_form_data = {k: v for k, v in zip(data_source["form"].keys(), parsed_values)}
-        parsed_data.update(parsed_form_data)
+
+        for key, value in parsed_form_data.items():
+            # Ajouter seulement si l'input n'a pas déjà été remplacé par un fichier
+            if key not in parsed_data:
+                parsed_data[key] = value
+
+        logger.error('parsed data 3')
+        logger.error(parsed_data)
 
     logger.info(f"✅ Parsed data: {parsed_data}")
     return column_names, parsed_data
