@@ -183,19 +183,17 @@ body {
 
 .graphs-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centre les éléments en cas de wrap */
-    gap: 10px;
+    flex-wrap: wrap; /* Permet de passer à la ligne si nécessaire */
+    justify-content: space-between; /* Répartit les graphes sur la largeur */
+    gap: 20px;
 }
 
 .graph-box {
-    flex-basis: calc(33.33% - 10px); /* 3 graphes par ligne */
-    min-width: 180px; /* Taille minimale */
-    max-width: 300px; /* Taille maximale */
-    min-height: 250px; /* Réduit la hauteur */
+    width: 48%; /* Ajuste la largeur pour qu'ils soient côte à côte */
+    min-height: 300px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 8px;
+    padding: 10px;
     background-color: #f9f9f9;
     text-align: center;
 }
@@ -207,26 +205,17 @@ body {
     margin: 0 auto;
 }
 
-/* Sur écrans moyens, réduit à 2 graphes par ligne */
-@media (max-width: 1024px) {
-    .graph-box {
-        flex-basis: calc(50% - 10px); /* 2 graphes par ligne */
-    }
-}
-
-/* Sur petits écrans, garde les graphes côte à côte avec une taille réduite */
+/* Responsive: Empile les graphes verticalement sur petits écrans
 @media (max-width: 768px) {
-    .graph-box {
-        flex-basis: calc(50% - 10px); /* Toujours 2 graphes par ligne */
+    .graphs-container {
+        flex-direction: column;
+        align-items: center;
     }
-}
 
-/* Sur écrans très petits, empile verticalement */
-@media (max-width: 480px) {
     .graph-box {
-        flex-basis: 100%; /* 1 graphe par ligne */
+        width: 80%; /* Largeur augmentée pour s'adapter aux petits écrans */
     }
-}
+} */
 
 .file-input-container {
     display: flex;
