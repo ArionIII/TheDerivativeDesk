@@ -7,6 +7,8 @@ from flask import Blueprint, render_template, request, jsonify
 import pandas as pd
 import json
 import numpy as np
+from werkzeug.datastructures import FileStorage
+
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue
@@ -262,3 +264,34 @@ def convert_numpy_types(obj):
     elif isinstance(obj, list):  # Vérifie si c'est une liste et convertit récursivement
         return [convert_numpy_types(item) for item in obj]
     return obj  # Sinon, renvoie l'objet inchangé
+
+
+def process_uploaded_files(data_source):
+    """
+    Gère plusieurs fichiers CSV/XLSX, les charge et retourne leurs datasets.
+
+    Args:
+        data_source (dict): Contient les fichiers uploadés.
+
+    Returns:
+        dict: Un dictionnaire contenant les datasets associés à chaque fichier.
+    """
+    parsed_datasets = {}
+
+    # Vérifier si des fichiers sont présents
+    if "files" in data_source and data_source["files"]:
+        logger.info("Processing uploaded files...")
+
+        for file_key, file_obj in data_source["files"].items():
+            if isinstance(file_obj, FileStorage) and file_obj.filename:
+                logger.info(f"Détection du fichier : {file_obj.filename}")
+
+                # Parser le fichier CSV/XLSX
+                try:
+                    parsed_data = parse_csv_and_xlsx(file_obj)
+                    parsed_datasets[file_obj.filename] = parsed_data
+                    logger.info(f"Fichier {file_obj.filename} chargé avec succès.")
+                except Exception as e:
+                    logger.error(f"Erreur lors du traitement de {file_obj.filename} : {e}")
+
+    return parsed_datasets

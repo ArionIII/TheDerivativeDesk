@@ -157,10 +157,16 @@ def anova(group_a, group_b, group_c=None):
     """
     Perform ANOVA test.
     """
-    if group_c is not None:
+    logger.info(f"Group A: {group_a}")
+    logger.info(f"Group B: {group_b}")
+    logger.info(f"Group C: {group_c}")
+    if group_c is not None and group_c!="":
+        logger.info(f"Performing ANOVA test for three groups")
         f_stat, p_value = stats.f_oneway(group_a, group_b, group_c)
     else:
+        logger.info(f"Performing ANOVA test for two groups")
         f_stat, p_value = stats.f_oneway(group_a, group_b)
+    logger.info(f"F-Statistic: {f_stat}, P-Value: {p_value}")
     return {
     "f_statistic": ("F-Statistic :", f_stat), 
     "p_value": ("P-Value : ", f"{p_value} : {'Significant' if p_value <= 0.05 else 'Not Significant'}")

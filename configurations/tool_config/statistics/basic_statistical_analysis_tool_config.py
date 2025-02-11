@@ -163,8 +163,10 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "description": "Perform simple linear regression analysis.",
         "url": "/tools/inferential-statistics/simple-regression",
         "inputs": [
-            {"label": "Independent Variable (X)", "id": "independent_variable", "type": "array", "placeholder": "e.g., [1,2,3]"},
-            {"label": "Dependent Variable (Y)", "id": "dependent_variable", "type": "array", "placeholder": "e.g., [4,5,6]"}
+            {"label": "Independent Variable (X)", "id": "independent_variable", "type": "array", "placeholder": "e.g., [1,2,3]", },
+            {"label": "Dependent Variable (Y)", "id": "dependent_variable", "type": "array", "placeholder": "e.g., [4,5,6]"},
+            {"label": "CSV File - X", "id": "csv_file_1", "type": "file", "accept": ".csv", "data_target": "independent_variable", "template": "/static/templates/simple_regression_1.csv", "optional": True},
+            {"label": "CSV File - Y", "id": "csv_file_2", "type": "file", "accept": ".csv", "data_target": "dependent_variable", "template": "/static/templates/simple_regression_2.csv", "optional": True},
         ],
         "outputs": ["Slope", "Intercept", "R-Squared Value"],
     },
