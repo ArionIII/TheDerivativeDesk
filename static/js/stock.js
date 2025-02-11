@@ -438,7 +438,7 @@ const formatPercentage = (num) => {
     newsModal.className = "modal hidden";
     newsModal.innerHTML = `
     <div class="modal-content">
-        <span class="close-btn-see-news" onclick="closeNewsModal()">&times;</span>
+    <button class="close-btn-see-news" onclick="closeNewsModal()">Close</button>
         <h2 id="modal-news-title">Stock News</h2>
         <div id="news-container"></div>
         <button class="close-news-button" onclick="closeNewsModal()">Close</button>
@@ -471,9 +471,9 @@ const formatPercentage = (num) => {
             document.getElementById("modal-news-title").textContent = `Latest News for ${ticker}`;
             document.getElementById("news-container").innerHTML = newsArticles.map(article => `
                 <div class="news-item">
-                    <h3><a href="${article.link}" target="_blank">${article.title}</a></h3>
+                    <h4><a href="${article.link}" target="_blank">${article.title}</a></h4>
                     <p><strong>${article.published}</strong></p>
-                    <p>${article.summary}</p>
+                    
                 </div>
             `).join("");
         }

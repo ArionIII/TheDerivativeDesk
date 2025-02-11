@@ -10,6 +10,8 @@ body {
     background-color: var(--background-color);
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Cache tout débordement horizontal */
+    max-width: 100vw; /* Empêche le contenu d'excéder la largeur de l'écran */
 }
 
 /* Tool Header */
@@ -320,9 +322,11 @@ body {
 }
 
 #see-news-modal {
-    left: 75%; /* Affiché à droite */
+    right:0; /* Affiché à droite */
     transform: translate(-25%, -50%);
     width: 40%;
+    padding-right: 50px;
+    box-sizing: border-box;
 }
 
 .news-item {
