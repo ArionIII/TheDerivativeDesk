@@ -195,13 +195,25 @@ canvas {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50%;
+    width: 80vw; /* Adapte en fonction de la largeur de l'écran */
     max-width: 600px;
+    height: 80vh; /* Adapte à la hauteur de l'écran */
+    max-height: 90vh; /* Empêche de dépasser l'écran */
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
     z-index: 1000;
+    overflow-y: auto; /* Permet le scroll si besoin */
+}
+
+/* Responsive : modals plus grandes sur grands écrans */
+@media (min-width: 1024px) {
+    .modal {
+        width: 50vw;
+        max-width: 700px;
+        height: 75vh;
+    }
 }
 
 .modal.show {
