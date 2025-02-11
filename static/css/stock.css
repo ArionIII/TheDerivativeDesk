@@ -210,12 +210,20 @@ canvas {
 /* Responsive : modals plus grandes sur grands écrans */
 @media (min-width: 1024px) {
     .modal {
-        width: 50vw;
-        max-width: 700px;
-        height: 75vh;
+        max-height: 70vh; /* Réduit la hauteur pour ne pas empiéter */
+        bottom: auto;
     }
 }
 
+/* Ajustement pour petits écrans */
+@media (max-width: 768px) {
+    .modal {
+        width: 90vw;
+        height: 85vh;
+        top: 10vh; /* Empêche le chevauchement du bas */
+        bottom: auto;
+    }
+}
 .modal.show {
     display: block;
 }
