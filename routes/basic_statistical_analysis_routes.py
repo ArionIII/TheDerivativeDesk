@@ -76,8 +76,11 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                 return "Calculation logic not implemented", 500
             logger.error('moment before result')
             result = calculation_function(**params)
+
+            #Plotting the graphs if needed
             result_graph = extract_values(result)
             graph_input = params | result_graph
+            graphs_output = {}
             logger.info(f'graph inputs : {graph_input}')
 
             if tool_key in GRAPH_FUNCTIONS:
@@ -90,10 +93,10 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                     logger.info(f"Graph function: {graph_function}")
                     graph = graph_function(graph_input)
                     graphs.append(graph)
-            graphs_output = {f'graph_{i+1}': graph for i, graph in enumerate(graphs)}
-            logger.info(f"Graphs: {graphs}")
-            # Execute the function and return results
+                graphs_output = {f'graph_{i+1}': graph for i, graph in enumerate(graphs)}
+                logger.info(f"Graphs: {graphs}")
 
+            # Execute the function and return results
             final_result = result | graphs_output
 
             return jsonify(final_result)

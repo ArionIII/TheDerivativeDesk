@@ -15,7 +15,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/descriptive-analysis/median",
         "inputs": [
             {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]"},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/median.csv"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv"},
         ],
         "outputs": ["Median Value"],
     },
@@ -75,7 +75,7 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
     "url": "/tools/descriptive-analysis/comprehensive-basic-analysis",
     "inputs": [
         {"label": "Dataset", "id": "dataset", "type": "array", "placeholder": "e.g., [1, 2, 3, 4, 5]"},
-        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset"},
+        {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "template": "/static/templates/comprehensive_basic_analysis.csv"},
     ],
     "outputs": [
         "Mean Value",

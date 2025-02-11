@@ -25,7 +25,7 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
         "inputs": [
             {"label": "Time Series Data", "id": "dataset", "type": "array", "placeholder": "e.g., [1,2,3,4,5]", "optional": False},
             {"label": "Window Size", "id": "window_size", "type": "number", "placeholder": "e.g., 3", "optional": False},
-            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True, "template": "/static/templates/median.csv"},
+            {"label": "CSV File", "id": "csv_file", "type": "file", "accept": ".csv", "data_target": "dataset", "optional": True, "template": "/static/templates/comprehensive_basic_analysis.csv"},
         ],
         "outputs": ["Smoothed Time Series"],
     },
@@ -78,7 +78,7 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
             "accept": ".csv",
             "data_target": "dataset",
             "optional": True,
-            "template": "/static/templates/median.csv"
+            "template": "/static/templates/comprehensive_basic_analysis.csv"
         }
     ],
     "outputs": [
