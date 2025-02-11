@@ -8,6 +8,7 @@ import pandas as pd
 import json
 import numpy as np
 from werkzeug.datastructures import FileStorage
+import ipdb
 
 
 class LogColors:
@@ -266,32 +267,75 @@ def convert_numpy_types(obj):
     return obj  # Sinon, renvoie l'objet inchangé
 
 
-def process_uploaded_files(data_source):
+def process_uploaded_files_with_target(data_source, tool_config):
     """
-    Gère plusieurs fichiers CSV/XLSX, les charge et retourne leurs datasets.
+    Gère les fichiers uploadés et remplace leur ID par leur `data_target`.
 
     Args:
-        data_source (dict): Contient les fichiers uploadés.
+        data_source (dict): Données reçues contenant les fichiers.
+        tool_config (list): Configuration des inputs, contenant `id` et `data_target`.
 
     Returns:
-        dict: Un dictionnaire contenant les datasets associés à chaque fichier.
+        dict: Un dictionnaire avec `data_target` comme clé et le contenu du fichier en valeur.
     """
     parsed_datasets = {}
 
     # Vérifier si des fichiers sont présents
     if "files" in data_source and data_source["files"]:
-        logger.info("Processing uploaded files...")
+        logger.info("📂 Processing uploaded files...")
 
         for file_key, file_obj in data_source["files"].items():
             if isinstance(file_obj, FileStorage) and file_obj.filename:
-                logger.info(f"Détection du fichier : {file_obj.filename}")
+                logger.info(f"📌 Détection du fichier : {file_obj.filename}")
+
+                # Trouver `data_target` correspondant à l'ID du fichier
+                target_name = next(
+                (item["data_target"] for item in tool_config["inputs"] if item["id"] == file_key),
+                file_key  # Valeur par défaut si non trouvé
+            )
+
 
                 # Parser le fichier CSV/XLSX
                 try:
                     parsed_data = parse_csv_and_xlsx(file_obj)
-                    parsed_datasets[file_obj.filename] = parsed_data
-                    logger.info(f"Fichier {file_obj.filename} chargé avec succès.")
+                    parsed_datasets[target_name] = parsed_data
+                    logger.info(f"✅ Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
                 except Exception as e:
-                    logger.error(f"Erreur lors du traitement de {file_obj.filename} : {e}")
+                    logger.error(f"❌ Erreur lors du traitement de {file_obj.filename} : {e}")
 
     return parsed_datasets
+
+
+def parse_input_data(request, tool_config):
+    """
+    Gère les différentes sources de données : fichiers, formulaire et JSON.
+
+    Args:
+        request (Flask request): L'objet request contenant les données.
+        tool_config (list): Configuration des inputs.
+
+    Returns:
+        dict: Un dictionnaire contenant les données parsées.
+    """
+    data_source = get_data_source(request)
+    parsed_data = {}
+
+    logger.info("📥 Processing input data...")
+    
+    # 🔹 1️⃣ Parsing des fichiers (avec remplacement de `id` par `data_target`)
+    if "files" in data_source and data_source["files"]:
+        parsed_files = process_uploaded_files_with_target(data_source, tool_config)
+        parsed_data.update(parsed_files)
+
+    # 🔹 2️⃣ Parsing du JSON
+    if "json" in data_source and data_source["json"]:
+        parsed_data.update(data_source["json"])
+
+    # 🔹 3️⃣ Parsing du formulaire (`form`)
+    if "form" in data_source and data_source["form"]:
+        parsed_values = [parse_array(value) for value in data_source["form"].values()]
+        parsed_form_data = {k: v for k, v in zip(data_source["form"].keys(), parsed_values)}
+        parsed_data.update(parsed_form_data)
+
+    logger.info(f"✅ Parsed data: {parsed_data}")
+    return parsed_data

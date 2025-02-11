@@ -176,7 +176,9 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
         "url": "/tools/inferential-statistics/multiple-regression",
         "inputs": [
             {"label": "Independent Variables (\( X_k \))", "id": "independent_variables", "type": "array", "placeholder": "e.g., [[1,2],[3,4],[5,6]]"},
-            {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"}
+            {"label": "Dependent Variable (Y)", "id": "dependent_variables", "type": "array", "placeholder": "e.g., [4,5,6]"},
+            {"label": "CSV File - (\( X_k \))", "id": "csv_file_1", "type": "file", "accept": ".csv", "data_target": "independent_variables", "template": "/static/templates/multi_regression_1.csv", "optional": True},
+            {"label": "CSV File - Y", "id": "csv_file_2", "type": "file", "accept": ".csv", "data_target": "dependent_variables", "template": "/static/templates/simple_regression_2.csv", "optional": True},
         ],
         "outputs": ["Coefficients", "Intercept", "R-Squared Value", "Mean Squared Error"],
         "graphs": [
