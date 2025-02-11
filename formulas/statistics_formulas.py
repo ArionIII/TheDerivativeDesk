@@ -316,21 +316,70 @@ def calculate_t_distribution(value, degrees_freedom):
     except Exception as e:
         return {"error": ("Error :", str(e))}, 400
 
-def calculate_moving_averages(dataset, window_size):
-    logger.info(f"Calculating moving averages for time series: {dataset}")
+
+def calculate_moving_averages(dataset, window_size, output_path="static/outputs/statistics/"):
+    """
+    Compute moving averages for a given dataset and save results in both CSV and XLSX formats.
+
+    Parameters:
+    - dataset: A list of numbers (single series) or a dictionary of lists (multiple series).
+    - window_size: The window size for the moving average calculation.
+    - output_path: Path to save the resulting CSV and XLSX files.
+
+    Returns:
+    - A tuple (csv_path, xlsx_path) containing the paths to the saved files.
+    """
     try:
-        dataset = list(map(float, dataset))  # Convert to float
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
+
         window_size = int(window_size)  # Convert window_size to integer
         logger.info(f"Window Size: {window_size}")
-        smoothed = [
-            sum(dataset[i:i + window_size]) / window_size 
-            for i in range(len(dataset) - window_size + 1)
-        ]
-        logger.info(f"Smoothed Time Series: {smoothed}")
-        return {"moving_average": ("Smoothed Time Series :", smoothed)}
+
+        if isinstance(dataset, list):
+            # Cas d'une seule colonne : convertir en DataFrame
+            df = pd.DataFrame({"Series": dataset})
+            df["Moving_Average"] = df["Series"].rolling(window=window_size).mean()
+            df_output = df.copy()
+
+        elif isinstance(dataset, dict):
+            # Aligner toutes les colonnes sur la même longueur
+            max_length = max(len(v) for v in dataset.values())
+            dataset_aligned = {
+                key: v + [np.nan] * (max_length - len(v)) for key, v in dataset.items()
+            }
+            df = pd.DataFrame(dataset_aligned)
+
+            # Calcul des moyennes mobiles
+            moving_averages = df.rolling(window=window_size).mean()
+
+            # Réintégrer les noms des colonnes en haut du fichier
+            df_output = pd.DataFrame(columns=df.columns)  # Créer un header
+            df_output = pd.concat([df_output, moving_averages], ignore_index=True)
+        else:
+            raise ValueError("Invalid dataset format. Expected list or dict of lists.")
+
+        # Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
+        df_output.dropna(inplace=True, how="all")
+
+        # Générer un nom de fichier unique
+        random_file_name = f"moving_average_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        logger.info(f"Moving averages saved to: {csv_path} and {xlsx_path}")
+        return csv_path, xlsx_path
+
     except Exception as e:
-        logger.error(f"Error in calculate_moving_averages: {e}")
-        return {"error": ("Error :", str(e))}, 400
+        logger.error(f"Error computing moving averages: {e}")
+        return {"error": f"Error computing moving averages: {e}"}, 400
+
 
 def calculate_exponential_smoothing(dataset, smoothing_factor):
     try:
