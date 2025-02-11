@@ -54,8 +54,8 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
 
     if request.method == "POST":
         try:
-            params = parse_input_data(request, tool_config)
-
+            colmun_names, params = parse_input_data(request, tool_config)
+            logger.warning("params were parsed")
             # logger.error(params)
             # Call the corresponding calculation function
             calculation_function = TOOL_FUNCTIONS.get(tool_key)

@@ -94,7 +94,6 @@ def parse_csv_and_xlsx(file):
 
         else:
             raise ValueError("Unsupported file format. Only CSV and XLSX are allowed.")
-        logger.warning(f"Loaded Data:\n{df}")
         # Vérifier si la première ligne contient des strings (header) ou seulement des nombres
         first_row = df.iloc[0].astype(str)  # Convertir en string pour test
         contains_strings = any(not value.replace(".", "", 1).isdigit() for value in first_row)
@@ -118,7 +117,9 @@ def parse_csv_and_xlsx(file):
             return df.iloc[:, 0].dropna().tolist()
 
         # Si plusieurs colonnes, retourner un dictionnaire {nom_colonne: liste de valeurs}
-        return [df[col].dropna().tolist() for col in df.columns]
+        logger.warning('multiple columns')
+        return (df.columns.tolist(), [df[col].dropna().tolist() for col in df.columns])
+
 
 
     except Exception as e:
@@ -202,7 +203,7 @@ def parse_inputs(data_source, inputs_config):
                     # Handle CSV file upload
                     file_data = request.files[input_id] if request.files else None
                     if file_data:
-                        params[input_id] = parse_csv_and_xlsx(file_data)
+                        column_names, params[input_id] = parse_csv_and_xlsx(file_data)
                 elif input_type == "array":
                     logger.info("Processing array input")
                     params[input_id] = parse_array(raw_value)
@@ -214,7 +215,6 @@ def parse_inputs(data_source, inputs_config):
                     params[input_id] = raw_value
             elif not optional:
                 raise ValueError(f"Missing required input: {input_id}")
-
     return params
 
 # Pour extraire les valeurs du result sans prendre en compte la display_value
@@ -280,10 +280,11 @@ def process_uploaded_files_with_target(data_source, tool_config):
         dict: Un dictionnaire avec `data_target` comme clé et le contenu du fichier en valeur.
     """
     parsed_datasets = {}
+    column_names = []
 
     # Vérifier si des fichiers sont présents
     if "files" in data_source and data_source["files"]:
-        logger.info("📂 Processing uploaded files...")
+        logger.warning("📂 Processing uploaded files...")
 
         for file_key, file_obj in data_source["files"].items():
             if isinstance(file_obj, FileStorage) and file_obj.filename:
@@ -294,17 +295,16 @@ def process_uploaded_files_with_target(data_source, tool_config):
                 (item["data_target"] for item in tool_config["inputs"] if item["id"] == file_key),
                 file_key  # Valeur par défaut si non trouvé
             )
-
-
                 # Parser le fichier CSV/XLSX
                 try:
-                    parsed_data = parse_csv_and_xlsx(file_obj)
+                    column_names, parsed_data = parse_csv_and_xlsx(file_obj)
+                    logger.warning(f"✅ Fichier {file_obj.filename} chargé avec succès.")
                     parsed_datasets[target_name] = parsed_data
-                    logger.info(f"✅ Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
+                    logger.warning(f"✅ Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
                 except Exception as e:
                     logger.error(f"❌ Erreur lors du traitement de {file_obj.filename} : {e}")
-
-    return parsed_datasets
+    logger.warning(f"✅ Parsed datasets: {parsed_datasets}")
+    return column_names, parsed_datasets
 
 
 def parse_input_data(request, tool_config):
@@ -321,11 +321,13 @@ def parse_input_data(request, tool_config):
     data_source = get_data_source(request)
     parsed_data = {}
 
-    logger.info("📥 Processing input data...")
-    
+    logger.warning("📥 Processing input data...")
+    column_names = []
     # 🔹 1️⃣ Parsing des fichiers (avec remplacement de `id` par `data_target`)
     if "files" in data_source and data_source["files"]:
-        parsed_files = process_uploaded_files_with_target(data_source, tool_config)
+        logger.warning("📂 Processing uploaded files...")
+        column_names, parsed_files = process_uploaded_files_with_target(data_source, tool_config)
+        logger.warning(f"✅ Parsed files: {parsed_files}")
         parsed_data.update(parsed_files)
 
     # 🔹 2️⃣ Parsing du JSON
@@ -339,4 +341,39 @@ def parse_input_data(request, tool_config):
         parsed_data.update(parsed_form_data)
 
     logger.info(f"✅ Parsed data: {parsed_data}")
-    return parsed_data
+    return column_names, parsed_data
+
+def reassign_params_if_header(tool_config, params, column_names):
+    """
+    Réassigne les paramètres et les noms de colonnes si un fichier CSV a été fourni 
+    et que son id dans tool_config contient "header": True.
+
+    Args:
+        tool_config (dict): Configuration de l'outil.
+        params (dict): Données parsées des inputs de l'utilisateur.
+        column_names (list): Liste des noms de colonnes issues du fichier CSV.
+
+    Returns:
+        tuple: (params mis à jour, column_names mis à jour)
+    """
+    for input_config in tool_config.get("inputs", []):
+        data_target = input_config.get("data_target")
+        
+        if data_target and input_config.get("header") == True:
+            # Vérifier si ce data_target est bien dans params
+            if data_target in params and isinstance(params[data_target], list):
+                data_values = params[data_target]  # Liste des listes
+                
+                if len(column_names) == 1:
+                    # Si une seule colonne, on garde une liste plate
+                    params[data_target] = data_values[0]  # On prend la première liste (colonne unique)
+                else:
+                    # Si plusieurs colonnes, transformer en dictionnaire {nom_colonne: liste de valeurs}
+                    params[data_target] = {
+                        col_name: data_values[i] for i, col_name in enumerate(column_names)
+                    }
+
+                break  # Une seule mise à jour suffit
+
+    return params, column_names
+

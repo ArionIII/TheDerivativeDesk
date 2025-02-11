@@ -210,7 +210,8 @@ BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG = {
             {"label": "Mean (μ)", "id": "mean", "type": "number", "placeholder": "e.g., 0"},
             {"label": "Standard Deviation (σ)", "id": "std_dev", "type": "number", "placeholder": "e.g., 1"}
         ],
-        "outputs": ["CDF Value"]
+        "outputs": ["CDF Value"],
+        "note": "The CDF is the probability that a random variable X following a Normal distribution will take a value less than or equal to x."    
     },
     "z-score": {
         "title": "Z-Score Calculation",

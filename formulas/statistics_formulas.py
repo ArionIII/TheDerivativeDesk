@@ -270,51 +270,51 @@ def multiple_regression(independent_variables, dependent_variables):
 def calculate_pdf(value, mean, std_dev):
     try:
         pdf_value = norm.pdf(value, loc=mean, scale=std_dev)
-        return ({"PDF Value": pdf_value})
+        return ({"pdf_value" : ("PDF Value :", pdf_value)})
     except Exception as e:
         return ({"error": str(e)}), 400
 
 def calculate_cdf(value, mean, std_dev):
     try:
         cdf_value = norm.cdf(value, loc=mean, scale=std_dev)
-        return ({"CDF Value": cdf_value})
+        return {"cdf_value": ("CDF Value :", cdf_value)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_z_score(value, mean, std_dev):
     try:
         z_score = (value - mean) / std_dev
-        return ({"Z-Score": z_score})
+        return {"z_score": ("Z-Score :", z_score)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_binomial(num_trials, prob_success, num_successes):
     try:
         probability = binom.pmf(num_successes, num_trials, prob_success)
-        return ({"Probability": probability})
+        return {"binomial_probability": ("Binomial Probability :", probability)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_poisson(num_events, rate):
     try:
         probability = poisson.pmf(num_events, rate)
-        return ({"Probability": probability})
+        return {"poisson_probability": ("Poisson Probability :", probability)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_normal_distribution(value, mean, std_dev):
     try:
         probability = norm.cdf(value, loc=mean, scale=std_dev)
-        return ({"Probability": probability})
+        return {"normal_distribution_probability": ("Normal Distribution Probability :", probability)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_t_distribution(value, degrees_freedom):
     try:
         probability = t.cdf(value, degrees_freedom)
-        return ({"Probability": probability})
+        return {"t_distribution_probability": ("T-Distribution Probability :", probability)}
     except Exception as e:
-        return ({"error": str(e)}), 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_moving_averages(dataset, window_size):
     logger.info(f"Calculating moving averages for time series: {dataset}")
@@ -327,10 +327,10 @@ def calculate_moving_averages(dataset, window_size):
             for i in range(len(dataset) - window_size + 1)
         ]
         logger.info(f"Smoothed Time Series: {smoothed}")
-        return {"Smoothed Time Series": smoothed}
+        return {"moving_average": ("Smoothed Time Series :", smoothed)}
     except Exception as e:
         logger.error(f"Error in calculate_moving_averages: {e}")
-        return {"error": str(e)}, 400
+        return {"error": ("Error :", str(e))}, 400
 
 def calculate_exponential_smoothing(dataset, smoothing_factor):
     try:
@@ -341,9 +341,10 @@ def calculate_exponential_smoothing(dataset, smoothing_factor):
                 smoothed.append(value)  # Initialize with the first value
             else:
                 smoothed.append(smoothing_factor * value + (1 - smoothing_factor) * smoothed[i-1])
-        return {"Smoothed Time Series": smoothed}
+        return {"exponential_smoothing": ("Smoothed Time Series :", smoothed)}
     except Exception as e:
-        return {"error": str(e)}, 400
+        return {"error": ("Error :", str(e))}, 400
+
 
 def calculate_autocorrelation(dataset, lag_order=1):
     try:
@@ -358,7 +359,7 @@ def calculate_autocorrelation(dataset, lag_order=1):
         )
         denominator = sum((x - mean) ** 2 for x in dataset)
         autocorrelation = numerator / denominator
-        return {"Autocorrelation": autocorrelation}
+        return {"autocorrelation": ("Autocorrelation :", autocorrelation)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -377,7 +378,7 @@ def calculate_transition_matrices(state_sequence, num_states):
             if row_sum > 0:
                 for i in range(len(row)):
                     row[i] /= row_sum
-        return {"Transition Matrix": matrix}
+        return {"transition_matrix": ("Transition Matrix :", matrix)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -395,7 +396,7 @@ def simulate_random_walk(num_steps, num_simulations, step_size=1):
                 position += step
                 walk.append(position)
             simulations.append(walk)
-        return {"Simulation Paths": simulations}
+        return {"simulation_paths": ("Simulation Paths :", simulations)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -410,7 +411,7 @@ def perform_monte_carlo_simulations(num_simulations, random_seed=None):
         
         # Generate random outcomes
         outcomes = [random.random() for _ in range(num_simulations)]
-        return {"Simulation Results": outcomes}
+        return {"simulation_results": ("Simulation Results :", outcomes)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -418,7 +419,7 @@ def perform_monte_carlo_simulations(num_simulations, random_seed=None):
 def perform_bayesian_updating(prior, likelihood, evidence):
     try:
         updated_probability = (likelihood * prior) / evidence
-        return {"Updated Probability": updated_probability}
+        return {"updated_probability": ("Updated Probability :", updated_probability)}
     except Exception as e:
         return {"error": str(e)}, 400
     
@@ -427,7 +428,7 @@ def calculate_matrix_multiplication(matrix_a, matrix_b):
         a = np.array(matrix_a)
         b = np.array(matrix_b)
         result = np.matmul(a, b)
-        return {"Matrix Product": result.tolist()}
+        return {"matrix_product": ("Matrix Product :", result.tolist())}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -435,7 +436,7 @@ def calculate_inverse_matrix(matrix):
     try:
         mat = np.array(matrix)
         inverse = np.linalg.inv(mat)
-        return {"Inverse Matrix": inverse.tolist()}
+        return {"inverse_matrix": ("Inverse Matrix :", inverse.tolist())}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -444,10 +445,10 @@ def perform_svd(matrix):
         mat = np.array(matrix)
         u, sigma, v_transposed = np.linalg.svd(mat)
         return {
-            "U Matrix": u.tolist(),
-            "Sigma (Singular Values)": sigma.tolist(),
-            "V Transposed": v_transposed.tolist(),
-        }
+    "u_matrix": ("U Matrix :", u.tolist()),
+    "sigma_values": ("Sigma (Singular Values) :", sigma.tolist()),
+    "v_transposed": ("V Transposed :", v_transposed.tolist()),
+}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -458,9 +459,9 @@ def perform_pca(data_matrix):
         u, s, v = np.linalg.svd(mean_centered, full_matrices=False)
         explained_variance = (s**2) / (len(data) - 1)
         return {
-            "Principal Components": v.tolist(),
-            "Explained Variance": explained_variance.tolist(),
-        }
+    "principal_components": ("Principal Components :", v.tolist()),
+    "explained_variance": ("Explained Variance :", explained_variance.tolist()),
+}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -469,9 +470,9 @@ def calculate_eigenvalues_eigenvectors(matrix):
         mat = np.array(matrix)
         eigenvalues, eigenvectors = np.linalg.eig(mat)
         return {
-            "Eigenvalues": eigenvalues.tolist(),
-            "Eigenvectors": eigenvectors.tolist(),
-        }
+    "eigenvalues": ("Eigenvalues :", eigenvalues.tolist()),
+    "eigenvectors": ("Eigenvectors :", eigenvectors.tolist()),
+}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -580,6 +581,7 @@ def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics
             # Cas d'une seule colonne : convertir en DataFrame
             df = pd.DataFrame({"Series": dataset})
             df["Log_Returns"] = np.log(df["Series"] / df["Series"].shift(1))
+            df_output = df.copy()
         elif isinstance(dataset, dict):
             # Aligner toutes les colonnes sur la même longueur
             max_length = max(len(v) for v in dataset.values())

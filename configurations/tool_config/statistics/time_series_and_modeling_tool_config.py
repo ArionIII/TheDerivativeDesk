@@ -12,7 +12,8 @@ TIME_SERIES_AND_MODELING_TOOL_CONFIG = ({
             "accept": ".csv",
             "data_target": "dataset",
             "optional": True,
-            "template": "/static/templates/sample_time_series.csv"
+            "template": "/static/templates/sample_time_series.csv",
+            "header": True
         }
     ],
     "outputs": ["CSV File with Log Returns"],

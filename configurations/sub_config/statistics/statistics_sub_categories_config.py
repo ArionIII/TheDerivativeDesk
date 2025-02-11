@@ -43,13 +43,12 @@ STATISTICS_TOOL_CATEGORIES = {
         "description": "Work with probability density functions, cumulative functions, and statistical distributions.",
         "parent_category": "statistics",
         "tools": [
-            {"title": "Probability Density Function (PDF)", "description": "Calculate the PDF for continuous random variables.", "url": "/tools/probability-tools/pdf"},
-            {"title": "Cumulative Distribution Function (CDF)", "description": "Compute the cumulative probability of random variables.", "url": "/tools/probability-tools/cdf"},
+            {"title": "Probability Density Function (Normal PDF)", "description": "Calculate the PDF for continuous random variables.", "url": "/tools/probability-tools/pdf"},
+            {"title": "Cumulative Distribution Function (Normal CDF)", "description": "Compute the cumulative probability of random variables.", "url": "/tools/probability-tools/cdf"},
             {"title": "Z-Score Calculation", "description": "Find the Z-score to standardize data points.", "url": "/tools/probability-tools/z-score"},
             {"title": "Binomial Distribution", "description": "Analyze binomial random variables and probabilities.", "url": "/tools/probability-tools/binomial-distribution"},
             {"title": "Poisson Distribution", "description": "Evaluate Poisson-distributed random events.", "url": "/tools/probability-tools/poisson-distribution"},
-            {"title": "Normal Distribution", "description": "Compute probabilities for normally distributed variables.", "url": "/tools/probability-tools/normal-distribution"},
-            {"title": "T-Distribution", "description": "Work with T-distributed data for small sample sizes.", "url": "/tools/probability-tools/t-distribution"},
+            {"title": "T-Distribution (Student CDF)", "description": "Work with T-distributed data for small sample sizes.", "url": "/tools/probability-tools/t-distribution"},
         ],
     },
     # Time Series Analysis
