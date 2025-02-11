@@ -1,4 +1,9 @@
 
+html, body {
+    overflow-x: hidden;
+}
+
+
 body {
     font-family: var(--font-family);
     line-height: 1.6;
@@ -28,7 +33,7 @@ body {
     max-width: 600px; /* Limite la largeur pour éviter qu'elle ne devienne trop grande */
     position: absolute;
     top: 90px; /* Positionne sous les boutons */
-    left: 67%; 
+    right:0; 
 }
 
 /* 🔹 Barre de recherche */

@@ -322,9 +322,11 @@ body {
 }
 
 #see-news-modal {
-    left: 75%; /* Affiché à droite */
+    right:0; /* Affiché à droite */
     transform: translate(-25%, -50%);
     width: 40%;
+    padding-right: 50px;
+    box-sizing: border-box;
 }
 
 .news-item {
