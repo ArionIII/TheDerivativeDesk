@@ -7,7 +7,7 @@ SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG = {
             {"label": "Number of Simulations", "id": "num_simulations", "type": "number", "placeholder": "e.g., 1000", "optional": False},
             {"label": "Random Seed (optional)", "id": "random_seed", "type": "number", "placeholder": "e.g., 42", "optional": True},
         ],
-        "outputs": ["Simulation Results"],
+        "outputs": ["CSV File with Simulation Results"],
     },
     "bayesian-updating": {
         "title": "Bayesian Updating",

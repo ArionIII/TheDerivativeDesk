@@ -45,3 +45,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem("hideBanner")) {
+        document.getElementById("site-banner").style.display = "block";
+    }
+});
+
+function closeBanner() {
+    document.getElementById("site-banner").style.display = "none";
+    localStorage.setItem("hideBanner", "true");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+    }
+
+    if (isMobile()) {
+        document.body.innerHTML = `
+            <div id="mobile-warning" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 20px;
+                padding: 20px;
+            ">
+                <p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>
+            </div>
+        `;
+    }
+});
+
+

@@ -73,8 +73,8 @@ STATISTICS_TOOL_CATEGORIES = {
             "url": "/tools/time-series-analysis/autocorrelation"
         },
         {
-            "title": "AR, MA, ARMA Predictions",
-            "description": "Automatically determine the best model (AR, MA, or ARMA) and generate future predictions.",
+            "title": "AR, MA, ARIMA Predictions",
+            "description": "Automatically determine the best model (AR, MA, or ARIMA) and generate future predictions.",
             "url": "/tools/time-series-analysis/AR-MA-ARMA-previsions"
         },
         {

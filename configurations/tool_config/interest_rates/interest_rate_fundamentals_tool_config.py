@@ -103,23 +103,129 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
         "title": "Extend LIBOR Curve with Swap Rates",
         "description": "Use swap rates to extend the LIBOR curve.",
         "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
-        "inputs": [
-            {"label": "Initial LIBOR Rates (comma-separated)", "id": "libor_rates", "type": "array", "placeholder": "e.g., [0.01, 0.015]", "optional": False},
-            {"label": "Swap Rates (comma-separated)", "id": "swap_rates", "type": "array", "placeholder": "e.g., [0.02, 0.025, 0.03]", "optional": False},
-            {"label": "Maturities (Years)", "id": "maturities", "type": "array", "placeholder": "e.g., [1, 2, 3]", "optional": False},
-        ],
+    "inputs": [
+        {
+            "label": "Initial LIBOR Rates (comma-separated)", 
+            "id": "libor_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.01, 0.015]", 
+            "optional": False
+        },
+        {
+            "label": "Swap Rates (comma-separated)", 
+            "id": "swap_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+            "optional": False
+        },
+        {
+            "label": "LIBOR Tenors (Years)", 
+            "id": "libor_tenors", 
+            "type": "array", 
+            "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
+            "optional": False
+        },
+        {
+            "label": "Swap Tenors (Years)", 
+            "id": "swap_tenors", 
+            "type": "array", 
+            "placeholder": "e.g., [2, 3, 5, 7, 10]", 
+            "optional": False
+        },
+        {
+            "label": "Day Count Convention", 
+            "id": "day_count_convention", 
+            "type": "select", 
+            "placeholder": "Select a Day Count Convention", 
+            "options": ["ACT/360", "30/360"], 
+            "default": "ACT/360", 
+            "optional": False
+        },
+        {
+            "label": "Fixed Leg Frequency", 
+            "id": "fixed_leg_frequency", 
+            "type": "select", 
+            "placeholder": "Select Fixed Leg Frequency", 
+            "options": ["Annual", "Semiannual"], 
+            "default": "Annual", 
+            "optional": False
+        },
+        {
+            "label": "Floating Leg Frequency", 
+            "id": "floating_leg_frequency", 
+            "type": "select", 
+            "placeholder": "Select Floating Leg Frequency", 
+            "options": ["3M", "6M"], 
+            "default": "6M", 
+            "optional": False
+        },
+        # {
+        #     "label": "Max Iterations", 
+        #     "id": "max_iterations", 
+        #     "type": "integer", 
+        #     "placeholder": "e.g., 100", 
+        #     "default": 100, 
+        #     "optional": True
+        # },
+        # {
+        #     "label": "Tolerance for Convergence", 
+        #     "id": "tolerance", 
+        #     "type": "float", 
+        #     "placeholder": "e.g., 0.00001", 
+        #     "default": 1e-6, 
+        #     "optional": True
+        # }
+    ],
+
+        "note" : "This tool is under development and may not be fully functional.",
         "outputs": ["Extended LIBOR Curve"],
     },
-    "extending-libor-curve-with-fra": {
-        "title": "Extend LIBOR Curve with FRA",
-        "description": "Use FRA rates to extend the LIBOR curve.",
-        "url": "/tools/term-structure-construction/extending-libor-curve-with-fra",
-        "inputs": [
-            {"label": "Initial LIBOR Rates (comma-separated)", "id": "libor_rates", "type": "array", "placeholder": "e.g., [0.01, 0.015]", "optional": False},
-            {"label": "FRA Rates (comma-separated)", "id": "fra_rates", "type": "array", "placeholder": "e.g., [0.02, 0.022, 0.024]", "optional": False},
-            {"label": "Maturities (Years)", "id": "maturities", "type": "array", "placeholder": "e.g., [1, 2, 3]", "optional": False},
-        ],
-        "outputs": ["Extended LIBOR Curve"],
+    "extending-zero-curve-with-fra": {
+        "title": "Extend Zero-Rate Curve with FRA",
+        "description": "Use FRA rates to extend the Zero-Rate curve.",
+        "url": "/tools/term-structure-construction/extending-zero-curve-with-fra",
+
+    "inputs": [
+        {
+            "label": "Initial LIBOR Rates (comma-separated)", 
+            "id": "libor_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.01, 0.015, 0.02]", 
+            "optional": False
+        },
+        {
+            "label": "FRA Rates (comma-separated)", 
+            "id": "fra_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.02, 0.022, 0.024]", 
+            "optional": False
+        },
+        {
+            "label": "LIBOR Maturities (Years)", 
+            "id": "libor_tenors", 
+            "type": "array", 
+            "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
+            "optional": False
+        },
+        {
+            "label": "FRA Maturities (Years)", 
+            "id": "fra_tenors", 
+            "type": "array", 
+            "placeholder": "e.g., [1.5, 2, 2.5, 3]", 
+            "optional": False
+        },
+        {
+            "label": "Day Count Convention", 
+            "id": "day_count_convention", 
+            "type": "select", 
+            "placeholder": "Select a Day Count Convention", 
+            "options": ["ACT/360", "30/360"], 
+            "default": "ACT/360", 
+            "optional": False
+        }
+    ],
+        "note" : "This tool is under development and may not be fully functional.",
+        "outputs": ["Extended Zero Curve"],
     },
     # "payoff-of-fra": {
     #     "title": "Payoff of FRA",

@@ -13,7 +13,7 @@ TOOL_FUNCTIONS = {
     "bond-pricing": bond_pricing,
     "determining-zero-rates": determining_zero_rates,
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,
-    "extending-libor-curve-with-fra": extending_libor_curve_with_fra,
+    "extending-zero-curve-with-fra": extending_zero_curve_with_fra,
     "payoff-of-fra": payoff_of_fra,
     "duration-and-convexity": duration_and_convexity,
 }
@@ -31,6 +31,7 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
         try:
             data_source = request.form if request.content_type.startswith("multipart/form-data") else request.json
             params = parse_inputs(data_source, tool_config["inputs"])
+            logger.warning(params)
             if tool_key not in TOOL_FUNCTIONS:
                 logger.error(f'{tool_key} not in tool functions list : {TOOL_FUNCTIONS}')
             calculation_function = TOOL_FUNCTIONS.get(tool_key)

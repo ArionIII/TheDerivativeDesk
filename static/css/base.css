@@ -123,3 +123,31 @@ body {
 .suggestions-container-tools::-webkit-scrollbar-thumb:hover {
     background: #bbb;
 }
+
+.site-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffcc00;
+    color: #000;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    z-index: 9999;
+    display: none; /* Masqué par défaut */
+}
+
+.site-banner button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.site-banner button:hover {
+    background: #333;
+}

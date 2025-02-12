@@ -17,7 +17,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import matplotlib.pyplot as plt
 import os
 import openpyxl
-
+import json
 import numpy as np
 import scipy.stats as stats
 
@@ -381,11 +381,11 @@ def calculate_moving_averages(dataset, window_size, output_path="static/outputs/
         return {"error": f"Error computing moving averages: {e}"}, 400
 
 
-def calculate_exponential_smoothing(dataset, smoothing_factor):
+def calculate_exponential_smoothing(time_series, smoothing_factor):
     try:
-        dataset = list(map(float, dataset))  # Convert to float
+        time_series = list(map(float, time_series))  # Convert to float
         smoothed = []
-        for i, value in enumerate(dataset):
+        for i, value in enumerate(time_series):
             if i == 0:
                 smoothed.append(value)  # Initialize with the first value
             else:
@@ -395,18 +395,19 @@ def calculate_exponential_smoothing(dataset, smoothing_factor):
         return {"error": ("Error :", str(e))}, 400
 
 
-def calculate_autocorrelation(dataset, lag_order=1):
+def calculate_autocorrelation(time_series, lag_order=1):
     try:
-        dataset = list(map(float, dataset))  # Convert to float
-        n = len(dataset)
-        mean = sum(dataset) / n
-        lagged_series = dataset[lag_order:]
-        original_series = dataset[:-lag_order]
+        lag_order = int(lag_order)
+        time_series = list(map(float, time_series))  # Convert to float
+        n = len(time_series)
+        mean = sum(time_series) / n
+        lagged_series = time_series[lag_order:]
+        original_series = time_series[:-lag_order]
         numerator = sum(
             (original_series[i] - mean) * (lagged_series[i] - mean) 
             for i in range(len(lagged_series))
         )
-        denominator = sum((x - mean) ** 2 for x in dataset)
+        denominator = sum((x - mean) ** 2 for x in time_series)
         autocorrelation = numerator / denominator
         return {"autocorrelation": ("Autocorrelation :", autocorrelation)}
     except Exception as e:
@@ -450,7 +451,7 @@ def simulate_random_walk(num_steps, num_simulations, step_size=1):
         return {"error": str(e)}, 400
 
 # Monte Carlo Simulations
-def perform_monte_carlo_simulations(num_simulations, random_seed=None):
+def perform_monte_carlo_simulations(num_simulations, output_path="static/outputs/simulations/", random_seed=None):
     try:
         # Ensure num_simulations is an integer
         num_simulations = int(num_simulations)
@@ -460,7 +461,25 @@ def perform_monte_carlo_simulations(num_simulations, random_seed=None):
         
         # Generate random outcomes
         outcomes = [random.random() for _ in range(num_simulations)]
-        return {"simulation_results": ("Simulation Results :", outcomes)}
+        
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
+        
+        # Convertir en DataFrame
+        df = pd.DataFrame({"Simulation_Index": range(1, num_simulations + 1), "Outcome": outcomes})
+        
+        # Générer un nom de fichier unique
+        random_file_name = f"monte_carlo_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+        
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+        
+        # ✅ Sauvegarde du fichier Excel
+        df.to_excel(xlsx_path, index=False, engine="openpyxl")
+        
+        return csv_path, xlsx_path
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -564,52 +583,65 @@ def determine_best_model(dataset):
     print(f"Modèle sélectionné : ARMA{best_order} (basé sur AIC={best_aic})")
     return (best_order, best_aic)
 
-
-
 def forecast_series(dataset, n_previsions, temporal_step):
     """
     Applique le modèle ARMA optimal et prédit les prochaines valeurs en utilisant un index numérique.
     """
-    # Vérifier que temporal_step est un entier valide
+    # Vérifier que temporal_step et n_previsions sont des entiers
     try:
         temporal_step = int(temporal_step)
         n_previsions = int(n_previsions)
     except ValueError:
         logger.error(f"Invalid format: temporal_step={temporal_step}, n_previsions={n_previsions}")
-        return {"error": "Temporal Step and Number of Predictions must be integers."}, 400
+        return {"error": ["Error :", "Temporal Step and Number of Predictions must be integers."]}, 400
 
     # Générer un index numérique basé sur temporal_step
-    start_index = 0  # Index de départ
+    start_index = 0
     time_index = np.arange(start_index, start_index + len(dataset) * temporal_step, temporal_step)
 
     # Convertir dataset en Pandas Series avec un index numérique
     dataset = pd.Series(dataset, index=time_index)
     logger.info(f"Dataset transformed into numerical index with step {temporal_step}.")
 
-    # Trouver le meilleur modèle (AR, MA, ARMA)
+    # Trouver le meilleur modèle ARMA
     best_order, best_aic = determine_best_model(dataset)
     model = ARIMA(dataset, order=best_order)
-    logger.info("Model has been chosen")
+    logger.info(f"Best model chosen: ARMA{best_order}, AIC={best_aic}")
+
+    # Entraînement du modèle
     result = model.fit()
     logger.info("Model has been fitted")
 
-    # 🛠 Correction du problème avec forecast_index
-    last_index = time_index[-1]  # Dernier point observé
+    # Correction du problème avec forecast_index
+    last_index = time_index[-1]
     forecast_index = np.arange(last_index + temporal_step, last_index + (n_previsions + 1) * temporal_step, temporal_step)
 
-    # Vérification des valeurs de forecast_index
+    # Vérification de forecast_index
     if forecast_index[0] <= last_index:
         logger.error(f"Invalid forecast index: {forecast_index}")
-        return {"error": "Forecast index must start after the last observed index."}, 400
+        return {"error": ["Error :", "Forecast index must start after the last observed index."]}, 400
 
     # Faire la prévision
-    forecast = result.forecast(steps=n_previsions)
-    forecast_series = pd.Series(forecast, index=forecast_index)
+    forecast_values = result.forecast(steps=n_previsions).tolist()
+    
+    # ✅ Convertir explicitement forecast_index en int Python natif pour éviter l'erreur `int32`
+    forecast_series = {int(index.item()): value for index, value in zip(forecast_index, forecast_values)}
 
     logger.info("Forecast has been made")
     logger.info("End AR-MA-ARMA")
 
-    return forecast_series.to_dict()  # Retourner en format dict pour API
+    # ✅ Transformer les prédictions en JSON formaté pour un bon affichage
+    predictions_formatted = json.dumps(forecast_series, indent=2)
+
+    # ✅ Retourner les données sous le format attendu par le frontend
+    return {
+        "forecast_result": [
+            "Forecast Results :",
+            f"Model: ARMA{best_order}, AIC: {best_aic}, Predictions: {predictions_formatted}"
+        ]
+    }
+
+
 
 def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics/"):
     """

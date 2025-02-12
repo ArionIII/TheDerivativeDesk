@@ -1,21 +1,27 @@
 from math import exp
 import numpy as np
 from config import logger
+import scipy.interpolate as interp
+from scipy.optimize import newton
+import QuantLib as ql
+from scipy.interpolate import CubicSpline
 
 def continuous_compounding_rate(rate_m, frequency_m):
+    logger.info(f"Calculating continuous compounding rate with rate_m: {rate_m} and frequency_m: {frequency_m}")
     try:
         rate_c = frequency_m * (exp(rate_m / frequency_m) - 1)
-        return {"Rate (Continuous Compounding)": rate_c}
+        return {"continuous_compounding_rate": ("Rate (Continuous Compounding) :", rate_c)}
     except Exception as e:
         return {"error": str(e)}, 400
 
 def m_compounding_rate(rate_c, frequency_m):
+    logger.info(f"Calculating m-compounding rate with rate_c: {rate_c} and frequency_m: {frequency_m}")
     """
     Convert a continuous compounding rate to m-compounding rate.
     """
     try:
         rate_m = frequency_m * np.log(1 + rate_c / frequency_m)
-        return {"Rate (m-Compounding)": rate_m}
+        return {"m_compounding_rate": ("Rate (m-Compounding) :", rate_m)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -39,29 +45,38 @@ def zero_rate_curve(input_rates, rate_type, maturities, space_between_payments=N
                 zero_rates.append(zero_rate)
 
         elif rate_type == "Swap":
-            # Swap Zero Rate Logic
-            # Account for periodic payments spaced by `space_between_payments`.
+            # Bootstrap method for swap zero rates
+            discount_factors = []  # Liste des facteurs d'actualisation
             for rate, maturity in zip(input_rates, maturities):
                 if maturity <= 0:
                     raise ValueError("Maturities must be positive.")
                 if space_between_payments <= 0:
                     raise ValueError("Space between payments must be positive.")
                 
-                # Number of payments over the maturity period
+                # Nombre total de paiements
                 num_payments = int(maturity / space_between_payments)
+                
+                # Somme des paiements déjà connus
+                discount_sum = sum(discount_factors)
+                
+                # Calcul du facteur d'actualisation pour la nouvelle échéance
+                discount_factor = (1 - rate * discount_sum) / (1 + rate * num_payments)
 
-                # Approximation of zero rate for swap rates
-                # Using average payments adjusted by `space_between_payments`
-                zero_rate = (rate / num_payments) * space_between_payments
+                # Calcul du taux zéro correspondant
+                zero_rate = (1 / discount_factor) ** (1 / maturity) - 1
                 zero_rates.append(zero_rate)
+
+                # Stocker le facteur d'actualisation pour les prochaines itérations
+                discount_factors.append(discount_factor)
 
         else:
             raise ValueError("Invalid rate type. Must be 'FRA' or 'Swap'.")
 
-        return {"Zero Rate Curve": zero_rates}
+        return {"zero_rate_curve": ("Zero Rate Curve :", zero_rates)}
 
     except Exception as e:
-        return {"error": str(e)}, 400
+        return {"error": ("Error :", str(e))}, 400
+
 
 def bond_pricing(face_value, coupon_rate, maturity, market_rate):
     try:
@@ -70,7 +85,7 @@ def bond_pricing(face_value, coupon_rate, maturity, market_rate):
             for t in range(1, int(maturity) + 1)
         )
         price += face_value / ((1 + market_rate / 100) ** maturity)
-        return {"Bond Price": price}
+        return {"bond_price": ("Bond Price :", price)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -91,89 +106,93 @@ def determining_zero_rates(bond_prices, maturities, face_values):
             zero_rates.append(zero_rate)
 
         # Return the result as a dictionary
-        return {"Zero Rates": zero_rates}
+        return {"zero_rates": ("Zero Rates :", zero_rates)}
     except Exception as e:
         return {"error": str(e)}, 400
 
-def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, maturities):
-    try:
-        if len(swap_rates) != len(maturities):
-            raise ValueError("Swap rates and maturities must have the same length.")
+def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors, swap_tenors,
+                                          day_count_convention="ACT/360",
+                                          fixed_leg_frequency="Annual",
+                                          floating_leg_frequency="6M"):
+    """
+    Étend une courbe de taux LIBOR avec des taux de swap via bootstrapping simple.
+    """
+    
+    # Convertir en numpy arrays pour faciliter les calculs
+    libor_tenors = np.array(libor_tenors, dtype=float)
+    swap_tenors = np.array(swap_tenors, dtype=float)
+    libor_rates = np.array(libor_rates, dtype=float)
+    swap_rates = np.array(swap_rates, dtype=float)
 
-        # Initialize the extended curve with LIBOR rates (assumed to be zero rates for short maturities)
-        zero_rate_curve = libor_rates[:]
-        known_maturities = list(range(1, len(libor_rates) + 1))  # Assume 1-year intervals for LIBOR maturities
-        logger.warning(f"known_maturities : {known_maturities}")
-        # Bootstrapping for swap rates
-        for swap_rate, maturity in zip(swap_rates, maturities):
-            if maturity in known_maturities:
-                continue  # Skip if the maturity is already covered by LIBOR rates
-            
-            # Calculate the zero rate for the current maturity using swap rates
-            num_payments = int(maturity)  # Assuming annual payments for simplicity
-            discount_sum = sum(
-                (1 / ((1 + zero_rate_curve[i - 1]) ** i)) for i in range(1, num_payments)
-            )
-            zero_rate = (
-                (1 - swap_rate * discount_sum) / (1 + swap_rate * num_payments)
-            ) ** (1 / maturity) - 1
-            
-            zero_rate_curve.append(zero_rate)
-            known_maturities.append(maturity)
+    # Initialisation des taux zéro avec les taux LIBOR
+    known_maturities = np.concatenate((libor_tenors, swap_tenors))
+    zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(swap_rates)))  # Placeholder pour bootstrapping
 
-        # Sort results by maturity
-        extended_curve = sorted(
-            zip(known_maturities, zero_rate_curve), key=lambda x: x[0]
-        )
-        logger.warning(f"extended_curve : {extended_curve}")
-        return {"Extended Zero Rate Curve": extended_curve}
+    # Bootstrapping sur les nouveaux points de swap
+    for i in range(len(swap_tenors)):
+        tenor = swap_tenors[i]
+        swap_rate = swap_rates[i]
 
-    except Exception as e:
-        return {"error": str(e)}, 400
+        # Approximation du taux zéro par une interpolation linéaire des valeurs précédentes
+        if tenor in libor_tenors:
+            rate = libor_rates[np.where(libor_tenors == tenor)[0][0]]
+        else:
+            prev_tenor = known_maturities[i + len(libor_tenors) - 1]
+            prev_rate = zero_rate_curve[i + len(libor_tenors) - 1]
+
+            # Interpolation linéaire entre le dernier point connu et le swap actuel
+            rate = prev_rate + (swap_rate - prev_rate) * (tenor - prev_tenor) / (tenor - prev_tenor)
+
+        zero_rate_curve[i + len(libor_tenors)] = rate
+
+    # Trier les maturités et taux pour garantir une courbe ordonnée
+    extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
+
+    return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
 
 
-def extending_libor_curve_with_fra(libor_rates, fra_rates, maturities):
-    try:
-        if len(fra_rates) != len(maturities):
-            raise ValueError("FRA rates and maturities must have the same length.")
+import numpy as np
 
-        # Initialize the zero rate curve with known LIBOR rates
-        zero_rate_curve = libor_rates[:]
-        known_maturities = list(range(1, len(libor_rates) + 1))  # Assume 1-year intervals for LIBOR maturities
+def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_tenors,
+                                  day_count_convention="ACT/360"):
+    """
+    Étend une courbe des taux zéro en intégrant des taux FRA via bootstrapping.
+    """
+    
+    # Convertir les entrées en arrays numpy
+    libor_tenors = np.array(libor_tenors, dtype=float)
+    fra_tenors = np.array(fra_tenors, dtype=float)
+    libor_rates = np.array(libor_rates, dtype=float)
+    fra_rates = np.array(fra_rates, dtype=float)
 
-        # Bootstrapping FRA rates to extend the curve
-        for fra_rate, maturity in zip(fra_rates, maturities):
-            if maturity in known_maturities:
-                continue  # Skip if the maturity is already covered by LIBOR rates
+    # Initialisation des taux zéro avec les taux LIBOR
+    known_maturities = np.concatenate((libor_tenors, fra_tenors))
+    zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(fra_rates)))  # Placeholder pour bootstrapping
 
-            # Previous zero rate and discount factor for the prior maturity
-            previous_maturity = max(known_maturities)
-            previous_zero_rate = zero_rate_curve[previous_maturity - 1]
-            previous_discount_factor = 1 / ((1 + previous_zero_rate) ** previous_maturity)
+    # Bootstrapping des taux zéro à partir des FRA
+    for i in range(len(fra_tenors)):
+        T1 = libor_tenors[-1] if i == 0 else fra_tenors[i - 1]  # Dernier point connu
+        T2 = fra_tenors[i]  # Nouveau point à calculer
+        FRA = fra_rates[i]
 
-            # Calculate the discount factor for the current maturity
-            discount_factor = previous_discount_factor / (1 + fra_rate * (maturity - previous_maturity))
+        # On récupère le dernier taux zéro connu
+        r_T1 = zero_rate_curve[np.where(known_maturities == T1)[0][0]]
 
-            # Calculate the zero rate for the current maturity
-            zero_rate = (1 / discount_factor) ** (1 / maturity) - 1
+        # Calcul du taux zéro à T2 à partir du taux FRA
+        r_T2 = ((1 + r_T1 * T1) * (1 + FRA * (T2 - T1)) - 1) / T2
 
-            zero_rate_curve.append(zero_rate)
-            known_maturities.append(maturity)
+        zero_rate_curve[np.where(known_maturities == T2)[0][0]] = r_T2
 
-        # Sort results by maturity
-        extended_curve = sorted(
-            zip(known_maturities, zero_rate_curve), key=lambda x: x[0]
-        )
-        return {"Extended Zero Rate Curve": extended_curve}
+    # Trier les maturités et taux pour garantir une courbe ordonnée
+    extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
 
-    except Exception as e:
-        return {"error": str(e)}, 400
+    return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
 
 
 def payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
     try:
         payoff = notional_value * (settlement_rate - contract_rate) * time / (1 + settlement_rate * time)
-        return {"FRA Payoff": payoff}
+        return {"fra_payoff": ("FRA Payoff :", payoff)}
     except Exception as e:
         return {"error": str(e)}, 400
 
@@ -187,49 +206,55 @@ def duration_and_convexity(cash_flows, discount_rates, time_periods):
         ]
         duration = sum(durations)
         convexity = sum(convexities)
-        return {"Duration": duration, "Convexity": convexity}
+        return {"duration_and_convexity": ("Duration & Convexity :", f"Duration: {duration} || Convexity: {convexity}")}
     except Exception as e:
         return {"error": str(e)}, 400
 
 
 def calculate_payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
     payoff = notional_value * (settlement_rate - contract_rate) * time
-    return payoff
+    return {"fra_payoff": ("FRA Payoff :", payoff)}
 
 def calculate_valuation_of_fra(forward_rate, contract_rate, notional_value, discount_factor):
     valuation = notional_value * (forward_rate - contract_rate) * discount_factor
-    return valuation
+    return {"fra_valuation": ("FRA Valuation :", valuation)}
 
-def calculate_forward_rate_calculation(spot_rates, times):
-    if len(spot_rates) != 2 or len(times) != 2:
-        raise ValueError("Exactly two spot rates and times are required.")
-    rate1, rate2 = spot_rates
-    time1, time2 = times
-    forward_rate = ((1 + rate2) ** time2 / (1 + rate1) ** time1) ** (1 / (time2 - time1)) - 1
-    return forward_rate
+def calculate_forward_rate(spot_rate_1, spot_rate_2, time_period_1, time_period_2):
+    """
+    Calcule le taux forward à partir de deux taux spot (zéro) et leurs maturités respectives.
+    """
+    # Vérification des entrées
+    if time_period_2 <= time_period_1:
+        raise ValueError("Time Period 2 must be greater than Time Period 1.")
+
+    # Calcul du taux forward
+    forward_rate = ((1 + spot_rate_2) ** time_period_2 / (1 + spot_rate_1) ** time_period_1) ** (1 / (time_period_2 - time_period_1)) - 1
+
+    # Retour formaté
+    return {"forward_rate": ("Forward Rate :", forward_rate)}
 
 def calculate_fra_break_even_rate(notional_value, forward_rate, time_to_settlement):
     break_even_rate = forward_rate / time_to_settlement
-    return break_even_rate
+    return {"fra_break_even_rate": ("FRA Break-even Rate :", break_even_rate)}
 
 def calculate_interest_rate_swap_cash_flows(notional_value, fixed_rate, floating_rate, time_periods):
     fixed_cash_flows = [notional_value * fixed_rate * t for t in time_periods]
     floating_cash_flows = [notional_value * floating_rate * t for t in time_periods]
-    return fixed_cash_flows, floating_cash_flows
+    return {"interest_rate_swap_cash_flows": ("Interest Rate Swap Cash Flows :", {"Fixed Cash Flows": fixed_cash_flows, "Floating Cash Flows": floating_cash_flows})}
 
 def calculate_interest_rate_swap_valuation(fixed_rate, floating_rate, notional_value, discount_factors):
     fixed_leg = sum([notional_value * fixed_rate * d for d in discount_factors])
     floating_leg = sum([notional_value * floating_rate * d for d in discount_factors])
     valuation = floating_leg - fixed_leg
-    return valuation
+    return {"interest_rate_swap_valuation": ("Interest Rate Swap Valuation :", valuation)}
 
 def calculate_pricing_interest_rate_futures(settlement_price, tick_size, contract_value):
     price = (100 - settlement_price) * contract_value / tick_size
-    return price
+    return {"pricing_interest_rate_futures": ("Pricing Interest Rate Futures :", price)}
 
 def calculate_swap_spread_analysis(swap_rate, treasury_yield):
     spread = swap_rate - treasury_yield
-    return spread
+    return {"swap_spread_analysis": ("Swap Spread Analysis :", spread)}
 
 def calculate_swaption_valuation(notional_value, volatility, time_to_maturity, strike_price, forward_rate):
     from math import exp, sqrt, log
@@ -237,12 +262,12 @@ def calculate_swaption_valuation(notional_value, volatility, time_to_maturity, s
     d1 = (log(forward_rate / strike_price) + (volatility ** 2 / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
     d2 = d1 - volatility * sqrt(time_to_maturity)
     swaption_value = notional_value * (forward_rate * norm.cdf(d1) - strike_price * norm.cdf(d2))
-    return swaption_value
+    return {"swaption_valuation": ("Swaption Valuation :", swaption_value)}
 
 def calculate_basis_swap_analysis(notional_value, benchmark_rate1, benchmark_rate2):
     spread = (benchmark_rate1 - benchmark_rate2) * notional_value
-    return spread
+    return {"basis_swap_analysis": ("Basis Swap Analysis :", spread)}
 
 def calculate_interest_rate_swap_delta_hedging(notional_value, duration, delta):
     delta_hedging_position = notional_value * duration * delta
-    return delta_hedging_position
+    return {"interest_rate_swap_delta_hedging": ("Interest Rate Swap Delta Hedging :", delta_hedging_position)}
