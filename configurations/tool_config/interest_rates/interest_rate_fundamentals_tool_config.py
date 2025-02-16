@@ -1,6 +1,6 @@
 INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "continuous-compounding-rate": {
-        "title": "Continuous Compounding Rate",
+        "title": "m-Compounding to Continuous Compounding Rate",
         "description": "Convert m-compounding rate to continuous compounding rate.",
         "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate",
         "inputs": [

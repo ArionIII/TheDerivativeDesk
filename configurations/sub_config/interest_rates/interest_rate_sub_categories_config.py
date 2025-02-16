@@ -9,7 +9,7 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "description": "Perform fundamental interest rate calculations, including rate conversions, bond pricing, and basic sensitivity analysis.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Continuous Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate"},
+            {"title": "Continuous Compounding to m-Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate"},
             {"title": "m-Compounding to Continuous Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate"},
             {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/basic-interest-rates-analysis/bond-pricing"},
             {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rates-analysis/determining-zero-rates"},
