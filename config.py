@@ -218,9 +218,53 @@ def parse_inputs(data_source, inputs_config):
 # Pour extraire les valeurs du result sans prendre en compte la display_value
 def extract_values(results):
     """
-    Extrait uniquement les valeurs numériques du dictionnaire sans la display_value.
+    Extrait uniquement les valeurs numériques du dictionnaire, ou lit les valeurs depuis un fichier CSV si nécessaire.
+
+    - Si `results` est un dictionnaire, retourne `{clé: valeur numérique}`.
+    - Si `results` est un tuple contenant un fichier CSV, lit les données du CSV et retourne un dictionnaire.
+
+    Retourne :
+    - Un dictionnaire `{clé: valeurs}` où les clés sont les colonnes ou indices si pas de header.
     """
-    return {key: value[1] for key, value in results.items()}
+    logger.info("Extracting numerical values from the results")
+    logger.warning(results)
+
+    # Cas où results est un tuple contenant des chemins de fichiers
+    if isinstance(results, tuple):
+        csv_path = None
+        
+        # Trouver le fichier CSV dans le tuple
+        for file in results:
+            if file.endswith(".csv"):
+                csv_path = file
+                break
+        
+        if csv_path is None:
+            raise ValueError("No CSV file found in results")
+
+        logger.info(f"Loading data from CSV file: {csv_path}")
+
+        # Lire le fichier CSV avec Pandas
+        df = pd.read_csv(csv_path)
+
+        # Vérifier si le CSV a un header (contient des noms de colonnes ou juste des valeurs)
+        if df.columns.str.contains("Unnamed").all():
+            logger.info("CSV file has no header, using column indices as keys")
+            data_dict = {i: df.iloc[:, i].tolist() for i in range(df.shape[1])}
+        else:
+            logger.info("CSV file has headers, using column names as keys")
+            data_dict = {col: df[col].tolist() for col in df.columns}
+        logger.error(data_dict)
+        return data_dict
+
+    # Cas où results est un dictionnaire normal
+    elif isinstance(results, dict):
+        logger.error({key: value[1] for key, value in results.items()})
+        return {key: value[1] for key, value in results.items()}
+    
+    else:
+        raise TypeError("Unsupported format for results")
+
 
 
 

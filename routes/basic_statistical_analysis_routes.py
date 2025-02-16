@@ -84,7 +84,7 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
                     graphs.append(graph)
                 graphs_output = {f'graph_{i+1}': graph for i, graph in enumerate(graphs)}
                 logger.info(f"Graphs: {graphs}")
-
+            
             # Execute the function and return results
             final_result = result | graphs_output
             logger.warning(final_result)

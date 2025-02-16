@@ -85,3 +85,82 @@ def generate_observed_vs_predicted_graph(data):
     ax.legend()
 
     return save_plot(fig, generate_unique_filename("multiple_regression_2"))
+
+
+def generate_zero_rates_curve(data):
+    """
+    Génère un graphique représentant la courbe des taux zéro (Zero-Coupon Yield Curve).
+    
+    Paramètres :
+    - maturities : Liste des maturités (X-axis)
+    - zero_rates : Liste des taux zéro correspondants (Y-axis)
+    
+    Retourne :
+    - Le chemin du fichier où le graphique est sauvegardé.
+    """
+    maturities = np.array(data.get("maturities", []))
+    zero_rates = np.array(data.get("Zero Rate (Continuous Compounding)", []))
+    logger.info(f"Generating zero rates curve with maturities: {maturities} and zero rates: {zero_rates}")
+
+    if maturities.size == 0 or zero_rates.size == 0:
+        raise ValueError("Missing maturities or zero rates")
+
+    # Création du graphique
+    fig, ax = plt.subplots()
+    ax.plot(maturities, zero_rates, marker="o", linestyle="-", color="blue", alpha=0.7, label="Zero Rates")
+    ax.set_xlabel("Maturities (Years)")
+    ax.set_ylabel("Zero Rate (%)")
+    ax.set_title("Zero-Coupon Yield Curve")
+    ax.grid(True)
+    ax.legend()
+
+    logger.info("Generated zero rates curve")
+
+    return save_plot(fig, generate_unique_filename("zero_coupon_yield_curve"))
+
+
+def generate_zero_rates_vs_bond_prices(data):
+    """
+    Génère un graphique comparant les taux zéro et les prix des obligations.
+
+    Paramètres :
+    - maturities : Liste des maturités (X-axis)
+    - zero_rates : Liste des taux zéro correspondants (Y-axis, première courbe)
+    - bond_prices : Liste des prix des obligations (Y-axis, deuxième courbe)
+
+    Retourne :
+    - Le chemin du fichier où le graphique est sauvegardé.
+    """
+    maturities = np.array(data.get("maturities", []))
+    #Obligé de prendre cette valeur pcq on output un CSV donc on perd l'id, et on ne garde que le display name
+    #TODO: à changer (pas tres propre comme méthode)
+    zero_rates = np.array(data.get("Zero Rate (Continuous Compounding)", []))
+    bond_prices = np.array(data.get("bond_prices", []))
+    
+    logger.info(f"Generating zero rates vs bond prices graph with maturities: {maturities}, zero rates: {zero_rates}, and bond prices: {bond_prices}")
+
+    if maturities.size == 0 or zero_rates.size == 0 or bond_prices.size == 0:
+        raise ValueError("Missing maturities, zero rates, or bond prices")
+
+    # Création du graphique
+    fig, ax1 = plt.subplots()
+
+    # Courbe des taux zéro
+    ax1.set_xlabel("Maturities (Years)")
+    ax1.set_ylabel("Zero Rate (%)", color="blue")
+    ax1.plot(maturities, zero_rates, marker="o", linestyle="-", color="blue", alpha=0.7, label="Zero Rates")
+    ax1.tick_params(axis="y", labelcolor="blue")
+
+    # Deuxième axe pour les prix des obligations
+    ax2 = ax1.twinx()
+    ax2.set_ylabel("Bond Prices", color="green")
+    ax2.plot(maturities, bond_prices, marker="s", linestyle="--", color="green", alpha=0.7, label="Bond Prices")
+    ax2.tick_params(axis="y", labelcolor="green")
+
+    # Titre et légende
+    fig.suptitle("Zero Rates vs Bond Prices")
+    ax1.grid(True)
+
+    logger.info("Generated zero rates vs bond prices graph")
+
+    return save_plot(fig, generate_unique_filename("zero_rates_vs_bond_prices"))

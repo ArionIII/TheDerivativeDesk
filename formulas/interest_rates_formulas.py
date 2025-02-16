@@ -5,6 +5,9 @@ import scipy.interpolate as interp
 from scipy.optimize import newton
 import QuantLib as ql
 from scipy.interpolate import CubicSpline
+import os
+import pandas as pd
+import random
 
 def continuous_compounding_rate(rate_m, frequency_m):
     logger.info(f"Calculating continuous compounding rate with rate_m: {rate_m} and frequency_m: {frequency_m}")
@@ -77,7 +80,6 @@ def zero_rate_curve(input_rates, rate_type, maturities, space_between_payments=N
     except Exception as e:
         return {"error": ("Error :", str(e))}, 400
 
-
 def bond_pricing(face_value, coupon_rate, maturity, market_rate):
     try:
         price = sum(
@@ -89,26 +91,103 @@ def bond_pricing(face_value, coupon_rate, maturity, market_rate):
     except Exception as e:
         return {"error": str(e)}, 400
 
-def determining_zero_rates(bond_prices, maturities, face_values):
+
+def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m_compoundings, output_path="static/outputs/interest-rates-and-fixed-income/"):
+    """
+    Compute the zero-coupon yield curve using the bootstrapping method.
+
+    Parameters:
+    - bond_prices: List of bond prices.
+    - maturities: List of bond maturities in years.
+    - face_values: List of bond face values.
+    - coupon_rates: List of coupon rates (decimal format, e.g., 0.05 for 5%).
+    - m_compoundings: List of compounding frequencies (1=annual, 2=semi-annual, etc.).
+
+    Returns:
+    - Displays a DataFrame containing the computed zero rates.
+    """
     try:
-        # Check if all input lists have the same length
-        if len(bond_prices) != len(maturities) or len(bond_prices) != len(face_values):
-            raise ValueError("Bond prices, maturities, and face values must have the same length.")
+        os.makedirs(output_path, exist_ok=True)
 
-        zero_rates = []
+        # Sort bonds by maturity in ascending order
+        sorted_data = sorted(zip(maturities, bond_prices, face_values, coupon_rates, m_compoundings))
+        maturities, bond_prices, face_values, coupon_rates, m_compoundings = zip(*sorted_data)
 
-        # Calculate zero rates for each bond
-        for price, maturity, face_value in zip(bond_prices, maturities, face_values):
-            if price <= 0 or maturity <= 0 or face_value <= 0:
-                raise ValueError("Bond prices, maturities, and face values must be positive values.")
-            # Calculate the zero rate
-            zero_rate = (face_value / price) ** (1 / maturity) - 1
-            zero_rates.append(zero_rate)
+        zero_rates = {}
 
-        # Return the result as a dictionary
-        return {"zero_rates": ("Zero Rates :", zero_rates)}
+        for i in range(len(maturities)):
+            P = bond_prices[i]  # Bond price
+            T = maturities[i]    # Maturity in years
+            FV = face_values[i]  # Face value
+            c = coupon_rates[i]  # Coupon rate
+            m = m_compoundings[i]  # Compounding frequency
+
+            # Coupon payment
+            C = FV * c * m  # Periodic coupon
+            logger.info(C)
+            if c == 0:  # Zero-coupon bond
+                r = np.log(FV/P)/T
+                logger.info("rate :")
+                logger.info(r)
+            else:  # Coupon-paying bond (bootstrapping method)
+                logger.info(f"Calcul du taux zéro pour maturité {T} ans")
+                logger.info(f"Prix de l'obligation : {P}")
+                logger.info(f"Valeur faciale : {FV}")
+                logger.info(f"Coupon annuel : {C}")
+                logger.info(f"Compounding frequency : {m}")
+
+                # Sum of discounted coupon payments using previously computed rates
+                coupon_sum = 0
+                for t in zero_rates:
+                    if t < T and (t*m).is_integer():
+                        discounted_coupon = (C / m) / (1 + zero_rates[t]) ** t
+                        coupon_sum += discounted_coupon
+                        logger.info(f"Coupon à l'année {t} : {C/m}, actualisé à {discounted_coupon}")
+
+                logger.info(f"Somme des coupons actualisés : {coupon_sum}")
+
+                logger.info('equation :')
+                logger.info(f'{coupon_sum} + {FV+C} * e^(-R * {T}) = {P}')
+                logger.info(f"Coupon sum (Somme des coupons actualisés) : {coupon_sum}")
+                logger.warning(f"Valeur faciale (FV) : {FV}")
+                logger.warning(f"Dernier coupon (C) : {C}")
+                logger.warning(f"Prix de l'obligation (P) : {P}")
+                logger.warning(f"Maturité (T) : {T}")
+                logger.warning(f"Expression complète avant résolution : {coupon_sum} + ({FV+(C/m)} * e^(-R * {T})) = {P}")
+
+
+                logger.warning(f"Taux zéro continûment composé (R) trouvé : {r}")
+
+                # Solve for the zero rate of the final cash flow
+                r = -1/T * np.log((P-coupon_sum)/(FV+(C/m)))
+                logger.info(f"Taux zéro calculé pour maturité {T} ans : {r}")
+            zero_rates[T] = r  # Store the annualized zero rate
+
+
+        # Convert to DataFrame for display
+        df = pd.DataFrame({
+            "Maturity": zero_rates.keys(),
+            "Zero Rate (Continuous Compounding)": zero_rates.values()
+        })
+
+        # Générer un nom de fichier unique
+        random_file_name = f"zero_rates_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        logger.info(f"zero-rates saved to: {csv_path} and {xlsx_path}")
+        return csv_path, xlsx_path
+
     except Exception as e:
-        return {"error": str(e)}, 400
+        raise ValueError(f"Error computing zero rates: {e}")
+
+
 
 def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors, swap_tenors,
                                           day_count_convention="ACT/360",

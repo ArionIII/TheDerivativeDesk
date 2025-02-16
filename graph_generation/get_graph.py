@@ -1,5 +1,5 @@
 from flask import Flask, request, send_file
-from graph_generation.graph_generator import generate_coefficients_graph, generate_observed_vs_predicted_graph
+from graph_generation.graph_generator import *
 
 app = Flask(__name__)
 
@@ -9,7 +9,10 @@ GRAPH_FUNCTIONS = {
         1: generate_coefficients_graph,
         2: generate_observed_vs_predicted_graph
     },
-    # 🔹 Ajouter ici d'autres outils avec leurs graphiques 🔹
+    "determining-zero-rates": {
+        1: generate_zero_rates_curve,
+        2: generate_zero_rates_vs_bond_prices,
+    },
 }
 
 @app.route("/api/get-graph")
