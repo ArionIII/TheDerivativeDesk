@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from config import logger, parse_inputs, parse_input_data, extract_values, convert_numpy_types
+from config import logger, parse_inputs, parse_input_data, extract_values, convert_numpy_types, result_tuple_into_dict
 from configurations.tool_config.interest_rates.interest_rate_fundamentals_tool_config import INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG
 from formulas.interest_rates_formulas import *  
 from graph_generation.get_graph import GRAPH_FUNCTIONS
@@ -66,7 +66,8 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
 
                 logger.error(result)
                 logger.error(graphs_output)
-                final_result = result | graphs_output
+            result = result_tuple_into_dict(result)
+            final_result = result | graphs_output
 
             # Execute the function and return results
             logger.warning(final_result)

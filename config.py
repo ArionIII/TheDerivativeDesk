@@ -425,3 +425,9 @@ def reassign_params_if_header(tool_config, params, column_names):
 
     return params, column_names
 
+def result_tuple_into_dict(result):
+    # Vérifier si result est un tuple (cas où ce sont des fichiers)
+    if isinstance(result, tuple):
+        result_dict = {"csv_file": result[0], "xlsx_file": result[1]}
+    else:
+        result_dict = result  # Déjà un dictionnaire
