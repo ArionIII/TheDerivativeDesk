@@ -256,7 +256,9 @@ def generate_extended_zero_rate_curve_graph(data):
     extended_zero_rates = np.array(data.get("Extended Zero Rates", []))
     libor_rates = np.array(data.get("libor_rates", []))
     libor_tenors = np.array(data.get("libor_tenors", []))  # Maturités LIBOR d'origine
-
+    logger.info(maturities)
+    logger.info(extended_zero_rates)
+    logger.info(libor_rates)
     if maturities.size == 0 or libor_rates.size == 0 or extended_zero_rates.size == 0:
         raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
 
@@ -289,50 +291,3 @@ def generate_extended_zero_rate_curve_graph(data):
 
 
 
-
-def generate_zero_rate_difference_graph(data):
-    """
-    Génère un graphique montrant la différence entre les taux zéro LIBOR et les taux zéro après extension.
-
-    Paramètres :
-    - data : Dictionnaire contenant les inputs nécessaires :
-      - "Maturity" : Liste des maturités disponibles (X-axis)
-      - "libor_tenors" : Liste des maturités LIBOR originales
-      - "libor_rates" : Liste des taux LIBOR correspondants
-      - "Extended Zero Rates" : Liste des taux zéro après extension
-
-    Retourne :
-    - Le chemin du fichier où le graphique est sauvegardé.
-    """
-    logger.info(f"Data received: {data}")
-
-    # Extraction des données
-    maturities = np.array(data.get("Maturity", []))
-    extended_zero_rates = np.array(data.get("Extended Zero Rates", []))
-    libor_tenors = np.array(data.get("libor_tenors", []))  # Maturités des taux LIBOR
-    libor_rates = np.array(data.get("libor_rates", []))  # Taux LIBOR correspondants
-
-    if maturities.size == 0 or libor_rates.size == 0 or extended_zero_rates.size == 0:
-        raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
-
-    # Filtrage des maturités communes
-    common_indices = np.isin(maturities, libor_tenors)
-    maturities_filtered = maturities[common_indices]
-    extended_rates_filtered = extended_zero_rates[common_indices]
-
-    # Associer les taux LIBOR correspondants à ces maturités
-    libor_rates_filtered = np.array([libor_rates[np.where(libor_tenors == m)[0][0]] for m in maturities_filtered])
-
-    # Calcul de la différence entre les taux zéro avant et après extension
-    zero_rate_difference = extended_rates_filtered - libor_rates_filtered
-    logger.warning(zero_rate_difference)
-    # Création du graphique
-    fig, ax = plt.subplots()
-    ax.bar(maturities_filtered, zero_rate_difference, color="purple", alpha=0.7)
-
-    ax.set_xlabel("Maturities (Years)")
-    ax.set_ylabel("Zero Rate Difference (%)")
-    ax.set_title("Différence entre les Taux Zéro LIBOR et Étendus")
-    ax.grid(axis="y")
-
-    return save_plot(fig, generate_unique_filename("zero_rate_difference"))
