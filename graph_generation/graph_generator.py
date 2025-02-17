@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import io
 from flask import send_file
 from config import logger
+from scipy.optimize import fsolve
+
 
 def save_plot(fig, filename):
     """Sauvegarde le graphe en fichier et retourne le chemin."""
@@ -455,3 +457,106 @@ def generate_spot_vs_forward_comparison(data):
 
     return save_plot(fig, generate_unique_filename("forward_rate_vs_spot_rate_curve"))
 
+
+
+def plot_fra_payoff(data):
+    """
+    Génère un graphique montrant l'évolution du payoff du FRA sur plusieurs périodes.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "forward_rates" : Liste des taux forward observés.
+      - "contract_rate" : Taux contractuel fixe.
+      - "notional_value" : Valeur notionnelle du FRA.
+      - "interval_between_payments" : Durée d'une période en années.
+
+    Retourne :
+    - Un graphique matplotlib contenant l'évolution du payoff du FRA.
+    """
+    try:
+        forward_rates = np.array(data.get("forward_rates", []), dtype=float)
+        contract_rate = float(data.get('contract_rate'))
+        notional_value = float(data.get('notional_value'))
+        interval_between_payments = float(data.get('interval_between_payments'))
+
+        # Vérification des données
+        if forward_rates.size == 0:
+            raise ValueError("Les taux forward sont vides.")
+
+        periods = np.arange(1, len(forward_rates) + 1)
+        payoffs = [
+            notional_value * (R_s - contract_rate) * interval_between_payments / (1 + R_s * interval_between_payments)
+            for R_s in forward_rates
+        ]
+
+        # Création du graphique
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.plot(periods, payoffs, marker="o", linestyle="-", color="green", linewidth=2, label="FRA Payoff")
+
+        ax.axhline(0, color="black", linestyle="--", linewidth=1.2)  # Ligne horizontale zéro
+        ax.set_xlabel("Périodes", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Payoff (€)", fontsize=12, fontweight="bold")
+        ax.set_title("Évolution du Payoff du FRA", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+
+        return save_plot(fig, generate_unique_filename("fra_valuation"))
+
+    except Exception as e:
+        print(f"Erreur lors de la génération du graphique: {e}")
+
+
+def plot_fra_fixed_vs_forward(data):
+    forward_rates = np.array(data.get("forward_rates", []), dtype=float)
+    contract_rate = float(data.get('contract_rate'))
+    periods = np.arange(1, len(forward_rates) + 1)
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.plot(periods, forward_rates, marker="o", linestyle="--", color="blue", linewidth=2, label="Forward Rates")
+    ax.axhline(y=contract_rate, color="red", linestyle="-", linewidth=2, label="Fixed Rate (Contract)")
+
+    ax.set_xlabel("Périodes", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Taux (%)", fontsize=12, fontweight="bold")
+    ax.set_title("Comparaison du Taux Contractuel et des Taux Forward", fontsize=14, fontweight="bold", color="darkblue")
+    ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+    ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+
+    return save_plot(fig, generate_unique_filename("fra_valuation_fix_vs_float"))
+
+# def plot_fra_break_even_vs_forward(data):
+#     forward_rates = np.array(data.get("forward_rates", []), dtype=float)
+#     break_even_rate = float(data.get("fra_break_even_rate"))
+
+#     if forward_rates.size == 0:
+#         raise ValueError("Les taux forward sont vides.")
+
+#     fig, ax = plt.subplots(figsize=(9, 6))
+#     ax.plot(forward_rates, [break_even_rate] * len(forward_rates), marker="o", linestyle="-", color="purple", linewidth=2, label="FRA Break-Even Rate")
+
+#     ax.set_xlabel("Taux Forward (%)", fontsize=12, fontweight="bold")
+#     ax.set_ylabel("FRA Break-Even Rate (%)", fontsize=12, fontweight="bold")
+#     ax.set_title("Relation entre Taux Forward et FRA Break-Even", fontsize=14, fontweight="bold", color="darkblue")
+#     ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+#     ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+
+#     return save_plot(fig, generate_unique_filename("fra_break_even_vs_forward"))
+
+
+# def plot_fra_break_even_vs_maturity(data):
+#     forward_rates = np.array(data.get("forward_rates", []), dtype=float)
+#     interval_between_payments = float(data.get("interval_between_payments"))
+#     break_even_rate = float(data.get("fra_break_even_rate"))
+#     maturities = [interval_between_payments*i for i in range(1,len(forward_rates))]
+#     if len(maturities) == 0:
+#         raise ValueError("Les maturités sont vides.")
+
+#     fig, ax = plt.subplots(figsize=(9, 6))
+#     ax.plot(maturities, [break_even_rate] * len(maturities), marker="s", linestyle="--", color="orange", linewidth=2, label="FRA Break-Even Rate")
+
+#     ax.set_xlabel("Durée du FRA (Années)", fontsize=12, fontweight="bold")
+#     ax.set_ylabel("FRA Break-Even Rate (%)", fontsize=12, fontweight="bold")
+#     ax.set_title("Sensibilité du FRA Break-Even Rate en fonction de la Durée", fontsize=14, fontweight="bold", color="darkblue")
+#     ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+#     ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+
+#     return save_plot(fig, generate_unique_filename("fra_break_even_vs_maturity"))

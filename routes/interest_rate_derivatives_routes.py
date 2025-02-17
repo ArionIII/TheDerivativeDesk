@@ -13,6 +13,7 @@ NEW_TOOL_FUNCTIONS = {
     "valuation-of-fra": calculate_valuation_of_fra,
     "forward-rate-calculation": calculate_forward_rate_curve,
     "fra-break-even-rate": calculate_fra_break_even_rate,
+    "hedging-with-fra": calculate_hedging_strategy_analysis,
     "calculate-interest-rate-swap-cash-flows": calculate_interest_rate_swap_cash_flows,
     "calculate-interest-rate-swap-valuation": calculate_interest_rate_swap_valuation,
     "calculate-pricing-interest-rate-futures": calculate_pricing_interest_rate_futures,

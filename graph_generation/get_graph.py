@@ -30,7 +30,15 @@ GRAPH_FUNCTIONS = {
     "forward-rate-calculation": {
         1:generate_forward_rate_curve,
         2:generate_spot_vs_forward_comparison,
-    }
+    },
+    "valuation-of-fra": {
+        1:plot_fra_payoff,
+        2:plot_fra_fixed_vs_forward
+    },
+    # "fra-break-even-rate": {
+    #     1:plot_fra_break_even_vs_forward,
+    #     2:plot_fra_break_even_vs_maturity,
+    # }
 }
 
 @app.route("/api/get-graph")

@@ -100,6 +100,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     ],
         "note": "You can calculate the forward rate curve with the 'Forward Rate Calculation' tool",
         "outputs": ["FRA Valuation"],
+        "graphs": [
+            {
+                "name": "FRA Payoff"
+            },
+            {
+                "name": "FRA fixed vs floating"
+            }
+        ]
     },
     # Forward Rate Calculation
     "forward-rate-calculation": {
@@ -157,23 +165,83 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Determine the break-even interest rate for an FRA.",
         "url": "/tools/forward-rate-agreements/fra-break-even-rate",
         "inputs": [
-            {"label": "Spot Rate", "id": "spot_rate", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-            {"label": "Forward Period (Years)", "id": "forward_period", "type": "number", "placeholder": "e.g., 0.5", "optional": False},
-        ],
+        {
+            "label": "Forward Rates (comma-separated)", 
+            "id": "forward_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "optional": False
+        },
+        {
+            "label": "Forward Rates (CSV)", 
+            "id": "file_forward_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "forward_rates", 
+            "template": "/static/templates/settlement_rates.csv", 
+            "optional": True
+        },
+        {
+            "label": "Interval Between Payments (Years)", 
+            "id": "interval_between_payments", 
+            "type": "number", 
+            "placeholder": "e.g., 0.5", 
+            "optional": False
+        }
+    ],
+        # "graphs": [
+        #     {"name" : "Break Even rate vs Forward rates"},
+        #     {"name" : "Break Even rate vs Maturity"}
+        # ],
+        "note": "You can calculate the forward rate curve with the 'Forward Rate Calculation' tool",
         "outputs": ["Break-Even Rate"],
     },
     # Hedging with FRA
     "hedging-with-fra": {
-        "title": "Hedging with FRA",
-        "description": "Analyze hedging strategies using forward rate agreements to manage interest rate risks.",
-        "url": "/tools/forward-rate-agreements/hedging-with-fra",
-        "inputs": [
-            {"label": "Current Position (Notional)", "id": "current_position", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Target Rate", "id": "target_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Market Rate", "id": "market_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-        ],
-        "outputs": ["Hedging Strategy Analysis"],
-    },
+    "title": "Hedging with FRA",
+    "description": "Analyze hedging strategies using forward rate agreements to manage interest rate risks.",
+    "url": "/tools/forward-rate-agreements/hedging-with-fra",
+    "inputs": [
+        {
+            "label": "Current Position (Notional)", 
+            "id": "current_position", 
+            "type": "number", 
+            "placeholder": "e.g., 1000000", 
+            "optional": False
+        },
+        {
+            "label": "Target Rate", 
+            "id": "target_rate", 
+            "type": "number", 
+            "placeholder": "e.g., 0.025", 
+            "optional": False
+        },
+        {
+            "label": "Market Rate", 
+            "id": "market_rate", 
+            "type": "number", 
+            "placeholder": "e.g., 0.03", 
+            "optional": False
+        },
+        {
+            "label": "FRA Period (Years)", 
+            "id": "fra_period", 
+            "type": "number", 
+            "placeholder": "e.g., 0.5", 
+            "optional": False
+        },
+        {
+            "label": "Position Type (Payer/Receiver)", 
+            "id": "position_type", 
+            "type": "select", 
+            "placeholder": "Select Payer or Receiver", 
+            "options": ["Payer", "Receiver"], 
+            "default": "Payer",
+            "optional": False
+        }
+    ],
+    "outputs": ["Hedging Strategy Analysis"],
+},
     # Interest Rate Swap Cash Flows
     "interest-rate-swap-cash-flows": {
         "title": "Interest Rate Swap Cash Flows",

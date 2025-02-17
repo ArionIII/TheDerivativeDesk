@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import random
 from scipy.interpolate import CubicSpline
+from scipy.optimize import fsolve
 
 def continuous_compounding_rate(rate_m, frequency_m):
     logger.info(f"Calculating continuous compounding rate with rate_m: {rate_m} and frequency_m: {frequency_m}")
@@ -440,6 +441,39 @@ def calculate_valuation_of_fra(contract_rate, forward_rates, notional_value, int
 
     except Exception as e:
         return {"error": str(e)}, 400
+
+def calculate_fra_break_even_rate(forward_rates, interval_between_payments):
+    """
+    Calcule le taux FRA Break-Even, c'est-à-dire le taux fixe qui rend la valeur totale du FRA égale à zéro.
+
+    Paramètres :
+    - forward_rates : Liste des taux forward observés (ex: [0.032, 0.035, 0.031, 0.037]).
+    - interval_between_payments : Durée d’une période en années (ex: 0.5 pour 6 mois).
+
+    Retourne :
+    - Un dictionnaire avec le taux FRA Break-Even.
+    """
+
+    try:
+        # Vérifier que forward_rates est bien une liste
+        if not isinstance(forward_rates, list) or len(forward_rates) == 0:
+            raise ValueError("forward_rates doit être une liste non vide de taux.")
+
+        # Fonction à minimiser : on cherche R_f tel que total_payoff = 0
+        def equation(R_f):
+            total_payoff = 0
+            for R_s in forward_rates:
+                payoff = (R_s - R_f) * interval_between_payments / (1 + R_s * interval_between_payments)
+                total_payoff += payoff
+            return total_payoff  # Doit être égal à 0
+
+        # Trouver la racine de l'équation (break-even rate)
+        R_f_solution = fsolve(equation, np.mean(forward_rates))[0]  # On initialise à la moyenne des forward rates
+
+        return {"fra_break_even_rate": ("FRA Break-Even Rate:", R_f_solution)}
+
+    except Exception as e:
+        return {"error": str(e)}, 400
     
 def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/outputs/interest-rates-and-fixed-income/"):
     """
@@ -495,10 +529,45 @@ def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/out
 
     except Exception as e:
         return {"error": str(e)}, 400
+    
 
-def calculate_fra_break_even_rate(notional_value, forward_rate, time_to_settlement):
-    break_even_rate = forward_rate / time_to_settlement
-    return {"fra_break_even_rate": ("FRA Break-even Rate :", break_even_rate)}
+def calculate_hedging_strategy_analysis(current_position,target_rate,market_rate,fra_period,position_type):
+    """
+    Calcule l'impact d'une stratégie de couverture avec un FRA.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "current_position" : Montant notionnel du contrat FRA.
+      - "target_rate" : Taux d'intérêt cible après couverture.
+      - "market_rate" : Taux d'intérêt actuel du marché.
+      - "fra_period" : Durée du FRA en années.
+      - "position_type" : Type de position ("Payer" ou "Receiver").
+
+    Retourne :
+    - Un dictionnaire contenant l'analyse de la couverture.
+    """
+    try:
+        if position_type not in ["Payer", "Receiver"]:
+            raise ValueError("Position Type doit être 'Payer' ou 'Receiver'.")
+
+        # Calcul du gain ou de la perte de la couverture
+        rate_difference = market_rate - target_rate if position_type == "Payer" else target_rate - market_rate
+        hedging_result = current_position * rate_difference * fra_period
+
+        # Analyse de l'efficacité de la couverture
+        hedge_effectiveness = (abs(rate_difference) / market_rate) * 100 if market_rate != 0 else 0
+
+        return {
+    "hedging_impact": ("Hedging Impact (€) :", round(hedging_result, 2)),
+    "hedge_effectiveness": ("Hedge Effectiveness (%) :", round(hedge_effectiveness, 2)),
+    "optimal_position": ("Optimal Position :", position_type),
+    "target_achieved": ("Target Achieved :", "Yes" if abs(rate_difference) < 0.0001 else "No")
+}
+
+    except Exception as e:
+        return {"error": str(e)}, 400
+
+
 
 def calculate_interest_rate_swap_cash_flows(notional_value, fixed_rate, floating_rate, time_periods):
     fixed_cash_flows = [notional_value * fixed_rate * t for t in time_periods]
