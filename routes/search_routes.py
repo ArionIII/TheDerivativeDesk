@@ -24,35 +24,51 @@ def search():
     if not query:
         return render_template("search.html", results=[])
 
-    query_tokens = query.split()  # Split query into tokens
+    query_tokens = query.split()  # Sépare la requête en mots-clés
     results = []
 
     for tool_key, tool in ALL_TOOLS.items():
         score = 0
 
-        # Normalize title, description, and keywords
-        title_tokens = tool["title"].lower().split()
-        description_tokens = tool["description"].lower().split()
-        keyword_tokens = [kw.lower() for kw in tool.get("keywords", [])]
+        # Normalisation des titres, descriptions et autres champs
+        title = tool["title"].lower()
+        description = tool["description"].lower()
+        outputs = [output.lower() for output in tool.get("outputs", [])]
+        graphs = [graph["name"].lower() for graph in tool.get("graphs", [])]
+        inputs = [inp["label"].lower() for inp in tool.get("inputs", [])]
 
-        # Match full query in title, description, or keywords
-        if query in tool["title"].lower():
-            score += 100  # Highest weight for exact match in title
-        if query in tool["description"].lower():
-            score += 70  # Medium weight for exact match in description
-        if any(query in keyword for keyword in keyword_tokens):
-            score += 50  # Lower weight for exact match in keywords
+        title_tokens = title.split()
+        description_tokens = description.split()
+        output_tokens = [token for output in outputs for token in output.split()]
+        graph_tokens = [token for graph in graphs for token in graph.split()]
+        input_tokens = [token for inp in inputs for token in inp.split()]
 
-        # Match individual tokens in title, description, or keywords
+        # Exact match scoring
+        if query == title:
+            score += 200
+        if query == description:
+            score += 100
+        if query in outputs:
+            score += 80
+        if query in graphs:
+            score += 80
+        if query in inputs:
+            score += 30
+
+        # Token matching scoring
         for token in query_tokens:
             if token in title_tokens:
-                score += 20
+                score += 30
             if token in description_tokens:
+                score += 20
+            if token in output_tokens:
                 score += 15
-            if any(token in keyword for keyword in keyword_tokens):
-                score += 10
+            if token in graph_tokens:
+                score += 15
+            if token in input_tokens:
+                score += 5
 
-        # Add result if score is greater than 0
+        # Ajouter le résultat si score > 0
         if score > 0:
             results.append({
                 "name": tool["title"],
@@ -61,10 +77,13 @@ def search():
                 "score": score
             })
 
-    # Sort results by score in descending order
-    results = sorted(results, key=lambda x: x["score"], reverse=True)
+    # Tri des résultats : 
+    # 1. D'abord par score (décroissant)
+    # 2. Si égalité, on priorise l'exact match sur le titre
+    results = sorted(results, key=lambda x: (-x["score"], x["name"] != query))
 
     return render_template("search.html", results=results, query=query)
+
 
 @search_routes.route("/suggest", methods=["GET"])
 def suggest():
@@ -80,38 +99,70 @@ def suggest():
     for tool_key, tool in ALL_TOOLS.items():
         score = 0
 
-        # Normalize title, description, and keywords
-        title_tokens = tool["title"].lower().split()
-        description_tokens = tool["description"].lower().split()
-        keyword_tokens = [kw.lower() for kw in tool.get("keywords", [])]
+        # Normalisation des titres, descriptions et autres champs
+        title = tool["title"].lower()
+        description = tool["description"].lower()
+        outputs = [output.lower() for output in tool.get("outputs", [])]
+        graphs = [graph["name"].lower() for graph in tool.get("graphs", [])]
+        inputs = [inp["label"].lower() for inp in tool.get("inputs", [])]
 
-        # Match full query in title, description, or keywords
-        if query in tool["title"].lower():
+        title_tokens = title.split()
+        description_tokens = description.split()
+        output_tokens = [token for output in outputs for token in output.split()]
+        graph_tokens = [token for graph in graphs for token in graph.split()]
+        input_tokens = [token for inp in inputs for token in inp.split()]
+
+        # Exact match scoring
+        if query == title:
             score += 100
-        if query in tool["description"].lower():
+        if query == description:
             score += 70
-        if any(query in keyword for keyword in keyword_tokens):
+        if query in outputs:
             score += 50
+        if query in graphs:
+            score += 50
+        if query in inputs:
+            score += 20
 
-        # Match individual tokens
+        # Token matching scoring
         for token in query_tokens:
             if token in title_tokens:
                 score += 20
             if token in description_tokens:
                 score += 15
-            if any(token in keyword for keyword in keyword_tokens):
+            if token in output_tokens:
                 score += 10
+            if token in graph_tokens:
+                score += 10
+            if token in input_tokens:
+                score += 5
 
-        # Add suggestion if score > 0
+        # Match partiel (progressivité) : On vérifie si la requête est un préfixe d'un mot dans les données
+        if any(title_word.startswith(query) for title_word in title_tokens):
+            score += 50
+        if any(desc_word.startswith(query) for desc_word in description_tokens):
+            score += 30
+        if any(output_word.startswith(query) for output_word in output_tokens):
+            score += 20
+        if any(graph_word.startswith(query) for graph_word in graph_tokens):
+            score += 20
+        if any(input_word.startswith(query) for input_word in input_tokens):
+            score += 10
+
+        # Ajouter le résultat si score > 0
         if score > 0:
             suggestions.append({
                 "name": tool["title"],
                 "url": tool["url"],
                 "description": tool["description"],
+                "score": score
             })
 
-    # Sort suggestions by relevance
-    suggestions = sorted(suggestions, key=lambda x: x["name"])
+    # Trier les suggestions par score (décroissant) et ensuite par ordre alphabétique en cas d'égalité
+    suggestions = sorted(suggestions, key=lambda x: (-x["score"], x["name"]))
+
     logger.info(f"Returning {len(suggestions)} suggestions")
     logger.info(suggestions)
+    
     return jsonify(suggestions)
+
