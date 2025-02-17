@@ -23,8 +23,8 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "tools": [
             # {"title": "Zero Rate Curve", "description": "Determine zero rates from market data.", "url": "/tools/term-structure-construction/zero-rate-curve"},
             {"title": "Determining Zero Rates & Zero-Curve", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rates-analysis/determining-zero-rates"},
-            {"title": "Extend LIBOR Curve with Swap Rates", "description": "Extend the LIBOR curve using swap rates.", "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates"},
-            {"title": "Extend Zero-Rate Curve with FRA", "description": "Extend the LIBOR curve using forward rate agreements (FRA).", "url": "/tools/term-structure-construction/extending-zero-curve-with-fra"},
+            {"title": "Extend Zero-Rate Curve with Swap Rates", "description": "Extend the Zero-Rate curve using swap rates.", "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates"},
+            {"title": "Extend Zero-Rate Curve with FRA", "description": "Extend the Zero-Rate curve using forward rate agreements (FRA).", "url": "/tools/term-structure-construction/extending-zero-curve-with-fra"},
         ],
     },
     # Forward Rate Agreements (FRA)

@@ -248,49 +248,87 @@ def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors,
         raise ValueError(f"Error computing smoothed LIBOR curve: {e}")
 
 
-
 def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_tenors,
-                                  day_count_convention="ACT/360"):
+                                         output_path="static/outputs/interest-rates-and-fixed-income/"):
     """
-    Étend une courbe des taux zéro en intégrant des taux FRA via bootstrapping.
+    Étend une courbe de taux LIBOR avec des taux de FRA via bootstrapping et interpolation spline cubique.
+
+    Différences avec les swaps :
+    - On calcule les taux zéro des nouveaux points en utilisant la formule des FRA.
+    - On ajoute ces points à la courbe et on applique une interpolation pour lisser la transition.
+
+    Paramètres :
+    - libor_rates : Taux zéro initiaux (LIBOR)
+    - fra_rates : Taux FRA pour compléter la courbe
+    - libor_tenors : Maturités associées aux taux LIBOR
+    - fra_tenors : Maturités associées aux taux FRA
+
+    Retourne :
+    - Chemins des fichiers CSV et XLSX avec la courbe étendue et lissée.
     """
-    
-    # Convertir les entrées en arrays numpy
-    libor_tenors = np.array(libor_tenors, dtype=float)
-    fra_tenors = np.array(fra_tenors, dtype=float)
-    libor_rates = np.array(libor_rates, dtype=float)
-    fra_rates = np.array(fra_rates, dtype=float)
 
-    # Initialisation des taux zéro avec les taux LIBOR
-    known_maturities = np.concatenate((libor_tenors, fra_tenors))
-    zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(fra_rates)))  # Placeholder pour bootstrapping
-
-    # Bootstrapping des taux zéro à partir des FRA
-    for i in range(len(fra_tenors)):
-        T1 = libor_tenors[-1] if i == 0 else fra_tenors[i - 1]  # Dernier point connu
-        T2 = fra_tenors[i]  # Nouveau point à calculer
-        FRA = fra_rates[i]
-
-        # On récupère le dernier taux zéro connu
-        r_T1 = zero_rate_curve[np.where(known_maturities == T1)[0][0]]
-
-        # Calcul du taux zéro à T2 à partir du taux FRA
-        r_T2 = ((1 + r_T1 * T1) * (1 + FRA * (T2 - T1)) - 1) / T2
-
-        zero_rate_curve[np.where(known_maturities == T2)[0][0]] = r_T2
-
-    # Trier les maturités et taux pour garantir une courbe ordonnée
-    extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
-
-    return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
-
-
-def payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
     try:
-        payoff = notional_value * (settlement_rate - contract_rate) * time / (1 + settlement_rate * time)
-        return {"fra_payoff": ("FRA Payoff :", payoff)}
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
+
+        # Convertir en numpy arrays
+        libor_tenors = np.array(libor_tenors, dtype=float)
+        fra_tenors = np.array(fra_tenors, dtype=float)
+        libor_rates = np.array(libor_rates, dtype=float)
+        fra_rates = np.array(fra_rates, dtype=float)
+
+        # Fusion des maturités et des taux initiaux
+        all_tenors = np.concatenate((libor_tenors, fra_tenors))
+        all_rates = np.concatenate((libor_rates, np.zeros_like(fra_rates)))  # Placeholder pour FRA
+
+        # Calcul des taux zéro à partir des FRA en utilisant la formule :
+        # (1 + r_2 * T_2) = (1 + r_1 * T_1) * (1 + FRA * (T_2 - T_1))
+        for i, T2 in enumerate(fra_tenors):
+            T1 = libor_tenors[-1] if len(libor_tenors) > 0 else 0  # Dernier point connu
+            r1 = libor_rates[-1] if len(libor_rates) > 0 else 0  # Dernier taux connu
+            FRA = fra_rates[i]  # Taux FRA actuel
+
+            # Calcul du taux zéro du nouvel échéancier
+            r2 = ((1 + r1 * T1) * (1 + FRA * (T2 - T1)) - 1) / T2
+            all_rates[len(libor_rates) + i] = r2  # Mise à jour du taux dans la courbe
+
+        # Suppression des doublons en moyennant les taux associés
+        tenor_rate_dict = {}
+        for tenor, rate in zip(all_tenors, all_rates):
+            if tenor in tenor_rate_dict:
+                tenor_rate_dict[tenor].append(rate)
+            else:
+                tenor_rate_dict[tenor] = [rate]
+
+        # Calcul de la moyenne pour chaque maturité unique
+        unique_tenors = sorted(tenor_rate_dict.keys())  # Assurer l'ordre croissant
+        averaged_rates = np.array([np.mean(tenor_rate_dict[t]) for t in unique_tenors])
+
+        # Appliquer une interpolation spline cubique
+        spline = CubicSpline(unique_tenors, averaged_rates)
+
+        # Générer des points plus fins pour la courbe interpolée
+        smooth_tenors = np.linspace(unique_tenors[0], unique_tenors[-1], 300)
+        smooth_rates = spline(smooth_tenors)
+
+        # Convertir en DataFrame pour l'export
+        df_interpolated = pd.DataFrame({"Maturity": smooth_tenors, "Interpolated Zero Rates": smooth_rates})
+
+        # Générer un nom de fichier unique
+        random_file_name = f"fra_smoothed_zero_rates_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df_interpolated.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df_interpolated.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        return csv_path, xlsx_path
+
     except Exception as e:
-        return {"error": str(e)}, 400
+        raise ValueError(f"Error computing smoothed LIBOR curve with FRA rates: {e}")
 
 def duration_and_convexity(cash_flows, discount_rates, time_periods):
     try:
@@ -316,9 +354,36 @@ def duration_and_convexity(cash_flows, discount_rates, time_periods):
 
 
 
-def calculate_payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
-    payoff = notional_value * (settlement_rate - contract_rate) * time
-    return {"fra_payoff": ("FRA Payoff :", payoff)}
+def payoff_of_fra(contract_rate, settlement_rates, notional_value, interval_between_payments):
+    """
+    Calcule le payoff total d'un FRA sur plusieurs périodes.
+
+    Paramètres :
+    - contract_rate : Taux fixe du FRA (ex: 0.03 pour 3%).
+    - settlement_rates : Liste des taux flottants observés (ex: [0.032, 0.035, 0.031, 0.037]).
+    - notional_value : Valeur notionnelle du contrat (ex: 1 000 000€).
+    - interval_between_payments : Durée d’une période en années (ex: 0.5 pour 6 mois).
+
+    Retourne :
+    - Un dictionnaire avec le payoff total du FRA.
+    """
+
+    try:
+        # Vérifier que settlement_rates est bien une liste
+        if not isinstance(settlement_rates, list):
+            raise ValueError("settlement_rates doit être une liste de taux.")
+
+        total_payoff = 0
+
+        # Boucle sur chaque période pour calculer le payoff
+        for R_s in settlement_rates:
+            payoff = notional_value * (R_s - contract_rate) * interval_between_payments / (1 + R_s * interval_between_payments)
+            total_payoff += payoff  # Accumuler tous les payoffs
+
+        return {"fra_total_payoff": ("Total FRA Payoff :", total_payoff)}
+
+    except Exception as e:
+        return {"error": str(e)}, 400
 
 def calculate_valuation_of_fra(forward_rate, contract_rate, notional_value, discount_factor):
     valuation = notional_value * (forward_rate - contract_rate) * discount_factor

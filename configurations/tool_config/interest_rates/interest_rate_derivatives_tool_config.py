@@ -1,17 +1,51 @@
 INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     # Payoff of FRA
     "payoff-of-fra": {
-        "title": "Payoff of FRA",
-        "description": "Calculate the payoff of a forward rate agreement based on agreed rates and market conditions.",
-        "url": "/tools/forward-rate-agreements/payoff-of-fra",
-        "inputs": [
-            {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-            {"label": "Settlement Rate", "id": "settlement_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Time (Years)", "id": "time", "type": "number", "placeholder": "e.g., 0.5", "optional": False},
-        ],
-        "outputs": ["FRA Payoff"],
-    },
+    "title": "Payoff of FRA",
+    "description": "Calculate the total payoff of a forward rate agreement over multiple periods based on agreed rates and market conditions.",
+    "url": "/tools/forward-rate-agreements/payoff-of-fra",
+    "inputs": [
+        {
+            "label": "Contract Rate", 
+            "id": "contract_rate", 
+            "type": "number", 
+            "placeholder": "e.g., 0.02", 
+            "optional": False
+        },
+        {
+            "label": "Settlement Rates (comma-separated)", 
+            "id": "settlement_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "optional": False
+        },
+        {
+            "label": "Settlement Rates (CSV)", 
+            "id": "file_settlement_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "settlement_rates", 
+            "template": "/static/templates/settlement_rates.csv", 
+            "optional": True
+        },
+        {
+            "label": "Notional Value", 
+            "id": "notional_value", 
+            "type": "number", 
+            "placeholder": "e.g., 1000000", 
+            "optional": False
+        },
+        {
+            "label": "Interval Between Payments (Years)", 
+            "id": "interval_between_payments", 
+            "type": "number", 
+            "placeholder": "e.g., 0.5", 
+            "optional": False
+        }
+    ],
+    "note": "The payoff is the net difference between Floating Leg & Fixed Leg. It is the payoff for the buyer of the FRA (aka the fix-leg payer / floating-leg receiver)",
+    "outputs": ["Total FRA Payoff"]
+},
     # Valuation of FRA
     "valuation-of-fra": {
         "title": "Valuation of FRA",

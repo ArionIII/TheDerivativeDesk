@@ -19,6 +19,9 @@ GRAPH_FUNCTIONS = {
     },
     "extending-libor-curve-with-swap-rates": {
         1:generate_extended_zero_rate_curve_graph_fixed,
+    },
+    "extending-zero-curve-with-fra": {
+        1:generate_extended_zero_rate_curve_graph_fra,
     }
 }
 

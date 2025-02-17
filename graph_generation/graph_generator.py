@@ -277,3 +277,52 @@ def generate_extended_zero_rate_curve_graph_fixed(data):
 
     except Exception as e:
         raise ValueError(f"Error generating extended zero rate curve graph: {e}")
+    
+
+def generate_extended_zero_rate_curve_graph_fra(data):
+    """
+    Génère un graphique montrant la courbe des taux zéro avant et après extension avec les taux FRA.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "Maturity" : Liste des maturités disponibles (X-axis)
+      - "libor_rates" : Liste des taux zéro LIBOR correspondants
+      - "Interpolated Zero Rates" : Liste des taux zéro après extension avec les FRA
+
+    Retourne :
+    - Un objet `fig` matplotlib contenant le graphique (sans le sauvegarder).
+    """
+
+    try:
+        # Extraction des données
+        maturities = np.array(data.get("Maturity", []))
+        libor_rates = np.array(data.get("libor_rates", []))
+        extended_rates = np.array(data.get("Interpolated Zero Rates", []))
+
+        # Vérification de la présence des données nécessaires
+        if maturities.size == 0 or libor_rates.size == 0 or extended_rates.size == 0:
+            raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
+
+        # Création du graphique avec un design amélioré
+        fig, ax = plt.subplots(figsize=(9, 6))
+
+        #TODO : Impossible actuellement car je ne garde pas les maturités initiales (à changer, et c'est pareil pour SWAP rates : ca bloque l'affichage des taux libor initiaux, ce qui est dommage).
+        # # Affichage des LIBOR Zero Rates initiaux
+        # ax.plot(maturities[:len(libor_rates)], libor_rates, marker="o", linestyle="--", 
+        #         color="royalblue", alpha=0.8, markersize=6, linewidth=2, label="LIBOR Zero Rates")
+
+        # Affichage des taux étendus via FRA
+        ax.plot(maturities, extended_rates, marker="s", linestyle="-", 
+                color="darkorange", alpha=0.9, markersize=5, linewidth=2, label="Extended Zero Rates (FRA)")
+
+        ax.set_xlabel("Maturity (Years)", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Zero Rates (%)", fontsize=12, fontweight="bold")
+        ax.set_title("Extended Zero Curve with FRA Rates", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+        ax.set_facecolor("#f5f5f5")
+
+        return save_plot(fig, generate_unique_filename("extended_zero_curve_fra_rates"))
+
+    except Exception as e:
+        raise ValueError(f"Error generating extended zero rate curve graph with FRA: {e}")

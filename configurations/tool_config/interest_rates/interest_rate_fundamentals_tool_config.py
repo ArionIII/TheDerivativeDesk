@@ -72,7 +72,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "determining-zero-rates": {
     "title": "Determining Zero Rates & Zero-Curve",
     "description": "Calculate zero rates from coupon bond prices and coupon rates.",
-    "url": "/tools/term-structure-construction/zero-rate-curve",
+    "url": "/tools/basic-interest-rates-analysis/determining-zero-rates",
     "inputs": [
         {
             "label": "Bond Prices (comma-separated)", 
@@ -81,7 +81,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "placeholder": "e.g., [980, 970, 960]"
         },
         {
-            "label": "Upload Bond Prices (CSV)", 
+            "label": "Bond Prices (CSV)", 
             "id": "file_bond_prices", 
             "type": "file", 
             "accept": ".csv", 
@@ -96,7 +96,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "placeholder": "e.g., [1000, 1000, 1000]"
         },
         {
-            "label": "Upload Face Values (CSV)", 
+            "label": "Face Values (CSV)", 
             "id": "file_face_values", 
             "type": "file", 
             "accept": ".csv", 
@@ -111,7 +111,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "placeholder": "e.g., [1, 2, 3]"
         },
         {
-            "label": "Upload Maturities (CSV)", 
+            "label": "Maturities (CSV)", 
             "id": "file_maturities", 
             "type": "file", 
             "accept": ".csv", 
@@ -126,7 +126,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "placeholder": "e.g., [0.05, 0.04, 0.03]"
         },
         {
-            "label": "Upload Coupon Rates (CSV)", 
+            "label": "Coupon Rates (CSV)", 
             "id": "file_coupon_rates", 
             "type": "file", 
             "accept": ".csv", 
@@ -141,7 +141,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "placeholder": "e.g., [2, 4, 1] (Semi-Annual, Quarterly, Annual)"
         },
         {
-            "label": "Upload Compounding Frequencies (CSV)", 
+            "label": "Compounding Frequencies (CSV)", 
             "id": "file_m_compoundings", 
             "type": "file", 
             "accept": ".csv", 
@@ -178,19 +178,19 @@ If these conditions are not met, the zero rates calculation may fail or produce 
 },
 
     "extending-libor-curve-with-swap-rates": {
-    "title": "Extend LIBOR Curve with Swap Rates",
+    "title": "Extend Zero-Rate Curve with Swap Rates",
     "description": "Use swap rates to extend the LIBOR curve.",
     "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
     "inputs": [
         {
-            "label": "Initial LIBOR Rates (comma-separated)", 
+            "label": "Initial Zero-Rates (comma-separated)", 
             "id": "libor_rates", 
             "type": "array", 
             "placeholder": "e.g., [0.01, 0.015]", 
             "optional": False
         },
         {
-            "label": "Upload Initial LIBOR Rates (CSV)", 
+            "label": "Initial Zero Rates (CSV)", 
             "id": "file_libor_rates", 
             "type": "file", 
             "accept": ".csv", 
@@ -206,7 +206,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
-            "label": "Upload Swap Rates (CSV)", 
+            "label": "Swap Rates (CSV)", 
             "id": "file_swap_rates", 
             "type": "file", 
             "accept": ".csv", 
@@ -215,14 +215,14 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": True
         },
         {
-            "label": "LIBOR Tenors (Years)", 
+            "label": "Zero-Rate Tenors (Years)", 
             "id": "libor_tenors", 
             "type": "array", 
             "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
             "optional": False
         },
         {
-            "label": "Upload LIBOR Tenors (CSV)", 
+            "label": "Zero-Rate Tenors (CSV)", 
             "id": "file_libor_tenors", 
             "type": "file", 
             "accept": ".csv", 
@@ -238,7 +238,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
-            "label": "Upload Swap Tenors (CSV)", 
+            "label": "Swap Tenors (CSV)", 
             "id": "file_swap_tenors", 
             "type": "file", 
             "accept": ".csv", 
@@ -247,7 +247,8 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": True
         },
     ],
-    "outputs": ["Extended LIBOR Curve"],
+    "outputs": ["Extended Zero Curve"],
+    "note": "We assume here for simplicity purpose : ACT/360 Day Count Convention, Annual Fixed Leg Frequency, and Semi-Annual Floating Leg Frequency. Also, we use CubicSpline Interpolation (solving of third-degrees polynomes), which allows bent curves instead of straight lines.",
     "graphs": [
         {
             "name": "Extended Zero Curve",
@@ -255,17 +256,26 @@ If these conditions are not met, the zero rates calculation may fail or produce 
     ]
 },
     "extending-zero-curve-with-fra": {
-        "title": "Extend Zero-Rate Curve with FRA",
-        "description": "Use FRA rates to extend the Zero-Rate curve.",
-        "url": "/tools/term-structure-construction/extending-zero-curve-with-fra",
+    "title": "Extend Zero-Rate Curve with FRA",
+    "description": "Use FRA rates to extend the Zero-Rate curve.",
+    "url": "/tools/term-structure-construction/extending-zero-curve-with-fra",
 
     "inputs": [
         {
-            "label": "Initial LIBOR Rates (comma-separated)", 
+            "label": "Initial Zero Rates (comma-separated)", 
             "id": "libor_rates", 
             "type": "array", 
             "placeholder": "e.g., [0.01, 0.015, 0.02]", 
             "optional": False
+        },
+        {
+            "label": "Initial Zero Rates (CSV)", 
+            "id": "file_libor_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "libor_rates", 
+            "template": "/static/templates/libor_rates_fra.csv", 
+            "optional": True
         },
         {
             "label": "FRA Rates (comma-separated)", 
@@ -275,11 +285,29 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
-            "label": "LIBOR Maturities (Years)", 
+            "label": "FRA Rates (CSV)", 
+            "id": "file_fra_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "fra_rates", 
+            "template": "/static/templates/fra_rates.csv", 
+            "optional": True
+        },
+        {
+            "label": "Zero-Rate Maturities (Years)", 
             "id": "libor_tenors", 
             "type": "array", 
             "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
             "optional": False
+        },
+        {
+            "label": "Zero-Rate Maturities (CSV)", 
+            "id": "file_libor_tenors", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "libor_tenors", 
+            "template": "/static/templates/libor_tenors_fra.csv", 
+            "optional": True
         },
         {
             "label": "FRA Maturities (Years)", 
@@ -289,18 +317,23 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
-            "label": "Day Count Convention", 
-            "id": "day_count_convention", 
-            "type": "select", 
-            "placeholder": "Select a Day Count Convention", 
-            "options": ["ACT/360", "30/360"], 
-            "default": "ACT/360", 
-            "optional": False
+            "label": "FRA Maturities (CSV)", 
+            "id": "file_fra_tenors", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "fra_tenors", 
+            "template": "/static/templates/fra_tenors.csv", 
+            "optional": True
         }
     ],
-        "note" : "This tool is under development and may not be fully functional.",
-        "outputs": ["Extended Zero Curve"],
-    },
+    "graphs": [
+        {
+            "name": "Extended Zero Curve",
+        }
+    ],
+    "note": "We assume here for simplicity purpose : ACT/360 Day Count Convention, Annual Fixed Leg Frequency, and Semi-Annual Floating Leg Frequency. Also, we use CubicSpline Interpolation (solving of third-degrees polynomes), which allows bent curves instead of straight lines.",
+    "outputs": ["Extended Zero Curve"]
+},
     # "payoff-of-fra": {
     #     "title": "Payoff of FRA",
     #     "description": "Calculate the payoff of a Forward Rate Agreement (FRA).",
