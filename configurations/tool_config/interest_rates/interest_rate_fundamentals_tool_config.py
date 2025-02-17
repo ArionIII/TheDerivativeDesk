@@ -318,14 +318,59 @@ If these conditions are not met, the zero rates calculation may fail or produce 
     #     "outputs": ["FRA Payoff"],
     # },
     "duration-and-convexity": {
-        "title": "Duration and Convexity",
-        "description": "Calculate the duration and convexity of a bond.",
-        "url": "/tools/basic-interest-rate-analysis/duration-and-convexity",
-        "inputs": [
-            {"label": "Bond Cash Flows (comma-separated)", "id": "cash_flows", "type": "array", "placeholder": "e.g., [50, 50, 1050]", "optional": False},
-            {"label": "Discount Rates (comma-separated)", "id": "discount_rates", "type": "array", "placeholder": "e.g., [0.03, 0.035, 0.04]", "optional": False},
-            {"label": "Time Periods (Years)", "id": "time_periods", "type": "array", "placeholder": "e.g., [1, 2, 3]", "optional": False},
-        ],
-        "outputs": ["Duration", "Convexity"],
-    },
+    "title": "Duration and Convexity",
+    "description": "Calculate the duration and convexity of a bond.",
+    "url": "/tools/basic-interest-rate-analysis/duration-and-convexity",
+    "inputs": [
+        {
+            "label": "Bond Cash Flows (comma-separated)", 
+            "id": "cash_flows", 
+            "type": "array", 
+            "placeholder": "e.g., [50, 50, 1050]", 
+            "optional": False
+        },
+        {
+            "label": "Discount Rates (comma-separated)", 
+            "id": "discount_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.03, 0.035, 0.04]", 
+            "optional": False
+        },
+        {
+            "label": "Time Periods (Years)", 
+            "id": "time_periods", 
+            "type": "array", 
+            "placeholder": "e.g., [1, 2, 3]", 
+            "optional": False
+        },
+        {
+            "label": "CSV for Cash Flows", 
+            "id": "cash_flows_file", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "cash_flows",
+            "template": "/static/templates/duration_cash_flows.csv", 
+
+        },
+        {
+            "label": "CSV for Discount Rates", 
+            "id": "discount_rates_file", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "discount_rates",
+            "template": "/static/templates/duration_discount_rates.csv", 
+
+        },
+        {
+            "label": "CSV for Time Periods", 
+            "id": "time_periods_file", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "time_periods",
+            "template": "/static/templates/duration_time_periods.csv", 
+
+        }
+    ],
+    "outputs": ["Duration", "Convexity"]
+}
 }
