@@ -179,7 +179,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
 
     "extending-libor-curve-with-swap-rates": {
     "title": "Extend Zero-Rate Curve with Swap Rates",
-    "description": "Use swap rates to extend the LIBOR curve.",
+    "description": "Use swap rates to extend the Zero-Rate curve.",
     "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
     "inputs": [
         {
