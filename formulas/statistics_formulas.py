@@ -432,13 +432,16 @@ def calculate_transition_matrices(state_sequence, num_states):
     except Exception as e:
         return {"error": str(e)}, 400
 
-def simulate_random_walk(num_steps, num_simulations, step_size=1):
+def simulate_random_walk(num_steps, num_simulations, step_size=1, output_path="static/outputs/statistics/"):
     try:
+        os.makedirs(output_path, exist_ok=True)
+
         num_steps = int(num_steps)
         num_simulations = int(num_simulations)
         step_size = float(step_size)
+
         simulations = []
-        for _ in range(num_simulations):
+        for sim in range(num_simulations):
             position = 0
             walk = [position]
             for _ in range(num_steps):
@@ -446,9 +449,25 @@ def simulate_random_walk(num_steps, num_simulations, step_size=1):
                 position += step
                 walk.append(position)
             simulations.append(walk)
-        return {"simulation_paths": ("Simulation Paths :", simulations)}
+
+        # Créer un DataFrame avec chaque simulation comme une colonne
+        df_output = pd.DataFrame(simulations).T
+        df_output.columns = [f"Simulation_{i+1}" for i in range(num_simulations)]
+
+        # Générer un nom de fichier unique
+        random_file_name = f"random_walk_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # Sauvegarder les fichiers
+        df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+        df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        return csv_path, xlsx_path
+
     except Exception as e:
-        return {"error": str(e)}, 400
+        return {"error": f"Error simulating random walk: {e}"}, 400
+
 
 # Monte Carlo Simulations
 def perform_monte_carlo_simulations(num_simulations, output_path="static/outputs/simulations/", random_seed=None):

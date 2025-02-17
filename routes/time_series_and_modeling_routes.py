@@ -16,6 +16,8 @@ TOOL_FUNCTIONS = ({
     "random-walk-simulation": simulate_random_walk,
     "AR-MA-ARMA-previsions": forecast_series,
     "log-returns-calculator": compute_log_returns_csv_xlsx,
+    "transition-matrices": calculate_transition_matrices,
+    "random-walks": simulate_random_walk,
 })
 
 

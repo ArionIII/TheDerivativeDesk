@@ -340,11 +340,11 @@ def compute_change_beta_portfolio(target_beta, current_beta, asset_value, future
     if asset_value <= 0 or futures_value <= 0:
         raise ValueError("Values must be positive.")
 
-    if current_beta > target_beta:
-        return ('short', (current_beta - target_beta) * (asset_value / futures_value))
-    if current_beta < target_beta:
-        return ('long', (target_beta - current_beta) * (asset_value / futures_value))
-    return ('Nothing to change', 0)
+    return {
+    "hedging_position": ("Hedging Position :", "short" if current_beta > target_beta else "long" if current_beta < target_beta else "Nothing to change"),
+    "contract_size": ("Contract Size :", round((abs(current_beta - target_beta) * (asset_value / futures_value)), 2) if current_beta != target_beta else 0)
+}
+
 
 
 def compute_capm(market_expected_return, risk_free_rate, portfolio_beta):
