@@ -246,39 +246,15 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "template": "/static/templates/swap_tenors.csv", 
             "optional": True
         },
-        {
-            "label": "Day Count Convention", 
-            "id": "day_count_convention", 
-            "type": "select", 
-            "placeholder": "Select a Day Count Convention", 
-            "options": ["ACT/360", "30/360"], 
-            "default": "ACT/360", 
-            "optional": False
-        },
-        {
-            "label": "Fixed Leg Frequency", 
-            "id": "fixed_leg_frequency", 
-            "type": "select", 
-            "placeholder": "Select Fixed Leg Frequency", 
-            "options": ["Annual", "Semiannual"], 
-            "default": "Annual", 
-            "optional": False
-        },
-        {
-            "label": "Floating Leg Frequency", 
-            "id": "floating_leg_frequency", 
-            "type": "select", 
-            "placeholder": "Select Floating Leg Frequency", 
-            "options": ["3M", "6M"], 
-            "default": "6M", 
-            "optional": False
-        }
     ],
     "outputs": ["Extended LIBOR Curve"],
     "graphs": [
         {
             "name": "Extended Zero Curve",
         },
+        {
+            'name': 'Difference between LIBOR & LIBOR extended rates'
+        }
     ]
 },
     "extending-zero-curve-with-fra": {
