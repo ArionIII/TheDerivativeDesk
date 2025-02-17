@@ -8,6 +8,7 @@ from scipy.interpolate import CubicSpline
 import os
 import pandas as pd
 import random
+from scipy.interpolate import CubicSpline
 
 def continuous_compounding_rate(rate_m, frequency_m):
     logger.info(f"Calculating continuous compounding rate with rate_m: {rate_m} and frequency_m: {frequency_m}")
@@ -187,50 +188,66 @@ def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m
     except Exception as e:
         raise ValueError(f"Error computing zero rates: {e}")
 
-
-
 def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors, swap_tenors,
-                                          day_count_convention="ACT/360",
-                                          fixed_leg_frequency="Annual",
-                                          floating_leg_frequency="6M"):
+                                               output_path="static/outputs/interest-rates-and-fixed-income/"):
     """
-    Étend une courbe de taux LIBOR avec des taux de swap via bootstrapping simple.
+    Étend une courbe de taux LIBOR avec des taux de swap via interpolation spline cubique,
+    en supprimant les doublons et en moyennant les taux lorsque des maturités se répètent.
     """
-    
-    # Convertir en numpy arrays pour faciliter les calculs
-    libor_tenors = np.array(libor_tenors, dtype=float)
-    swap_tenors = np.array(swap_tenors, dtype=float)
-    libor_rates = np.array(libor_rates, dtype=float)
-    swap_rates = np.array(swap_rates, dtype=float)
 
-    # Initialisation des taux zéro avec les taux LIBOR
-    known_maturities = np.concatenate((libor_tenors, swap_tenors))
-    zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(swap_rates)))  # Placeholder pour bootstrapping
+    try:
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
 
-    # Bootstrapping sur les nouveaux points de swap
-    for i in range(len(swap_tenors)):
-        tenor = swap_tenors[i]
-        swap_rate = swap_rates[i]
+        # Convertir en numpy arrays
+        libor_tenors = np.array(libor_tenors, dtype=float)
+        swap_tenors = np.array(swap_tenors, dtype=float)
+        libor_rates = np.array(libor_rates, dtype=float)
+        swap_rates = np.array(swap_rates, dtype=float)
 
-        # Approximation du taux zéro par une interpolation linéaire des valeurs précédentes
-        if tenor in libor_tenors:
-            rate = libor_rates[np.where(libor_tenors == tenor)[0][0]]
-        else:
-            prev_tenor = known_maturities[i + len(libor_tenors) - 1]
-            prev_rate = zero_rate_curve[i + len(libor_tenors) - 1]
+        # Fusion des maturités et des taux
+        all_tenors = np.concatenate((libor_tenors, swap_tenors))
+        all_rates = np.concatenate((libor_rates, swap_rates))
 
-            # Interpolation linéaire entre le dernier point connu et le swap actuel
-            rate = prev_rate + (swap_rate - prev_rate) * (tenor - prev_tenor) / (tenor - prev_tenor)
+        # Suppression des doublons en moyennant les taux associés
+        tenor_rate_dict = {}
+        for tenor, rate in zip(all_tenors, all_rates):
+            if tenor in tenor_rate_dict:
+                tenor_rate_dict[tenor].append(rate)
+            else:
+                tenor_rate_dict[tenor] = [rate]
 
-        zero_rate_curve[i + len(libor_tenors)] = rate
+        # Calcul de la moyenne pour chaque maturité unique
+        unique_tenors = sorted(tenor_rate_dict.keys())  # Assurer l'ordre croissant
+        averaged_rates = np.array([np.mean(tenor_rate_dict[t]) for t in unique_tenors])
 
-    # Trier les maturités et taux pour garantir une courbe ordonnée
-    extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
+        # Appliquer une interpolation spline cubique
+        spline = CubicSpline(unique_tenors, averaged_rates)
 
-    return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
+        # Générer des points plus fins pour la courbe interpolée
+        smooth_tenors = np.linspace(unique_tenors[0], unique_tenors[-1], 300)
+        smooth_rates = spline(smooth_tenors)
+
+        # Convertir en DataFrame pour l'export
+        df_interpolated = pd.DataFrame({"Maturity": smooth_tenors, "Interpolated Zero Rates": smooth_rates})
+
+        # Générer un nom de fichier unique
+        random_file_name = f"smoothed_zero_rates_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df_interpolated.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df_interpolated.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        return csv_path, xlsx_path
+
+    except Exception as e:
+        raise ValueError(f"Error computing smoothed LIBOR curve: {e}")
 
 
-import numpy as np
 
 def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_tenors,
                                   day_count_convention="ACT/360"):
@@ -277,17 +294,26 @@ def payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
 
 def duration_and_convexity(cash_flows, discount_rates, time_periods):
     try:
-        durations = [
-            (t * cf) / ((1 + r) ** t) for t, cf, r in zip(time_periods, cash_flows, discount_rates)
-        ]
-        convexities = [
-            (t * (t + 1) * cf) / ((1 + r) ** (t + 2)) for t, cf, r in zip(time_periods, cash_flows, discount_rates)
-        ]
-        duration = sum(durations)
-        convexity = sum(convexities)
-        return {"duration_and_convexity": ("Duration & Convexity :", f"Duration: {duration} || Convexity: {convexity}")}
+        # Actualisation des cash flows
+        pv_cash_flows = [cf / ((1 + r) ** t) for cf, r, t in zip(cash_flows, discount_rates, time_periods)]
+        pv_total = sum(pv_cash_flows)  # Valeur actuelle totale de l'obligation
+
+        # Calcul de la duration pondérée
+        durations = [(t * cf) / ((1 + r) ** t) for t, cf, r in zip(time_periods, cash_flows, discount_rates)]
+        duration = np.round(sum(durations) / pv_total, 3)  # Normalisation par la valeur actuelle
+
+        # Calcul de la convexité pondérée
+        convexities = [(t * (t + 1) * cf) / ((1 + r) ** (t + 2)) for t, cf, r in zip(time_periods, cash_flows, discount_rates)]
+        convexity = np.round(sum(convexities) / pv_total, 3)  # Normalisation par la valeur actuelle
+
+        return {
+    "duration": ("Duration :", str(duration)),
+    "convexity": ("Convexity :", str(convexity))
+}
+
     except Exception as e:
         return {"error": str(e)}, 400
+
 
 
 def calculate_payoff_of_fra(contract_rate, settlement_rate, notional_value, time):

@@ -19,44 +19,44 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     ],
     "outputs": ["Rate (m-Compounding)"],
 },
-    "zero-rate-curve": {
-    "title": "Zero Rate Curve Construction",
-    "description": "Construct zero rate curves using market instruments.",
-    "url": "/tools/basic-interest-rates-analysis/zero-rate-curve",
-    "inputs": [
-        {
-            "label": "Input Rates (comma-separated)", 
-            "id": "input_rates", 
-            "type": "array", 
-            "placeholder": "e.g., [0.02, 0.025, 0.03]", 
-            "optional": False
-        },
-        {
-            "label": "Rate Type (e.g., FRA, Swap)", 
-            "id": "rate_type", 
-            "type": "select", 
-            "placeholder": "Select Rate Type (FRA or Swap)", 
-            "options": ["FRA", "Swap"], 
-            "default": "FRA", 
-            "optional": False
-        },
-        {
-            "label": "Maturities (comma-separated)", 
-            "id": "maturities", 
-            "type": "array", 
-            "placeholder": "e.g., [0.5, 1, 1.5]", 
-            "optional": False
-        },
-        {
-            "label": "Space Between Payments (Years)", 
-            "id": "space_between_payments", 
-            "type": "number", 
-            "placeholder": "e.g., 0.5 (Semi-annual)", 
-            "optional": True
-        }
-    ],
-    "outputs": ["Zero Rate Curve"]
-},
+    # "zero-rate-curve": {
+    # "title": "Zero Rate Curve Construction",
+    # "description": "Construct zero rate curves using market instruments.",
+    # "url": "/tools/basic-interest-rates-analysis/zero-rate-curve",
+    # "inputs": [
+    #     {
+    #         "label": "Input Rates (comma-separated)", 
+    #         "id": "input_rates", 
+    #         "type": "array", 
+    #         "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+    #         "optional": False
+    #     },
+    #     {
+    #         "label": "Rate Type (e.g., FRA, Swap)", 
+    #         "id": "rate_type", 
+    #         "type": "select", 
+    #         "placeholder": "Select Rate Type (FRA or Swap)", 
+    #         "options": ["FRA", "Swap"], 
+    #         "default": "FRA", 
+    #         "optional": False
+    #     },
+    #     {
+    #         "label": "Maturities (comma-separated)", 
+    #         "id": "maturities", 
+    #         "type": "array", 
+    #         "placeholder": "e.g., [0.5, 1, 1.5]", 
+    #         "optional": False
+    #     },
+    #     {
+    #         "label": "Space Between Payments (Years)", 
+    #         "id": "space_between_payments", 
+    #         "type": "number", 
+    #         "placeholder": "e.g., 0.5 (Semi-annual)", 
+    #         "optional": True
+    #     }
+    # ],
+    # "outputs": ["Zero Rate Curve"]
+# },
     "bond-pricing": {
         "title": "Bond Pricing",
         "description": "Calculate the price of a bond given its characteristics.",
@@ -70,7 +70,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
         "outputs": ["Bond Price"],
     },
     "determining-zero-rates": {
-    "title": "Determining Zero Rates",
+    "title": "Determining Zero Rates & Zero-Curve",
     "description": "Calculate zero rates from coupon bond prices and coupon rates.",
     "url": "/tools/term-structure-construction/zero-rate-curve",
     "inputs": [
@@ -178,9 +178,9 @@ If these conditions are not met, the zero rates calculation may fail or produce 
 },
 
     "extending-libor-curve-with-swap-rates": {
-        "title": "Extend LIBOR Curve with Swap Rates",
-        "description": "Use swap rates to extend the LIBOR curve.",
-        "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
+    "title": "Extend LIBOR Curve with Swap Rates",
+    "description": "Use swap rates to extend the LIBOR curve.",
+    "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates",
     "inputs": [
         {
             "label": "Initial LIBOR Rates (comma-separated)", 
@@ -190,11 +190,29 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
+            "label": "Upload Initial LIBOR Rates (CSV)", 
+            "id": "file_libor_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "libor_rates", 
+            "template": "/static/templates/libor_rates.csv", 
+            "optional": True
+        },
+        {
             "label": "Swap Rates (comma-separated)", 
             "id": "swap_rates", 
             "type": "array", 
             "placeholder": "e.g., [0.02, 0.025, 0.03]", 
             "optional": False
+        },
+        {
+            "label": "Upload Swap Rates (CSV)", 
+            "id": "file_swap_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "swap_rates", 
+            "template": "/static/templates/swap_rates.csv", 
+            "optional": True
         },
         {
             "label": "LIBOR Tenors (Years)", 
@@ -204,6 +222,15 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
+            "label": "Upload LIBOR Tenors (CSV)", 
+            "id": "file_libor_tenors", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "libor_tenors", 
+            "template": "/static/templates/libor_tenors.csv", 
+            "optional": True
+        },
+        {
             "label": "Swap Tenors (Years)", 
             "id": "swap_tenors", 
             "type": "array", 
@@ -211,53 +238,22 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "optional": False
         },
         {
-            "label": "Day Count Convention", 
-            "id": "day_count_convention", 
-            "type": "select", 
-            "placeholder": "Select a Day Count Convention", 
-            "options": ["ACT/360", "30/360"], 
-            "default": "ACT/360", 
-            "optional": False
+            "label": "Upload Swap Tenors (CSV)", 
+            "id": "file_swap_tenors", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "swap_tenors", 
+            "template": "/static/templates/swap_tenors.csv", 
+            "optional": True
         },
-        {
-            "label": "Fixed Leg Frequency", 
-            "id": "fixed_leg_frequency", 
-            "type": "select", 
-            "placeholder": "Select Fixed Leg Frequency", 
-            "options": ["Annual", "Semiannual"], 
-            "default": "Annual", 
-            "optional": False
-        },
-        {
-            "label": "Floating Leg Frequency", 
-            "id": "floating_leg_frequency", 
-            "type": "select", 
-            "placeholder": "Select Floating Leg Frequency", 
-            "options": ["3M", "6M"], 
-            "default": "6M", 
-            "optional": False
-        },
-        # {
-        #     "label": "Max Iterations", 
-        #     "id": "max_iterations", 
-        #     "type": "integer", 
-        #     "placeholder": "e.g., 100", 
-        #     "default": 100, 
-        #     "optional": True
-        # },
-        # {
-        #     "label": "Tolerance for Convergence", 
-        #     "id": "tolerance", 
-        #     "type": "float", 
-        #     "placeholder": "e.g., 0.00001", 
-        #     "default": 1e-6, 
-        #     "optional": True
-        # }
     ],
-
-        "note" : "This tool is under development and may not be fully functional.",
-        "outputs": ["Extended LIBOR Curve"],
-    },
+    "outputs": ["Extended LIBOR Curve"],
+    "graphs": [
+        {
+            "name": "Extended Zero Curve",
+        },
+    ]
+},
     "extending-zero-curve-with-fra": {
         "title": "Extend Zero-Rate Curve with FRA",
         "description": "Use FRA rates to extend the Zero-Rate curve.",
@@ -320,7 +316,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
     "duration-and-convexity": {
     "title": "Duration and Convexity",
     "description": "Calculate the duration and convexity of a bond.",
-    "url": "/tools/basic-interest-rate-analysis/duration-and-convexity",
+    "url": "/tools/basic-interest-rates-analysis/duration-and-convexity",
     "inputs": [
         {
             "label": "Bond Cash Flows (comma-separated)", 
@@ -369,6 +365,14 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "data_target": "time_periods",
             "template": "/static/templates/duration_time_periods.csv", 
 
+        }
+    ],
+    "graphs":[
+        {
+            "name": "Duration Contribution (%)"
+        },
+        {
+            "name": "Cash Flow Discounting"
         }
     ],
     "outputs": ["Duration", "Convexity"]

@@ -12,7 +12,6 @@ INTEREST_RATES_TOOL_CATEGORIES = {
             {"title": "Continuous Compounding to m-Compounding Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate"},
             {"title": "m-Compounding to Continuous Rate", "description": "Convert m-compounding rates to continuous compounding rates.", "url": "/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate"},
             {"title": "Bond Pricing", "description": "Calculate the price of bonds based on market rates.", "url": "/tools/basic-interest-rates-analysis/bond-pricing"},
-            {"title": "Determining Zero Rates", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rates-analysis/determining-zero-rates"},
             {"title": "Duration and Convexity", "description": "Compute Macaulay, Modified Duration for bonds & Convexity.", "url": "/tools/basic-interest-rates-analysis/duration-and-convexity"},
         ],
     },
@@ -22,7 +21,8 @@ INTEREST_RATES_TOOL_CATEGORIES = {
         "description": "Construct term structures of interest rates using various market instruments.",
         "parent_category": "interest-rates",
         "tools": [
-            {"title": "Zero Rate Curve", "description": "Determine zero rates from market data.", "url": "/tools/term-structure-construction/zero-rate-curve"},
+            # {"title": "Zero Rate Curve", "description": "Determine zero rates from market data.", "url": "/tools/term-structure-construction/zero-rate-curve"},
+            {"title": "Determining Zero Rates & Zero-Curve", "description": "Compute zero rates from bond prices.", "url": "/tools/basic-interest-rates-analysis/determining-zero-rates"},
             {"title": "Extend LIBOR Curve with Swap Rates", "description": "Extend the LIBOR curve using swap rates.", "url": "/tools/term-structure-construction/extending-libor-curve-with-swap-rates"},
             {"title": "Extend Zero-Rate Curve with FRA", "description": "Extend the LIBOR curve using forward rate agreements (FRA).", "url": "/tools/term-structure-construction/extending-zero-curve-with-fra"},
         ],

@@ -11,7 +11,7 @@ interest_rate_fundamentals_routes = Blueprint("interest_rate_fundamentals_routes
 TOOL_FUNCTIONS = {
     "continuous-compounding-rate": continuous_compounding_rate,
     "m-to-continuous-compounding-rate": m_compounding_rate,
-    "zero-rate-curve": zero_rate_curve,
+    # "zero-rate-curve": zero_rate_curve,
     "bond-pricing": bond_pricing,
     "determining-zero-rates": determining_zero_rates,
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,
@@ -48,6 +48,7 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
             # Plotting the graphs if needed
             graphs_output = {}
             if tool_key in GRAPH_FUNCTIONS:
+                logger.warning('TOOL KEY IN GRAPH FUNCTIONS')
                 result_graph = extract_values(result)
                 graph_input = params | result_graph
                 logger.warning(f'graph inputs : {graph_input}')

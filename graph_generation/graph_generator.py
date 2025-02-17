@@ -164,3 +164,116 @@ def generate_zero_rates_vs_bond_prices(data):
     logger.info("Generated zero rates vs bond prices graph")
 
     return save_plot(fig, generate_unique_filename("zero_rates_vs_bond_prices"))
+
+def generate_duration_contribution_graph(data):
+    """
+    Génère un graphique montrant la contribution de chaque période à la duration en pourcentage.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "time_periods" : Liste des périodes (X-axis)
+      - "cash_flows" : Liste des cash flows correspondants
+      - "discount_rates" : Liste des taux d'actualisation
+
+    Retourne :
+    - Le chemin du fichier où le graphique est sauvegardé.
+    """
+    time_periods = np.array(data.get("time_periods", []))
+    cash_flows = np.array(data.get("cash_flows", []))
+    discount_rates = np.array(data.get("discount_rates", []))
+
+    if time_periods.size == 0 or cash_flows.size == 0 or discount_rates.size == 0:
+        raise ValueError("Missing time periods, cash flows, or discount rates")
+
+    # Calcul de la contribution à la duration
+    duration_contributions = (time_periods * cash_flows) / ((1 + discount_rates) ** time_periods)
+
+    # Conversion en pourcentage
+    total_duration_contribution = np.sum(duration_contributions)
+    duration_contributions_percent = (duration_contributions / total_duration_contribution) * 100
+
+    # Création du graphique
+    fig, ax = plt.subplots()
+    ax.bar(time_periods, duration_contributions_percent, color="blue", alpha=0.7)
+    ax.set_xlabel("Time Periods")
+    ax.set_ylabel("Contribution à la Duration (%)")
+    ax.set_title("Contribution relative de chaque période à la Duration")
+    ax.grid(axis="y")
+
+    return save_plot(fig, generate_unique_filename("duration_contribution_percent"))
+
+def generate_cash_flow_discounting_graph(data):
+    """
+    Génère un graphique montrant la valeur actualisée des cash flows dans le temps.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "time_periods" : Liste des périodes (X-axis)
+      - "cash_flows" : Liste des cash flows correspondants
+      - "discount_rates" : Liste des taux d'actualisation
+
+    Retourne :
+    - Le chemin du fichier où le graphique est sauvegardé.
+    """
+    time_periods = np.array(data.get("time_periods", []))
+    cash_flows = np.array(data.get("cash_flows", []))
+    discount_rates = np.array(data.get("discount_rates", []))
+
+    if time_periods.size == 0 or cash_flows.size == 0 or discount_rates.size == 0:
+        raise ValueError("Missing time periods, cash flows, or discount rates")
+
+    # Calcul de la valeur actualisée des cash flows
+    discounted_cash_flows = cash_flows / ((1 + discount_rates) ** time_periods)
+
+    # Création du graphique
+    fig, ax = plt.subplots()
+    ax.plot(time_periods, discounted_cash_flows, marker="o", linestyle="-", color="green", alpha=0.7, label="Discounted Cash Flows")
+    ax.set_xlabel("Time Periods")
+    ax.set_ylabel("Discounted Cash Flow Value")
+    ax.set_title("Valeur actualisée des Cash Flows")
+    ax.grid(True)
+    ax.legend()
+
+    return save_plot(fig, generate_unique_filename("cash_flow_discounting"))
+    
+
+def generate_extended_zero_rate_curve_graph_fixed(data):
+    """
+    Génère un graphique montrant la courbe des taux zéro avant et après extension avec les taux de swap.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "Maturity" : Liste des maturités disponibles (X-axis)
+      - "libor_rates" : Liste des taux zéro LIBOR correspondants
+      - "Interpolated Zero Rates" : Liste des taux zéro après extension
+
+    Retourne :
+    - Un objet `fig` matplotlib contenant le graphique (sans le sauvegarder).
+    """
+
+    try:
+        # Extraction des données
+        maturities = np.array(data.get("Maturity", []))
+        libor_rates = np.array(data.get("libor_rates", []))
+        extended_rates = np.array(data.get("Interpolated Zero Rates", []))
+
+        # Vérification de la présence des données nécessaires
+        if maturities.size == 0 or libor_rates.size == 0 or extended_rates.size == 0:
+            raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
+
+        # Création du graphique avec un design amélioré
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.plot(maturities, extended_rates, marker="s", linestyle="-", 
+                color="crimson", alpha=0.9, markersize=5, linewidth=2, label="Extended Zero Rates")
+
+        ax.set_xlabel("Maturity (Years)", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Zero Rates (%)", fontsize=12, fontweight="bold")
+        ax.set_title("Extended LIBOR Curve", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+        ax.set_facecolor("#f5f5f5")
+
+        return save_plot(fig, generate_unique_filename("extended_zero_curve_swap_rates"))
+
+    except Exception as e:
+        raise ValueError(f"Error generating extended zero rate curve graph: {e}")

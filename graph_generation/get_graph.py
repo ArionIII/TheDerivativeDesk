@@ -13,6 +13,13 @@ GRAPH_FUNCTIONS = {
         1: generate_zero_rates_curve,
         2: generate_zero_rates_vs_bond_prices,
     },
+    "duration-and-convexity": {
+        1:generate_duration_contribution_graph,
+        2:generate_cash_flow_discounting_graph,
+    },
+    "extending-libor-curve-with-swap-rates": {
+        1:generate_extended_zero_rate_curve_graph_fixed,
+    }
 }
 
 @app.route("/api/get-graph")
