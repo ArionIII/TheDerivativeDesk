@@ -11,7 +11,7 @@ interest_rate_fundamentals_routes = Blueprint("interest_rate_fundamentals_routes
 TOOL_FUNCTIONS = {
     "continuous-compounding-rate": continuous_compounding_rate,
     "m-to-continuous-compounding-rate": m_compounding_rate,
-    "zero-rate-curve": zero_rate_curve,
+    # "zero-rate-curve": zero_rate_curve,
     "bond-pricing": bond_pricing,
     "determining-zero-rates": determining_zero_rates,
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,

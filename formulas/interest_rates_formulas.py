@@ -192,42 +192,65 @@ def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m
 def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors, swap_tenors,
                                           day_count_convention="ACT/360",
                                           fixed_leg_frequency="Annual",
-                                          floating_leg_frequency="6M"):
+                                          floating_leg_frequency="6M",
+                                          output_path="static/outputs/interest-rates-and-fixed-income/"):
     """
-    Étend une courbe de taux LIBOR avec des taux de swap via bootstrapping simple.
+    Étend une courbe de taux LIBOR avec des taux de swap via bootstrapping simple et enregistre les résultats en CSV/XLSX.
     """
-    
-    # Convertir en numpy arrays pour faciliter les calculs
-    libor_tenors = np.array(libor_tenors, dtype=float)
-    swap_tenors = np.array(swap_tenors, dtype=float)
-    libor_rates = np.array(libor_rates, dtype=float)
-    swap_rates = np.array(swap_rates, dtype=float)
 
-    # Initialisation des taux zéro avec les taux LIBOR
-    known_maturities = np.concatenate((libor_tenors, swap_tenors))
-    zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(swap_rates)))  # Placeholder pour bootstrapping
+    try:
+        # Vérifier et créer le répertoire de sortie si nécessaire
+        os.makedirs(output_path, exist_ok=True)
 
-    # Bootstrapping sur les nouveaux points de swap
-    for i in range(len(swap_tenors)):
-        tenor = swap_tenors[i]
-        swap_rate = swap_rates[i]
+        # Convertir en numpy arrays pour faciliter les calculs
+        libor_tenors = np.array(libor_tenors, dtype=float)
+        swap_tenors = np.array(swap_tenors, dtype=float)
+        libor_rates = np.array(libor_rates, dtype=float)
+        swap_rates = np.array(swap_rates, dtype=float)
 
-        # Approximation du taux zéro par une interpolation linéaire des valeurs précédentes
-        if tenor in libor_tenors:
-            rate = libor_rates[np.where(libor_tenors == tenor)[0][0]]
-        else:
-            prev_tenor = known_maturities[i + len(libor_tenors) - 1]
-            prev_rate = zero_rate_curve[i + len(libor_tenors) - 1]
+        # Initialisation des taux zéro avec les taux LIBOR
+        known_maturities = np.concatenate((libor_tenors, swap_tenors))
+        zero_rate_curve = np.concatenate((libor_rates, np.zeros_like(swap_rates)))  # Placeholder pour bootstrapping
 
-            # Interpolation linéaire entre le dernier point connu et le swap actuel
-            rate = prev_rate + (swap_rate - prev_rate) * (tenor - prev_tenor) / (tenor - prev_tenor)
+        # Bootstrapping sur les nouveaux points de swap
+        for i in range(len(swap_tenors)):
+            tenor = swap_tenors[i]
+            swap_rate = swap_rates[i]
 
-        zero_rate_curve[i + len(libor_tenors)] = rate
+            # Approximation du taux zéro par une interpolation linéaire des valeurs précédentes
+            if tenor in libor_tenors:
+                rate = libor_rates[np.where(libor_tenors == tenor)[0][0]]
+            else:
+                prev_tenor = known_maturities[i + len(libor_tenors) - 1]
+                prev_rate = zero_rate_curve[i + len(libor_tenors) - 1]
 
-    # Trier les maturités et taux pour garantir une courbe ordonnée
-    extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
+                # Interpolation linéaire entre le dernier point connu et le swap actuel
+                rate = prev_rate + (swap_rate - prev_rate) * (tenor - prev_tenor) / (tenor - prev_tenor)
 
-    return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
+            zero_rate_curve[i + len(libor_tenors)] = rate
+
+        # Trier les maturités et taux pour garantir une courbe ordonnée
+        extended_curve = sorted(zip(known_maturities, zero_rate_curve), key=lambda x: x[0])
+
+        # Convertir en DataFrame pour l'export
+        df = pd.DataFrame(extended_curve, columns=["Maturity", "Extended Zero Rates"])
+
+        # Générer un nom de fichier unique
+        random_file_name = f"extended_zero_rates_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV (compatible Excel)
+        df.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        return csv_path, xlsx_path
+
+    except Exception as e:
+        raise ValueError(f"Error computing extended LIBOR curve: {e}")
+
 
 def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_tenors,
                                   day_count_convention="ACT/360"):

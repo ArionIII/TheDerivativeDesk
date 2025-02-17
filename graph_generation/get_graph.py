@@ -16,6 +16,10 @@ GRAPH_FUNCTIONS = {
     "duration-and-convexity": {
         1:generate_duration_contribution_graph,
         2:generate_cash_flow_discounting_graph,
+    },
+    "extending-libor-curve-with-swap-rates": {
+        1:generate_extended_zero_rate_curve_graph,
+        2:generate_zero_rate_difference_graph,
     }
 }
 
