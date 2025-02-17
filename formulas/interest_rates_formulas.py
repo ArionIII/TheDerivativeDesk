@@ -11,22 +11,22 @@ import random
 from scipy.interpolate import CubicSpline
 from scipy.optimize import fsolve
 
-def continuous_compounding_rate(rate_m, frequency_m):
-    logger.info(f"Calculating continuous compounding rate with rate_m: {rate_m} and frequency_m: {frequency_m}")
+def continuous_compounding_rate(rate, frequency):
+    logger.info(f"Calculating continuous compounding rate with rate_m: {rate} and frequency_m: {frequency}")
     try:
-        rate_c = frequency_m * (exp(rate_m / frequency_m) - 1)
-        return {"continuous_compounding_rate": ("Rate (Continuous Compounding) :", rate_c)}
+        rate_c = frequency * (exp(rate / frequency) - 1)
+        return {"compounding_rate": ("Rate (m-Compounding) :", rate_c)}
     except Exception as e:
         return {"error": str(e)}, 400
 
-def m_compounding_rate(rate_c, frequency_m):
-    logger.info(f"Calculating m-compounding rate with rate_c: {rate_c} and frequency_m: {frequency_m}")
+def m_compounding_rate(rate, frequency):
+    logger.info(f"Calculating m-compounding rate with rate_c: {rate} and frequency_m: {frequency}")
     """
     Convert a continuous compounding rate to m-compounding rate.
     """
     try:
-        rate_m = frequency_m * np.log(1 + rate_c / frequency_m)
-        return {"m_compounding_rate": ("Rate (m-Compounding) :", rate_m)}
+        rate_m = frequency * np.log(1 + rate / frequency)
+        return {"compounding_rate": ("Rate (Continuous-Compounding) :", rate_m)}
     except Exception as e:
         return {"error": str(e)}, 400
 

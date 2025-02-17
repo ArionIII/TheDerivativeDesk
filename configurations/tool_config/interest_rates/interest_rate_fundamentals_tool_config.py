@@ -4,8 +4,8 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
         "description": "Convert m-compounding rate to continuous compounding rate.",
         "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate",
         "inputs": [
-            {"label": "Rate (m-compounding)", "id": "rate_m", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
-            {"label": "Compounding Frequency (m)", "id": "frequency_m", "type": "number", "placeholder": "e.g., 4", "optional": False},
+            {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
+            {"label": "Compounding Frequency ", "id": "frequency", "type": "number", "placeholder": "e.g., 4", "optional": False},
         ],
         "outputs": ["Rate (Continuous Compounding)"],
     },
@@ -14,8 +14,8 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "description": "Convert continuous compounding rate to m-compounding rate.",
     "url": "/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate",
     "inputs": [
-        {"label": "Rate (Continuous Compounding)", "id": "rate_c", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
-        {"label": "Compounding Frequency (m)", "id": "frequency_m", "type": "number", "placeholder": "e.g., 4", "optional": False},
+        {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
+        {"label": "Compounding Frequency", "id": "frequency", "type": "number", "placeholder": "e.g., 4", "optional": False},
     ],
     "outputs": ["Rate (m-Compounding)"],
 },
