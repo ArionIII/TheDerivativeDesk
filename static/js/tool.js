@@ -1,3 +1,4 @@
+console.log('TOOL.JS LOADED')
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("tool-form");
     const results = document.getElementById("results");
@@ -81,12 +82,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("Graphs:", graphs);
                 insertGraphs(graphs);
             }
-
+            console.log('JUST BEFORE DOWNLOAD FILES')
             if (isAllFiles(resultData)) {
+                console.log('IS ALL FILES TRUE')
                 results.innerHTML = `<p class="success">Your files were successfully downloaded.</p>`;
                 downloadFiles(resultData);
                 console.log("Files:", resultData);
             } else {
+                console.log('IS ALL FILES FALSE')
                 results.innerHTML = formatResultData(resultData);
                 console.log("Results:", resultData);
             }
@@ -184,20 +187,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Handle download button click
+    // IS ALL FILES est TRUE si tous les éléments de l'objet sont des fichiers valides, ET NE PREND PAS EN COMPTE LES LIENS VERS GRAPHS
     function isAllFiles(data) {
-        const filePaths = Object.values(data).filter(value => typeof value === "string");
+        console.log("DATA", data);
+        
+        if (typeof data !== "object" || data === null) {
+            return false; // Si data n'est pas un objet ou est null, ce n'est pas un fichier
+        }
     
-        return filePaths.length > 0 && filePaths.every(value => value.startsWith("static/outputs/"));
+        const values = Object.values(data);
+    
+        // Vérifier si tous les éléments sont des fichiers valides (dans "static/outputs/" ou "/static/graphs/")
+        const allFilePaths = values.every(value => 
+            (typeof value === "string" && 
+                (value.startsWith("static/outputs/") || value.startsWith("/static/graphs/")) // ✅ Accepter aussi les .png
+            ) ||
+            (typeof value === "object" && value !== null && isAllFiles(value)) // Vérifier récursivement pour les dictionnaires imbriqués
+        );
+    
+        return values.length > 0 && allFilePaths;
     }
     
     
-
+    
+    
+    
+// NE DOWNLOAD PAS LES PNG, POUR NE PAS DOWNLOAD LES GRAPHS (inutile)
     function downloadFiles(files) {
         Object.values(files).forEach(fileUrl => {
-            const fullUrl = window.location.origin + "/" + fileUrl.replace(/^\/+/, "");  // Supprime les "/" en trop
+            // Vérifier si le fichier est une image .png et l'ignorer
+            if (fileUrl.endsWith(".png")) {
+                console.log("Skipping download for image:", fileUrl);
+                return; // Ignore ce fichier et passe au suivant
+            }
+    
+            // Construire l'URL complet en supprimant les "/" en trop
+            const fullUrl = window.location.origin + "/" + fileUrl.replace(/^\/+/, "");  
     
             console.log("Downloading file:", fullUrl);
     
+            // Créer un élément <a> pour déclencher le téléchargement
             const link = document.createElement("a");
             link.href = fullUrl;
             link.download = fileUrl.split("/").pop(); // Extraire uniquement le nom du fichier
@@ -206,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.removeChild(link);
         });
     }
+    
     
 
     // Validate form inputs

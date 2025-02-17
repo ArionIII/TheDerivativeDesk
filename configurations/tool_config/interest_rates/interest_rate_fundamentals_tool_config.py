@@ -86,7 +86,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "type": "file", 
             "accept": ".csv", 
             "data_target": "bond_prices", 
-            "template": "/static/templates/bond_prices_template.csv", 
+            "template": "/static/templates/bond_prices_cloche.csv", 
             "optional": True
         },
         {
@@ -101,7 +101,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "type": "file", 
             "accept": ".csv", 
             "data_target": "face_values", 
-            "template": "/static/templates/face_values_template.csv", 
+            "template": "/static/templates/face_values_cloche.csv", 
             "optional": True
         },
         {
@@ -116,7 +116,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "type": "file", 
             "accept": ".csv", 
             "data_target": "maturities", 
-            "template": "/static/templates/maturities_template.csv", 
+            "template": "/static/templates/maturities_cloche.csv", 
             "optional": True
         },
         {
@@ -131,7 +131,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "type": "file", 
             "accept": ".csv", 
             "data_target": "coupon_rates", 
-            "template": "/static/templates/coupon_rates_template.csv", 
+            "template": "/static/templates/coupon_rates_cloche.csv", 
             "optional": True
         },
         {
@@ -146,7 +146,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "type": "file", 
             "accept": ".csv", 
             "data_target": "m_compoundings", 
-            "template": "/static/templates/m_compoundings_template.csv", 
+            "template": "/static/templates/m_compoundings_cloche.csv", 
             "optional": True
         }
     ],
@@ -160,7 +160,6 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     ],
     "outputs": ["CSV File with Zero Rates"],
     "note" : """
-You will automatically download a CSV file AND an XLSX file with the zero rates computed from the input series.  
 To ensure accurate computations, the input data must satisfy the following conditions:
 
 1. **All input lists must be complete and well-formatted**  
