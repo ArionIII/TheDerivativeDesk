@@ -320,7 +320,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
     "duration-and-convexity": {
     "title": "Duration and Convexity",
     "description": "Calculate the duration and convexity of a bond.",
-    "url": "/tools/basic-interest-rate-analysis/duration-and-convexity",
+    "url": "/tools/basic-interest-rates-analysis/duration-and-convexity",
     "inputs": [
         {
             "label": "Bond Cash Flows (comma-separated)", 
@@ -369,6 +369,14 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "data_target": "time_periods",
             "template": "/static/templates/duration_time_periods.csv", 
 
+        }
+    ],
+    "graphs":[
+        {
+            "name": "Duration Contribution (%)"
+        },
+        {
+            "name": "Cash Flow Discounting"
         }
     ],
     "outputs": ["Duration", "Convexity"]

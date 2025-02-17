@@ -229,9 +229,6 @@ def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors,
 
     return {"extended_zero_rate_curve_fra": ("Extended Zero Rate Curve FRA :", extended_curve)}
 
-
-import numpy as np
-
 def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_tenors,
                                   day_count_convention="ACT/360"):
     """
@@ -277,17 +274,26 @@ def payoff_of_fra(contract_rate, settlement_rate, notional_value, time):
 
 def duration_and_convexity(cash_flows, discount_rates, time_periods):
     try:
-        durations = [
-            (t * cf) / ((1 + r) ** t) for t, cf, r in zip(time_periods, cash_flows, discount_rates)
-        ]
-        convexities = [
-            (t * (t + 1) * cf) / ((1 + r) ** (t + 2)) for t, cf, r in zip(time_periods, cash_flows, discount_rates)
-        ]
-        duration = sum(durations)
-        convexity = sum(convexities)
-        return {"duration_and_convexity": ("Duration & Convexity :", f"Duration: {duration} || Convexity: {convexity}")}
+        # Actualisation des cash flows
+        pv_cash_flows = [cf / ((1 + r) ** t) for cf, r, t in zip(cash_flows, discount_rates, time_periods)]
+        pv_total = sum(pv_cash_flows)  # Valeur actuelle totale de l'obligation
+
+        # Calcul de la duration pondérée
+        durations = [(t * cf) / ((1 + r) ** t) for t, cf, r in zip(time_periods, cash_flows, discount_rates)]
+        duration = np.round(sum(durations) / pv_total, 3)  # Normalisation par la valeur actuelle
+
+        # Calcul de la convexité pondérée
+        convexities = [(t * (t + 1) * cf) / ((1 + r) ** (t + 2)) for t, cf, r in zip(time_periods, cash_flows, discount_rates)]
+        convexity = np.round(sum(convexities) / pv_total, 3)  # Normalisation par la valeur actuelle
+
+        return {
+    "duration": ("Duration :", str(duration)),
+    "convexity": ("Convexity :", str(convexity))
+}
+
     except Exception as e:
         return {"error": str(e)}, 400
+
 
 
 def calculate_payoff_of_fra(contract_rate, settlement_rate, notional_value, time):

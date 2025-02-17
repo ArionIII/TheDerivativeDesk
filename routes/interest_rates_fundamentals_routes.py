@@ -48,6 +48,7 @@ def handle_interest_rate_tool_request(tool_key, sub_category_key):
             # Plotting the graphs if needed
             graphs_output = {}
             if tool_key in GRAPH_FUNCTIONS:
+                logger.warning('TOOL KEY IN GRAPH FUNCTIONS')
                 result_graph = extract_values(result)
                 graph_input = params | result_graph
                 logger.warning(f'graph inputs : {graph_input}')

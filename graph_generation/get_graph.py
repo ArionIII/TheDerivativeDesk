@@ -13,6 +13,10 @@ GRAPH_FUNCTIONS = {
         1: generate_zero_rates_curve,
         2: generate_zero_rates_vs_bond_prices,
     },
+    "duration-and-convexity": {
+        1:generate_duration_contribution_graph,
+        2:generate_cash_flow_discounting_graph,
+    }
 }
 
 @app.route("/api/get-graph")
