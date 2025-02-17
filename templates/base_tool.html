@@ -15,11 +15,12 @@
 <main>
     <!-- Note Section -->
     {% if tool.note %}
-    <section class="note-section">
-        <h3>Additional Information</h3>
-        <p>{{ tool.note }}</p>
-    </section>
+        <section class="note-section">
+            <h3>Additional Information</h3>
+            <p>{{ tool.note | safe }}</p>
+        </section>
     {% endif %}
+
     
     <!-- Input Section -->
     <section class="input-section">
@@ -121,7 +122,7 @@
     <section class="actions-section">
         <h2>Stocks</h2>
         <div class="search-bar">
-            <input type="text" id="search-action" placeholder="Search for actions..." />
+            <input type="text" id="search-action" placeholder="Search for companies / tickers..." />
             <button id="search-btn">Search</button>
             <div id="suggestions" class="suggestions hidden"></div>
         </div>

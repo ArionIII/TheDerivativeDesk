@@ -260,3 +260,79 @@
     flex-grow: 1; /* Permet au texte de rester centré */
     text-align: center; /* Centre le texte */
 }
+
+/* Latest tools section */
+/* Section principale */
+.latest-tools {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0;
+}
+
+/* Titre */
+.latest-tools h3 {
+    font-size: 26px;
+    color: var(--dark-gray);
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Grille des outils */
+.latest-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0;
+}
+
+/* Cartes des outils (sans bordure, affichage intégré) */
+.latest-tool-item {
+    display: block;
+    padding: 15px;
+    color: var(--dark-gray);
+    text-decoration: none;
+    background: none;
+    border-left: 4px solid var(--primary-color); /* Barre latérale orange classe */
+    transition: background 0.2s ease-in-out;
+}
+
+/* Effet au survol */
+.latest-tool-item:hover {
+    background: var(--primary-color-hover);
+    color: white;
+    border-left: 4px solid var(--primary-color-hover);
+}
+
+/* Titres des outils */
+.latest-tool-item h4 {
+    font-size: 20px;
+    margin: 0 0 8px;
+    color: var(--primary-color);
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Texte de description */
+.latest-tool-item p {
+    font-size: 14px;
+    color: var(--dark-gray);
+    margin: 0;
+}
+
+/* Effet au survol sur le titre */
+.latest-tool-item:hover h4 {
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .latest-tools h3 {
+        font-size: 22px;
+    }
+    
+    .latest-tools-grid {
+        grid-template-columns: 1fr;
+    }
+}

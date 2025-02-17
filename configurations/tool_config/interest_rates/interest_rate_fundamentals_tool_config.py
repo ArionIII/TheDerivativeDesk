@@ -1,6 +1,6 @@
 INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "continuous-compounding-rate": {
-        "title": "Continuous Compounding Rate",
+        "title": "m-Compounding to Continuous Compounding Rate",
         "description": "Convert m-compounding rate to continuous compounding rate.",
         "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate",
         "inputs": [
@@ -71,34 +71,112 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     },
     "determining-zero-rates": {
     "title": "Determining Zero Rates",
-    "description": "Calculate zero rates from coupon bond prices.",
+    "description": "Calculate zero rates from coupon bond prices and coupon rates.",
     "url": "/tools/term-structure-construction/zero-rate-curve",
     "inputs": [
         {
             "label": "Bond Prices (comma-separated)", 
             "id": "bond_prices", 
             "type": "array", 
-            "placeholder": "e.g., [980, 970, 960]", 
-            "optional": False
+            "placeholder": "e.g., [980, 970, 960]"
+        },
+        {
+            "label": "Upload Bond Prices (CSV)", 
+            "id": "file_bond_prices", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "bond_prices", 
+            "template": "/static/templates/bond_prices_cloche.csv", 
+            "optional": True
         },
         {
             "label": "Face Values (comma-separated)", 
             "id": "face_values", 
             "type": "array", 
-            "placeholder": "e.g., [1000, 1000, 1000]", 
-            "optional": False
+            "placeholder": "e.g., [1000, 1000, 1000]"
+        },
+        {
+            "label": "Upload Face Values (CSV)", 
+            "id": "file_face_values", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "face_values", 
+            "template": "/static/templates/face_values_cloche.csv", 
+            "optional": True
         },
         {
             "label": "Maturities (Years)", 
             "id": "maturities", 
             "type": "array", 
-            "placeholder": "e.g., [1, 2, 3]", 
-            "optional": False
+            "placeholder": "e.g., [1, 2, 3]"
         },
-
+        {
+            "label": "Upload Maturities (CSV)", 
+            "id": "file_maturities", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "maturities", 
+            "template": "/static/templates/maturities_cloche.csv", 
+            "optional": True
+        },
+        {
+            "label": "Coupon Rates (comma-separated, in decimal form)", 
+            "id": "coupon_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.05, 0.04, 0.03]"
+        },
+        {
+            "label": "Upload Coupon Rates (CSV)", 
+            "id": "file_coupon_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "coupon_rates", 
+            "template": "/static/templates/coupon_rates_cloche.csv", 
+            "optional": True
+        },
+        {
+            "label": "Compounding Frequency per Year (comma-separated)", 
+            "id": "m_compoundings", 
+            "type": "array", 
+            "placeholder": "e.g., [2, 4, 1] (Semi-Annual, Quarterly, Annual)"
+        },
+        {
+            "label": "Upload Compounding Frequencies (CSV)", 
+            "id": "file_m_compoundings", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "m_compoundings", 
+            "template": "/static/templates/m_compoundings_cloche.csv", 
+            "optional": True
+        }
     ],
-    "outputs": ["Zero Rates"]
+     "graphs": [
+        {
+            "name": "Zero Rates Curve",
+        },
+        {
+            "name": "Zero Rates vs Bond Prices",
+        }
+    ],
+    "outputs": ["CSV File with Zero Rates"],
+    "note" : """
+To ensure accurate computations, the input data must satisfy the following conditions:
+
+1. **All input lists must be complete and well-formatted**  
+    Each list must have the **same length**.  
+
+2. **The first bond should ideally be a zero-coupon bond**  
+   Bootstrapping works best when the shortest-maturity bond is zero-coupon, ensuring a reliable starting point.  
+
+3. **Maturities should align with coupon payment schedules**  
+   Each maturity \( T \) should be a **multiple of \( 1/m \)** (where \( m \) is the compounding frequency).  
+   Example: If coupons are paid **semi-annually** (\( m=2 \)), maturities must be at intervals like 0.5, 1.0, 1.5, 2.0, etc.
+
+If these conditions are not met, the zero rates calculation may fail or produce inaccurate results.
+"""
+
 },
+
     "extending-libor-curve-with-swap-rates": {
         "title": "Extend LIBOR Curve with Swap Rates",
         "description": "Use swap rates to extend the LIBOR curve.",
