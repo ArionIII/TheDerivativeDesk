@@ -252,9 +252,6 @@ If these conditions are not met, the zero rates calculation may fail or produce 
         {
             "name": "Extended Zero Curve",
         },
-        {
-            'name': 'Difference between LIBOR & LIBOR extended rates'
-        }
     ]
 },
     "extending-zero-curve-with-fra": {

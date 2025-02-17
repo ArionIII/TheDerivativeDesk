@@ -235,8 +235,9 @@ def generate_cash_flow_discounting_graph(data):
     ax.legend()
 
     return save_plot(fig, generate_unique_filename("cash_flow_discounting"))
+    
 
-def generate_extended_zero_rate_curve_graph_fixed(data, output_path="static/outputs/interest-rates-and-fixed-income/"):
+def generate_extended_zero_rate_curve_graph_fixed(data):
     """
     Génère un graphique montrant la courbe des taux zéro avant et après extension avec les taux de swap.
 
@@ -244,16 +245,13 @@ def generate_extended_zero_rate_curve_graph_fixed(data, output_path="static/outp
     - data : Dictionnaire contenant les inputs nécessaires :
       - "Maturity" : Liste des maturités disponibles (X-axis)
       - "libor_rates" : Liste des taux zéro LIBOR correspondants
-      - "Extended Zero Rates" : Liste des taux zéro après extension
+      - "Interpolated Zero Rates" : Liste des taux zéro après extension
 
     Retourne :
-    - Le chemin du fichier où le graphique est sauvegardé.
+    - Un objet `fig` matplotlib contenant le graphique (sans le sauvegarder).
     """
 
     try:
-        # Vérifier et créer le répertoire de sortie si nécessaire
-        os.makedirs(output_path, exist_ok=True)
-
         # Extraction des données
         maturities = np.array(data.get("Maturity", []))
         libor_rates = np.array(data.get("libor_rates", []))
@@ -263,66 +261,19 @@ def generate_extended_zero_rate_curve_graph_fixed(data, output_path="static/outp
         if maturities.size == 0 or libor_rates.size == 0 or extended_rates.size == 0:
             raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
 
-        # Création du graphique
-        fig, ax = plt.subplots()
-        ax.plot(maturities[:len(libor_rates)], libor_rates, marker="o", linestyle="--", color="blue", alpha=0.7, label="LIBOR Zero Rates")
-        ax.plot(maturities, extended_rates, marker="s", linestyle="-", color="red", alpha=0.9, label="Extended Zero Rates")
-        
-        ax.set_xlabel("Maturity (Years)")
-        ax.set_ylabel("Zero Rates (%)")
-        ax.set_title("Extended LIBOR Curve")
-        ax.grid(True)
-        ax.legend()
+        # Création du graphique avec un design amélioré
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.plot(maturities, extended_rates, marker="s", linestyle="-", 
+                color="crimson", alpha=0.9, markersize=5, linewidth=2, label="Extended Zero Rates")
 
-        return save_plot(fig, generate_unique_filename("extended_zero_rate_curve"))
+        ax.set_xlabel("Maturity (Years)", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Zero Rates (%)", fontsize=12, fontweight="bold")
+        ax.set_title("Extended LIBOR Curve", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+        ax.set_facecolor("#f5f5f5")
+
+        return save_plot(fig, generate_unique_filename("extended_zero_curve_swap_rates"))
 
     except Exception as e:
         raise ValueError(f"Error generating extended zero rate curve graph: {e}")
-
-def generate_libor_comparison_bar_chart_fixed(data, output_path="static/outputs/interest-rates-and-fixed-income/"):
-    """
-    Génère un bar chart comparant les taux LIBOR initiaux et les taux étendus après extension.
-
-    Paramètres :
-    - data : Dictionnaire contenant les inputs nécessaires :
-      - "Maturity" : Liste des maturités disponibles (X-axis)
-      - "libor_rates" : Liste des taux zéro LIBOR correspondants
-      - "Extended Zero Rates" : Liste des taux zéro après extension
-
-    Retourne :
-    - Le chemin du fichier où le graphique est sauvegardé.
-    """
-
-    try:
-        # Vérifier et créer le répertoire de sortie si nécessaire
-        os.makedirs(output_path, exist_ok=True)
-
-        # Extraction des données
-        maturities = np.array(data.get("Maturity", []))
-        libor_rates = np.array(data.get("libor_rates", []))
-        extended_rates = np.array(data.get("Interpolated Zero Rates", []))
-
-        # Vérification de la présence des données nécessaires
-        if maturities.size == 0 or libor_rates.size == 0 or extended_rates.size == 0:
-            raise ValueError("Missing maturities, LIBOR rates, or extended zero rates")
-
-        # Filtrer les taux étendus pour ne garder que ceux correspondant aux maturités LIBOR
-        libor_maturities = maturities[:len(libor_rates)]
-        extended_rates_filtered = extended_rates[:len(libor_rates)]
-
-        # Calcul de la différence entre les taux
-        rate_differences = extended_rates_filtered - libor_rates
-
-        # Création du graphique
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.bar(libor_maturities, rate_differences, color="purple", alpha=0.7)
-
-        ax.set_xlabel("Maturity (Years)")
-        ax.set_ylabel("Difference in Zero Rates (%)")
-        ax.set_title("Difference Between LIBOR and Extended Zero Rates")
-        ax.grid(axis="y", linestyle="--", alpha=0.6)
-
-        return save_plot(fig, generate_unique_filename("libor_vs_extended_difference"))
-
-    except Exception as e:
-        raise ValueError(f"Error generating LIBOR comparison bar chart: {e}")
