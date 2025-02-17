@@ -16,7 +16,6 @@ TOOL_FUNCTIONS = {
     "determining-zero-rates": determining_zero_rates,
     "extending-libor-curve-with-swap-rates": extending_libor_curve_with_swap_rates,
     "extending-zero-curve-with-fra": extending_zero_curve_with_fra,
-    "payoff-of-fra": payoff_of_fra,
     "duration-and-convexity": duration_and_convexity,
 }
 

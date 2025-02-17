@@ -22,6 +22,14 @@ GRAPH_FUNCTIONS = {
     },
     "extending-zero-curve-with-fra": {
         1:generate_extended_zero_rate_curve_graph_fra,
+    },
+    "payoff-of-fra": {
+        1:generate_fra_payoff_evolution_graph,
+        2:generate_fra_fixed_vs_floating_rates_graph,
+    },
+    "forward-rate-calculation": {
+        1:generate_forward_rate_curve,
+        2:generate_spot_vs_forward_comparison,
     }
 }
 

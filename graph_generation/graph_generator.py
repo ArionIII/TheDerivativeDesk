@@ -326,3 +326,132 @@ def generate_extended_zero_rate_curve_graph_fra(data):
 
     except Exception as e:
         raise ValueError(f"Error generating extended zero rate curve graph with FRA: {e}")
+    
+
+def generate_fra_payoff_evolution_graph(data):
+    """
+    Génère un graphique montrant l'évolution du payoff du FRA sur plusieurs périodes.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "settlement_rates" : Liste des taux flottants observés.
+      - "contract_rate" : Taux contractuel fixe.
+      - "notional_value" : Valeur notionnelle du FRA.
+      - "interval_between_payments" : Durée d'une période en années.
+
+    Retourne :
+    - Un objet `fig` matplotlib contenant le graphique (sans le sauvegarder).
+    """
+
+    try:
+        # Extraction des données
+        settlement_rates = np.array(data.get("settlement_rates", []))
+        contract_rate = data.get("contract_rate", 0.0)
+        notional_value = data.get("notional_value", 1_000_000)  # Par défaut 1 million
+        interval = data.get("interval_between_payments", 0.5)  # Par défaut 6 mois
+
+        # Vérification de la présence des données nécessaires
+        if settlement_rates.size == 0:
+            raise ValueError("Missing settlement rates")
+
+        # Calcul des payoffs pour chaque période
+        payoff_per_period = notional_value * (settlement_rates - contract_rate) * interval / (1 + settlement_rates * interval)
+        periods = np.arange(1, len(settlement_rates) + 1)
+
+        # Création du graphique
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.plot(periods, payoff_per_period, marker="o", linestyle="-", color="green", markersize=6, linewidth=2, label="FRA Payoff per Period")
+
+        ax.axhline(0, color="black", linestyle="--", linewidth=1.2)  # Ligne horizontale zéro
+
+        ax.set_xlabel("Periods", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Payoff (€)", fontsize=12, fontweight="bold")
+        ax.set_title("Evolution of FRA Payoff Over Time", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+        ax.set_facecolor("#f5f5f5")
+
+        return save_plot(fig, generate_unique_filename("fra_payoff_evolution"))
+
+    except Exception as e:
+        raise ValueError(f"Error generating FRA payoff evolution graph: {e}")
+
+
+def generate_fra_fixed_vs_floating_rates_graph(data):
+    """
+    Génère un graphique comparant le taux contractuel fixe et les taux flottants sur plusieurs périodes.
+
+    Paramètres :
+    - data : Dictionnaire contenant les inputs nécessaires :
+      - "settlement_rates" : Liste des taux flottants observés.
+      - "contract_rate" : Taux contractuel fixe.
+
+    Retourne :
+    - Un objet `fig` matplotlib contenant le graphique (sans le sauvegarder).
+    """
+
+    try:
+        # Extraction des données
+        settlement_rates = np.array(data.get("settlement_rates", []))
+        contract_rate = data.get("contract_rate", 0.0)
+
+        # Vérification de la présence des données nécessaires
+        if settlement_rates.size == 0:
+            raise ValueError("Missing settlement rates")
+
+        # Création de l'axe des périodes
+        periods = np.arange(1, len(settlement_rates) + 1)
+
+        # Création du graphique
+        fig, ax = plt.subplots(figsize=(9, 6))
+        ax.plot(periods, settlement_rates, marker="o", linestyle="-", color="red", markersize=6, linewidth=2, label="Floating Rates (Market)")
+        ax.axhline(contract_rate, color="blue", linestyle="--", linewidth=2, label="Fixed Contract Rate")
+
+        ax.set_xlabel("Periods", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Interest Rates (%)", fontsize=12, fontweight="bold")
+        ax.set_title("Comparison of Fixed vs Floating Rates", fontsize=14, fontweight="bold", color="darkblue")
+        ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+        ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+        ax.set_facecolor("#f5f5f5")
+
+        return save_plot(fig, generate_unique_filename("fra_fixed_vs_floating_rates"))
+
+    except Exception as e:
+        raise ValueError(f"Error generating FRA fixed vs floating rates graph: {e}")
+
+def generate_forward_rate_curve(data):
+    logger.warning(data)
+    maturities = np.array(data.get("maturities", []))
+    #TODO
+    forward_rates = np.array(data.get("Forward Rate", []))
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.plot(maturities[1:], forward_rates, marker="o", linestyle="-", color="blue", markersize=6, linewidth=2, label="Forward Rate Curve")
+
+    ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Forward Rate", fontsize=12, fontweight="bold")
+    ax.set_title("Forward Rate Curve", fontsize=14, fontweight="bold", color="darkblue")
+    ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+    ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+    ax.set_facecolor("#f5f5f5")
+
+    return save_plot(fig, generate_unique_filename("forward_rate_curve"))
+
+# Function to generate spot vs forward rate comparison plot
+def generate_spot_vs_forward_comparison(data):
+    maturities = np.array(data.get("maturities", []))
+    #TODO
+    forward_rates = np.array(data.get("Forward Rate", []))
+    spot_rates = np.array(data.get("spot_rates", []))
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.plot(maturities, spot_rates, marker="o", linestyle="-", color="red", markersize=6, linewidth=2, label="Spot Rates")
+    ax.plot(maturities[1:], forward_rates, marker="s", linestyle="--", color="blue", markersize=6, linewidth=2, label="Forward Rates")
+
+    ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Rate", fontsize=12, fontweight="bold")
+    ax.set_title("Spot Rates vs Forward Rates", fontsize=14, fontweight="bold", color="darkblue")
+    ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
+    ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
+    ax.set_facecolor("#f5f5f5")
+
+    return save_plot(fig, generate_unique_filename("forward_rate_vs_spot_rate_curve"))
+

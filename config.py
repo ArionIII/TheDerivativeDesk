@@ -231,6 +231,7 @@ def extract_values(results):
 
     # Cas où results est un tuple contenant des chemins de fichiers
     if isinstance(results, tuple):
+        logger.error(results)
         csv_path = None
         
         # Trouver le fichier CSV dans le tuple

@@ -10,8 +10,8 @@ interest_rate_derivatives_routes = Blueprint("interest_rate_derivatives_routes",
 # Tool Functions
 NEW_TOOL_FUNCTIONS = {
     "payoff-of-fra": payoff_of_fra,
-    "calculate-valuation-of-fra": calculate_valuation_of_fra,
-    "forward-rate-calculation": calculate_forward_rate,
+    "valuation-of-fra": calculate_valuation_of_fra,
+    "forward-rate-calculation": calculate_forward_rate_curve,
     "fra-break-even-rate": calculate_fra_break_even_rate,
     "calculate-interest-rate-swap-cash-flows": calculate_interest_rate_swap_cash_flows,
     "calculate-interest-rate-swap-valuation": calculate_interest_rate_swap_valuation,
@@ -50,6 +50,8 @@ def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
 
             # Initialize the final result dictionary
             final_result = result
+            logger.info('final result')
+            logger.info(final_result)
 
             # Plotting the graphs if needed
             graphs_output = {}

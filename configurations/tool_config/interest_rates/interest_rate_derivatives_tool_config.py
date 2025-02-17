@@ -44,34 +44,113 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         }
     ],
     "note": "The payoff is the net difference between Floating Leg & Fixed Leg. It is the payoff for the buyer of the FRA (aka the fix-leg payer / floating-leg receiver)",
-    "outputs": ["Total FRA Payoff"]
-},
+    "outputs": ["Total FRA Payoff"],
+    "graphs":[
+        {
+            "name" : "Payoff Evolution"
+        },
+        {
+            "name" : "Fixed Leg vs Floating Leg"
+        }
+    ]
+},  
     # Valuation of FRA
     "valuation-of-fra": {
         "title": "Valuation of FRA",
         "description": "Evaluate the value of a forward rate agreement using discount factors and market forward rates.",
         "url": "/tools/forward-rate-agreements/valuation-of-fra",
         "inputs": [
-            {"label": "Forward Rate", "id": "forward_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-            {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Discount Factor", "id": "discount_factor", "type": "number", "placeholder": "e.g., 0.95", "optional": False},
-        ],
+        {
+            "label": "Contract Rate", 
+            "id": "contract_rate", 
+            "type": "number", 
+            "placeholder": "e.g., 0.02", 
+            "optional": False
+        },
+        {
+            "label": "Forward Rates (comma-separated)", 
+            "id": "forward_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "optional": False
+        },
+        {
+            "label": "Forward Rates (CSV)", 
+            "id": "file_forward_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "forward_rates", 
+            "template": "/static/templates/settlement_rates.csv", 
+            "optional": True
+        },
+        {
+            "label": "Notional Value", 
+            "id": "notional_value", 
+            "type": "number", 
+            "placeholder": "e.g., 1000000", 
+            "optional": False
+        },
+        {
+            "label": "Interval Between Payments (Years)", 
+            "id": "interval_between_payments", 
+            "type": "number", 
+            "placeholder": "e.g., 0.5", 
+            "optional": False
+        }
+    ],
+        "note": "You can calculate the forward rate curve with the 'Forward Rate Calculation' tool",
         "outputs": ["FRA Valuation"],
     },
     # Forward Rate Calculation
     "forward-rate-calculation": {
-        "title": "Forward Rate Calculation",
-        "description": "Calculate forward rates from spot rates or zero rates.",
-        "url": "/tools/forward-rate-agreements/forward-rate-calculation",
-        "inputs": [
-            {"label": "Spot Rate 1", "id": "spot_rate_1", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-            {"label": "Spot Rate 2", "id": "spot_rate_2", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Time Period 1 (Years)", "id": "time_period_1", "type": "number", "placeholder": "e.g., 1", "optional": False},
-            {"label": "Time Period 2 (Years)", "id": "time_period_2", "type": "number", "placeholder": "e.g., 2", "optional": False},
-        ],
-        "outputs": ["Forward Rate"],
-    },
+    "title": "Forward Rate Calculation",
+    "description": "Calculate the forward curve from spot rates (zero rates).",
+    "url": "/tools/forward-rate-agreements/forward-rate-calculation",
+    "inputs": [
+        {
+            "label": "Spot Rates (comma-separated)", 
+            "id": "spot_rates", 
+            "type": "array", 
+            "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+            "optional": False
+        },
+        {
+            "label": "Maturities (Years)", 
+            "id": "maturities", 
+            "type": "array", 
+            "placeholder": "e.g., [1, 2, 3]", 
+            "optional": False
+        },
+        {
+            "label": "Upload Spot Rate Data (CSV)", 
+            "id": "file_spot_rates", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "spot_rates",
+            "template": "/static/templates/spot_rates_forward_rates.csv", 
+            "optional": True
+        },
+        {
+            "label": "Upload Maturity Data (CSV)", 
+            "id": "file_maturities", 
+            "type": "file", 
+            "accept": ".csv", 
+            "data_target": "maturities",
+            "template": "/static/templates/maturities_forward_rates.csv", 
+            "optional": True
+        }
+    ],
+    "graphs":[
+        {
+            "name": "Forward Rates Curve"
+        },
+        {
+            "name": "Forward Rates vs Spot Rates"
+        }
+    ],
+    "outputs": ["Forward Rate Curve CSV & XLSX files"],
+},
+
     # FRA Break-Even Rate
     "fra-break-even-rate": {
         "title": "FRA Break-Even Rate",

@@ -376,32 +376,125 @@ def payoff_of_fra(contract_rate, settlement_rates, notional_value, interval_betw
         total_payoff = 0
 
         # Boucle sur chaque période pour calculer le payoff
+        logger.warning(settlement_rates)
+        logger.warning(contract_rate)
+        logger.warning(notional_value)
+        logger.warning(interval_between_payments)
+        
+        # Vérification et conversion en un tableau numpy bien formaté
+        logger.warning(type(settlement_rates))
+        logger.warning(type(contract_rate))
+        logger.warning(type(notional_value))
+        logger.warning(type(interval_between_payments))
         for R_s in settlement_rates:
+            logger.warning(R_s)
+            logger.warning(type(R_s))
             payoff = notional_value * (R_s - contract_rate) * interval_between_payments / (1 + R_s * interval_between_payments)
             total_payoff += payoff  # Accumuler tous les payoffs
-
+        logger.warning(total_payoff)
         return {"fra_total_payoff": ("Total FRA Payoff :", total_payoff)}
 
     except Exception as e:
         return {"error": str(e)}, 400
 
-def calculate_valuation_of_fra(forward_rate, contract_rate, notional_value, discount_factor):
-    valuation = notional_value * (forward_rate - contract_rate) * discount_factor
-    return {"fra_valuation": ("FRA Valuation :", valuation)}
 
-def calculate_forward_rate(spot_rate_1, spot_rate_2, time_period_1, time_period_2):
+def calculate_valuation_of_fra(contract_rate, forward_rates, notional_value, interval_between_payments):
     """
-    Calcule le taux forward à partir de deux taux spot (zéro) et leurs maturités respectives.
+    Calcule le payoff total d'un FRA sur plusieurs périodes.
+
+    Paramètres :
+    - contract_rate : Taux fixe du FRA (ex: 0.03 pour 3%).
+    - settlement_rates : Liste des taux flottants observés (ex: [0.032, 0.035, 0.031, 0.037]).
+    - notional_value : Valeur notionnelle du contrat (ex: 1 000 000€).
+    - interval_between_payments : Durée d’une période en années (ex: 0.5 pour 6 mois).
+
+    Retourne :
+    - Un dictionnaire avec le payoff total du FRA.
     """
-    # Vérification des entrées
-    if time_period_2 <= time_period_1:
-        raise ValueError("Time Period 2 must be greater than Time Period 1.")
 
-    # Calcul du taux forward
-    forward_rate = ((1 + spot_rate_2) ** time_period_2 / (1 + spot_rate_1) ** time_period_1) ** (1 / (time_period_2 - time_period_1)) - 1
+    try:
+        # Vérifier que settlement_rates est bien une liste
+        if not isinstance(forward_rates, list):
+            raise ValueError("forward_rates doit être une liste de taux.")
 
-    # Retour formaté
-    return {"forward_rate": ("Forward Rate :", forward_rate)}
+        total_payoff = 0
+
+        # Boucle sur chaque période pour calculer le payoff
+        logger.warning(forward_rates)
+        logger.warning(contract_rate)
+        logger.warning(notional_value)
+        logger.warning(interval_between_payments)
+        
+        # Vérification et conversion en un tableau numpy bien formaté
+        logger.warning(type(forward_rates))
+        logger.warning(type(contract_rate))
+        logger.warning(type(notional_value))
+        logger.warning(type(interval_between_payments))
+        for R_s in forward_rates:
+            logger.warning(R_s)
+            logger.warning(type(R_s))
+            payoff = notional_value * (R_s - contract_rate) * interval_between_payments / (1 + R_s * interval_between_payments)
+            total_payoff += payoff  # Accumuler tous les payoffs
+        logger.warning(total_payoff)
+        return {"fra_total_valuation": ("Total FRA Valuation :", total_payoff)}
+
+    except Exception as e:
+        return {"error": str(e)}, 400
+    
+def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/outputs/interest-rates-and-fixed-income/"):
+    """
+    Calcule toute la courbe des taux forward à partir d'une liste de taux spot et de maturités,
+    puis enregistre les résultats en CSV et XLSX.
+    """
+
+    try:
+        os.makedirs(output_path, exist_ok=True)
+        # Vérification et conversion en numpy array
+        spot_rates = np.array(spot_rates, dtype=float)
+        maturities = np.array(maturities, dtype=float)
+
+        # Vérification des entrées
+        if len(spot_rates) != len(maturities):
+            raise ValueError("Spot rates and maturities must have the same length.")
+        if any(np.diff(maturities) <= 0):
+            raise ValueError("Maturities must be strictly increasing.")
+
+        # Calcul des taux forward pour chaque intervalle
+        forward_rates = []
+        forward_periods = []  # Stocker les périodes couvertes
+
+        for i in range(len(spot_rates) - 1):
+            spot_rate_1, spot_rate_2 = spot_rates[i], spot_rates[i + 1]
+            time_period_1, time_period_2 = maturities[i], maturities[i + 1]
+
+            # Calcul du taux forward
+            forward_rate = ((1 + spot_rate_2) ** time_period_2 / (1 + spot_rate_1) ** time_period_1) ** (1 / (time_period_2 - time_period_1)) - 1
+            forward_rates.append(forward_rate)
+            forward_periods.append(f"{time_period_1} → {time_period_2}")  # Exprime la période en texte
+
+        # Création d'un DataFrame pour les résultats avec colonnes explicites
+        df_forward_rates = pd.DataFrame({
+            "Forward Period": forward_periods,
+            "Start Maturity (Years)": maturities[:-1],
+            "End Maturity (Years)": maturities[1:],
+            "Forward Rate": forward_rates
+        })
+
+        # Générer un nom de fichier unique
+        random_file_name = f"forward_rate_curve_{random.randint(10**9, 10**10 - 1)}"
+        csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+        xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
+
+        # ✅ Sauvegarde du CSV
+        df_forward_rates.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+
+        # ✅ Sauvegarde du fichier Excel
+        df_forward_rates.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+        return csv_path, xlsx_path
+
+    except Exception as e:
+        return {"error": str(e)}, 400
 
 def calculate_fra_break_even_rate(notional_value, forward_rate, time_to_settlement):
     break_even_rate = forward_rate / time_to_settlement
