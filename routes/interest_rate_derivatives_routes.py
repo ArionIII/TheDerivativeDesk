@@ -22,7 +22,6 @@ NEW_TOOL_FUNCTIONS = {
     "calculate-interest-rate-swap-delta-hedging": calculate_interest_rate_swap_delta_hedging,
 }
 
-# Generic Request Handler
 # Generic Request Handler for New Interest Rate Tools
 def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
     logger.info(f"Handling request for tool: {tool_key} in {sub_category_key}")
