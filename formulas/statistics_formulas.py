@@ -630,16 +630,28 @@ def forecast_series(dataset, n_previsions, temporal_step):
     logger.info("Forecast has been made")
     logger.info("End AR-MA-ARMA")
 
-    # ✅ Transformer les prédictions en JSON formaté pour un bon affichage
-    predictions_formatted = json.dumps(forecast_series, indent=2)
+    output_path = "static/outputs/simulations/"
+    random_file_name = f"forecast_{random.randint(10**9, 10**10 - 1)}"
+    csv_path = os.path.join(output_path, f"{random_file_name}.csv")
+    xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-    # ✅ Retourner les données sous le format attendu par le frontend
-    return {
-        "forecast_result": [
-            "Forecast Results :",
-            f"Model: ARMA{best_order}, AIC: {best_aic}, Predictions: {predictions_formatted}"
-        ]
-    }
+    df_output = pd.DataFrame(list(forecast_series.items()), columns=["Index", "Forecast"])
+    df_output["Model"] = ""
+    df_output["AIC Criterion Value"] = ""
+
+    df_output.loc[0, "Model"] = f"ARMA {best_order}"
+    df_output.loc[0, "AIC Criterion Value"] = best_aic
+
+    df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
+    df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
+
+    return csv_path, xlsx_path
+    # return {
+    #     "forecast_result": [
+    #         "Forecast Results :",
+    #         f"Model: ARMA{best_order}, AIC: {best_aic}, Predictions: {predictions_formatted}"
+    #     ]
+    # }
 
 
 
