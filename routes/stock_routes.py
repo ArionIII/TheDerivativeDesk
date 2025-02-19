@@ -88,9 +88,10 @@ def get_random_stocks():
         possible_tickers = list(ALL_TICKERS.keys())
         selected_tickers = random.sample(possible_tickers, min(len(possible_tickers), num_stocks * 3))
         valid_stocks = []
-
+        logger.warning(selected_tickers)
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
+            logger.warning(stock)
             info = stock.info
 
             if not info or "quoteType" not in info or "regularMarketVolume" not in info:
@@ -124,6 +125,7 @@ def get_random_stocks():
         return jsonify({"stocks": valid_stocks[:num_stocks]}) 
 
     except Exception as e:
+        logger.info('Get random stocks')
         logger.error(f"Error fetching stock data: {e}")
         return jsonify({"error": str(e)}), 500
 
@@ -134,7 +136,9 @@ def get_random_stocks():
 @stock_chart_routes.route("/api/stock-chart/<ticker>", methods=["GET"])
 def get_stock_chart(ticker):
     try:
+        logger.warning('Entering random stock get')
         stock = yf.Ticker(ticker)
+        logger.warning(stock)
         # time.sleep(1)  # Ajout d'un délai pour éviter un rate-limit
         history = stock.history(period="1mo", interval="1d")
 
@@ -297,6 +301,7 @@ def get_stock_details(ticker):
         # logger.warning(f"stock_details : {stock_details}")
         return jsonify({"details": stock_details})
     except Exception as e:
+        logger.info('Get Stock Details')
         logger.error(f"Error fetching stock details for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
 
@@ -332,5 +337,6 @@ def get_stock_news(ticker):
         return jsonify({"news": news_articles})
 
     except Exception as e:
+        logger.info('Get Stock News')
         logger.error(f"Error fetching news for {ticker}: {e}")
         return jsonify({"error": str(e)}), 500
