@@ -10,6 +10,7 @@ import matplotlib
 import time
 from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
 import feedparser
+import ipdb
 
 matplotlib.use("Agg")
 GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={ticker}+stock&hl=en-US&gl=US&ceid=US:en"
@@ -23,6 +24,7 @@ stock_news_routes = Blueprint("stock_news_routes", __name__)
 ALL_TICKERS = combine_tickers_and_titles()
 @stocks_routes.route("/api/stocks", methods=["GET"])
 def get_random_stocks():
+    #TODO : Séparer en 2 fonctions...
     """
     Fetch stock data from ALL_TICKERS.
     - Si c'est une recherche rapide (search_term != "" et detailed=False), on renvoie juste les tickers et titres.
@@ -92,8 +94,19 @@ def get_random_stocks():
         for ticker in selected_tickers:
             stock = yf.Ticker(ticker)
             logger.warning(stock)
-            info = stock.info
-
+            try:
+                info = stock.info
+            except Exception:
+                #TODO : Un peu sale comme solution mais bug majeur qui a pop avec la 
+                # MAJ 0.14 de yfinance --> a voir si je peux régler ça 
+                # (impossible de rétrograder car les autres sont déprécated : peut etre 0.13 a tester)
+                
+                # AUSSI : Dans le search bah s'il clique dessus et que y'a pas d'info, ca fait 
+                # juste rien --> afficher message d'indisponibilité ?
+                logger.error('skipping an error stock')
+                continue
+            logger.info("info for the stock")
+            # ipdb.set_trace()
             if not info or "quoteType" not in info or "regularMarketVolume" not in info:
                 logger.warning(f"Skipping {ticker}: No valid market data found.")
                 continue
@@ -101,16 +114,16 @@ def get_random_stocks():
             current_price = info.get("currentPrice")
             previous_close = info.get("previousClose")
             history = stock.history(period="1mo", interval="1d")
-
-            if history.empty or "Close" not in history:
+            # ipdb.set_trace()
+            if history.empty or "Close" not in history or history["Close"].isna().all():
                 logger.warning(f"Skipping {ticker}: No historical data available.")
                 continue
 
             first_price = history.iloc[0]["Close"] if not history.empty else None
-
+            # ipdb.set_trace()
             change = (current_price - previous_close) / previous_close if current_price and previous_close else "N/A"
             change_monthly = (current_price - first_price) / first_price if current_price and first_price else "N/A"
-
+            # ipdb.set_trace()
             valid_stocks.append({
                 "ticker": ticker,
                 "title": ALL_TICKERS.get(ticker, "Unknown"),
@@ -118,6 +131,7 @@ def get_random_stocks():
                 "change": change if isinstance(change, float) else "N/A",
                 "change_monthly": change_monthly if isinstance(change_monthly, float) else "N/A",
             })
+            # ipdb.set_trace()
 
             if len(valid_stocks) >= num_stocks:
                 break
