@@ -1,89 +1,101 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
+    // 🔍 Vérifie si l'utilisateur est Googlebot
+    function isGooglebot() {
+        return /Googlebot|AdsBot-Google-Mobile|Mediapartners-Google/i.test(navigator.userAgent);
+    }
+
+    // 📱 Vérifie si l'utilisateur est sur mobile
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) || window.innerWidth < 768;
+    }
+
+    // 🚫 Bloque les utilisateurs mobiles sauf Googlebot
+    if (!isGooglebot() && isMobile()) {
+        const warningDiv = document.createElement("div");
+        warningDiv.id = "mobile-warning";
+        warningDiv.style = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 20px;
+            padding: 20px;
+        `;
+        warningDiv.innerHTML = `<p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>`;
+
+        document.body.innerHTML = "";
+        document.body.appendChild(warningDiv);
+    }
+
+    // 🔍 Gestion du champ de recherche et suggestions
     const searchInputTools = document.getElementById("search-input-tools");
     const suggestionsContainerTools = document.getElementById("suggestions-container-tools");
 
-    searchInputTools.addEventListener("input", async (e) => {
-        const query = e.target.value.trim();
+    if (searchInputTools && suggestionsContainerTools) {
+        searchInputTools.addEventListener("input", async (e) => {
+            const query = e.target.value.trim();
 
-        if (!query) {
-            suggestionsContainerTools.innerHTML = "";
-            suggestionsContainerTools.classList.remove("active");
-            return;
-        }
+            if (!query) {
+                suggestionsContainerTools.innerHTML = "";
+                suggestionsContainerTools.classList.remove("active");
+                return;
+            }
 
-        try {
-            const response = await fetch(`/suggest?q=${encodeURIComponent(query)}`);
-            const suggestions = await response.json();
+            try {
+                const response = await fetch(`/suggest?q=${encodeURIComponent(query)}`);
+                const suggestions = await response.json();
 
-            if (suggestions.length > 0) {
-                suggestionsContainerTools.innerHTML = suggestions
-                    .map((s) => {
-                        return `
-                            <div class="suggestion-item-tools">
-                                <a href="${s.url}">${s.name}</a>
-                                <p>${s.description}</p>
-                            </div>
-                        `;
-                    })
-                    .join("");
+                if (suggestions.length > 0) {
+                    suggestionsContainerTools.innerHTML = suggestions
+                        .map((s) => {
+                            return `
+                                <div class="suggestion-item-tools">
+                                    <a href="${s.url}">${s.name}</a>
+                                    <p>${s.description}</p>
+                                </div>
+                            `;
+                        })
+                        .join("");
 
-                suggestionsContainerTools.classList.add("active");
-            } else {
+                    suggestionsContainerTools.classList.add("active");
+                } else {
+                    suggestionsContainerTools.innerHTML = "";
+                    suggestionsContainerTools.classList.remove("active");
+                }
+            } catch (err) {
+                console.error("Error fetching suggestions:", err);
+            }
+        });
+
+        // 🔹 Cacher les suggestions si l'utilisateur clique en dehors
+        document.addEventListener("click", (e) => {
+            if (!suggestionsContainerTools.contains(e.target) && e.target !== searchInputTools) {
                 suggestionsContainerTools.innerHTML = "";
                 suggestionsContainerTools.classList.remove("active");
             }
-        } catch (err) {
-            console.error("Error fetching suggestions:", err);
-        }
-    });
+        });
+    }
 
-    // 🔹 Cacher les suggestions si l'utilisateur clique en dehors
-    document.addEventListener("click", (e) => {
-        if (!suggestionsContainerTools.contains(e.target) && e.target !== searchInputTools) {
-            suggestionsContainerTools.innerHTML = "";
-            suggestionsContainerTools.classList.remove("active");
-        }
-    });
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
+    // 🎉 Gestion de l'affichage de la bannière
     if (!localStorage.getItem("hideBanner")) {
-        document.getElementById("site-banner").style.display = "block";
+        const siteBanner = document.getElementById("site-banner");
+        if (siteBanner) {
+            siteBanner.style.display = "block";
+        }
     }
 });
 
 function closeBanner() {
-    document.getElementById("site-banner").style.display = "none";
-    localStorage.setItem("hideBanner", "true");
+    const siteBanner = document.getElementById("site-banner");
+    if (siteBanner) {
+        siteBanner.style.display = "none";
+        localStorage.setItem("hideBanner", "true");
+    }
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    function isMobile() {
-        return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
-    }
-
-    if (isMobile()) {
-        document.body.innerHTML = `
-            <div id="mobile-warning" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: black;
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                font-size: 20px;
-                padding: 20px;
-            ">
-                <p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>
-            </div>
-        `;
-    }
-});
-
-
