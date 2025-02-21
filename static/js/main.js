@@ -7,9 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) || window.innerWidth < 768;
     }
 
-    if (!isGooglebot() && isMobile()) {
-        document.write(`
-            <div id="mobile-warning" style="
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!isGooglebot() && isMobile()) {
+            const warningDiv = document.createElement("div");
+            warningDiv.id = "mobile-warning";
+            warningDiv.style = `
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -23,11 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 text-align: center;
                 font-size: 20px;
                 padding: 20px;
-            ">
-                <p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>
-            </div>
-        `);
-    }
+            `;
+            warningDiv.innerHTML = `<p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>`;
+            
+            document.body.innerHTML = "";
+            document.body.appendChild(warningDiv);
+        }
+    });
+
 
     // 🔍 Gestion du champ de recherche et suggestions
     const searchInputTools = document.getElementById("search-input-tools");
