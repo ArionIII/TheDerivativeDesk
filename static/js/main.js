@@ -1,37 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 🔍 Vérifie si l'utilisateur est Googlebot
     function isGooglebot() {
         return /Googlebot|AdsBot-Google-Mobile|Mediapartners-Google/i.test(navigator.userAgent);
     }
 
-    // 📱 Vérifie si l'utilisateur est sur mobile
     function isMobile() {
         return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) || window.innerWidth < 768;
     }
 
-    // 🚫 Bloque les utilisateurs mobiles sauf Googlebot
     if (!isGooglebot() && isMobile()) {
-        const warningDiv = document.createElement("div");
-        warningDiv.id = "mobile-warning";
-        warningDiv.style = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 20px;
-            padding: 20px;
-        `;
-        warningDiv.innerHTML = `<p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>`;
-
-        document.body.innerHTML = "";
-        document.body.appendChild(warningDiv);
+        document.write(`
+            <div id="mobile-warning" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 20px;
+                padding: 20px;
+            ">
+                <p>This site is not available on mobile. Please visit it from a desktop or laptop.</p>
+            </div>
+        `);
     }
 
     // 🔍 Gestion du champ de recherche et suggestions
