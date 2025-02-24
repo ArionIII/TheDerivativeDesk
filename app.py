@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
 from routes.futures_forward_routes import forwards_routes, futures_routes
 from routes.hedging_routes import hedging_basics_routes, equity_hedging_routes
@@ -62,6 +62,15 @@ app.register_blueprint(interest_rate_fundamentals_routes)
 app.register_blueprint(tool_category_interest_rates_routes)
 app.register_blueprint(interest_rate_derivatives_routes)
 app.register_blueprint(stock_news_routes)
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory("static", "robots.txt", mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory("static", "sitemap.xml", mimetype="application/xml")
 
 # Route pour la page d'accueil
 @app.route("/")
