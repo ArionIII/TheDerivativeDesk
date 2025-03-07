@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("tool-form");
     const results = document.getElementById("results");
     const chartElement = document.getElementById("chart");
+    let activeChart = null;
 
     form.setAttribute("novalidate", true); // Disable native validation
 
@@ -95,9 +96,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Update visualization (if chart exists)
+            
+            if (!chartElement) {
+                console.warn("Chart element not found");
+                return;
+            }
             if (chartElement) {
                 const ctx = chartElement.getContext("2d");
-                new Chart(ctx, {
+            
+                // Si un graphique existe déjà, on le détruit avant de recréer le nouveau
+                if (activeChart) {
+                    activeChart.destroy();
+                }
+            
+                activeChart = new Chart(ctx, {
                     type: "line",
                     data: {
                         labels: Array.from({ length: 10 }, (_, i) => i),
