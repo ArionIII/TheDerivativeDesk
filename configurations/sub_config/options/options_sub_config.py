@@ -45,11 +45,11 @@ OPTIONS_TOOL_CATEGORIES = {
                 "description": "Price European and Asian options using Monte Carlo simulation.",
                 "url": "/tools/options/option-pricing/monte-carlo-option"
             },
-            {
-                "title": "Monte Carlo (Path-Dependent Options)",
-                "description": "Use Monte Carlo to price path-dependent options like lookbacks.",
-                "url": "/tools/options/option-pricing/monte-carlo-path-dependent"
-            }
+            # {
+            #     "title": "Monte Carlo (Path-Dependent Options)",
+            #     "description": "Use Monte Carlo to price path-dependent options like lookbacks.",
+            #     "url": "/tools/options/option-pricing/monte-carlo-path-dependent"
+            # }
         ]
     },
 

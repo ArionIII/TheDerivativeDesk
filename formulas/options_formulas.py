@@ -111,21 +111,32 @@ def implied_volatility(option_type, underlying_price, strike_price, option_price
 def monte_carlo_pricing(option_type, option_style, underlying_price, strike_price, 
                         risk_free_rate, volatility, num_simulations):
     try:
+        num_simulations = int(num_simulations)
         np.random.seed(42)
         dt = 1 / 365
         payoffs = []
+
         for _ in range(num_simulations):
             path = [underlying_price]
             for _ in range(int(1 / dt)):
                 path.append(path[-1] * np.exp((risk_free_rate - 0.5 * volatility ** 2) * dt +
                                               volatility * np.sqrt(dt) * np.random.randn()))
-            if option_type == "CALL":
-                payoff = max(0, path[-1] - strike_price)
+            
+            if option_style == "European":
+                if option_type == "CALL":
+                    payoff = max(0, max(path) - strike_price)
+                else:
+                    payoff = max(0, strike_price - max(path))
+            
+            elif option_style == "Asian":
+                average_price = np.mean(path)
+                if option_type == "CALL":
+                    payoff = max(0, average_price - strike_price)
+                else:
+                    payoff = max(0, strike_price - average_price)
+            
             else:
-                payoff = max(0, strike_price - path[-1])
-
-            if option_style == "AMERICAN":
-                payoff = max(payoff, path[-1] - strike_price if option_type == "CALL" else strike_price - path[-1])
+                raise ValueError("Invalid option style. Must be 'AMERICAN' or 'ASIAN'.")
 
             payoffs.append(payoff)
 
@@ -137,13 +148,14 @@ def monte_carlo_pricing(option_type, option_style, underlying_price, strike_pric
 
 
 
-def compare_american_vs_european(option_type, underlying_price, strike_price, time_to_maturity, 
+
+def compare_american_vs_european(option_type, underlying_price, strike_price, time_to_maturity, dividend_yield, 
                                   risk_free_rate, volatility):
     try:
-        american_price = binomial_trees_pricing(option_type, "AMERICAN", underlying_price, strike_price, 
-                                                time_to_maturity, risk_free_rate, volatility, 100)["option_price"][1]
-        european_price = binomial_trees_pricing(option_type, "EUROPEAN", underlying_price, strike_price, 
-                                                time_to_maturity, risk_free_rate, volatility, 100)["option_price"][1]
+        american_price = binomial_dividend_pricing(option_type, "AMERICAN", underlying_price, strike_price, 
+                                                time_to_maturity, risk_free_rate, volatility, dividend_yield, 100)["option_price"][1]
+        european_price = binomial_dividend_pricing(option_type, "EUROPEAN", underlying_price, strike_price, 
+                                                time_to_maturity, risk_free_rate, volatility, dividend_yield, 100)["option_price"][1]
         
         spread = american_price - european_price
         

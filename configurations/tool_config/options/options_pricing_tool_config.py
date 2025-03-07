@@ -57,12 +57,14 @@ OPTION_PRICING_TOOL_CONFIG = {
         "description": "Calculate the implied volatility of an option using the Black-Scholes model.",
         "url": "/tools/options/option-pricing/black-scholes-implied-volatility",
         "inputs": [
-            {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number"},
-            {"label": "Strike Price (K)", "id": "strike_price", "type": "number"},
-            {"label": "Market Option Price", "id": "option_price", "type": "number"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number"}
-        ],
+    {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
+    {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "e.g., 100"},
+    {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "e.g., 100"},
+    {"label": "Market Option Price", "id": "option_price", "type": "number", "placeholder": "e.g., 10.5"},
+    {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1 (in years)"},
+    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05"}
+],
+
         "outputs": ["Implied Volatility"],
         "visualization": True,
         "graphs": [
@@ -81,7 +83,8 @@ OPTION_PRICING_TOOL_CONFIG = {
             {"label": "Strike Price (K)", "id": "strike_price", "type": "number"},
             {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number"},
             {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number"},
-            {"label": "Volatility (σ)", "id": "volatility", "type": "number"}
+            {"label": "Volatility (σ)", "id": "volatility", "type": "number"},
+            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "e.g., 0.03", "optional":True},
         ],
         "outputs": ["Spread Value"],
         "visualization": True,
@@ -117,18 +120,18 @@ OPTION_PRICING_TOOL_CONFIG = {
     ]
 },
 
-    "monte-carlo-path-dependent": {
-        "title": "Monte Carlo: Path Dependent Options",
-        "description": "Use Monte Carlo simulation to price path-dependent options.",
-        "url": "/tools/options/option-pricing/monte-carlo-path-dependent",
-        "inputs": [
-            {"label": "Number of Paths", "id": "num_paths", "type": "number"}
-        ],
-        "outputs": ["Path Dependent Option Price"],
-        "visualization": True,
-        "graphs": [
-            {"name": "Path Dependent Payoff"}
-        ],
-        "keywords": ["monte carlo", "path dependent", "option pricing", "simulation"]
-    }
+    # "monte-carlo-path-dependent": {
+    #     "title": "Monte Carlo: Path Dependent Options",
+    #     "description": "Use Monte Carlo simulation to price path-dependent options.",
+    #     "url": "/tools/options/option-pricing/monte-carlo-path-dependent",
+    #     "inputs": [
+    #         {"label": "Number of Paths", "id": "num_paths", "type": "number"}
+    #     ],
+    #     "outputs": ["Path Dependent Option Price"],
+    #     "visualization": True,
+    #     "graphs": [
+    #         {"name": "Path Dependent Payoff"}
+    #     ],
+    #     "keywords": ["monte carlo", "path dependent", "option pricing", "simulation"]
+    # }
 }
