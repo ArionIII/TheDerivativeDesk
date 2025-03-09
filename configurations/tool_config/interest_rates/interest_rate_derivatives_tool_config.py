@@ -1,3 +1,5 @@
+from config import generate_input_from_file
+import os
 INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
     # Payoff of FRA
     "payoff-of-fra": {
@@ -9,14 +11,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Contract Rate", 
             "id": "contract_rate", 
             "type": "number", 
-            "placeholder": "e.g., 0.02", 
+            "placeholder": "0.02", 
             "optional": False
         },
         {
             "label": "Settlement Rates (comma-separated)", 
             "id": "settlement_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'settlement_rates.csv'))}",
             "optional": False
         },
         {
@@ -32,14 +34,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Notional Value", 
             "id": "notional_value", 
             "type": "number", 
-            "placeholder": "e.g., 1000000", 
+            "placeholder": "1000000", 
             "optional": False
         },
         {
             "label": "Interval Between Payments (Years)", 
             "id": "interval_between_payments", 
             "type": "number", 
-            "placeholder": "e.g., 0.5", 
+            "placeholder": "0.5", 
             "optional": False
         }
     ],
@@ -64,14 +66,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Contract Rate", 
             "id": "contract_rate", 
             "type": "number", 
-            "placeholder": "e.g., 0.02", 
+            "placeholder": "0.02", 
             "optional": False
         },
         {
             "label": "Forward Rates (comma-separated)", 
             "id": "forward_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'settlement_rates.csv'))}",
             "optional": False
         },
         {
@@ -87,14 +89,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Notional Value", 
             "id": "notional_value", 
             "type": "number", 
-            "placeholder": "e.g., 1000000", 
+            "placeholder": "1000000", 
             "optional": False
         },
         {
             "label": "Interval Between Payments (Years)", 
             "id": "interval_between_payments", 
             "type": "number", 
-            "placeholder": "e.g., 0.5", 
+            "placeholder": "0.5", 
             "optional": False
         }
     ],
@@ -119,14 +121,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Spot Rates (comma-separated)", 
             "id": "spot_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'spot_rates_forward_rates.csv'))}",
             "optional": False
         },
         {
             "label": "Maturities (Years)", 
             "id": "maturities", 
             "type": "array", 
-            "placeholder": "e.g., [1, 2, 3]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'maturities_forward_rates.csv'))}",
             "optional": False
         },
         {
@@ -169,7 +171,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Forward Rates (comma-separated)", 
             "id": "forward_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.021, 0.023, 0.024, 0.022]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'settlement_rates.csv'))}",
             "optional": False
         },
         {
@@ -185,7 +187,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Interval Between Payments (Years)", 
             "id": "interval_between_payments", 
             "type": "number", 
-            "placeholder": "e.g., 0.5", 
+            "placeholder": "0.5", 
             "optional": False
         }
     ],
@@ -206,28 +208,28 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "label": "Current Position (Notional)", 
             "id": "current_position", 
             "type": "number", 
-            "placeholder": "e.g., 1000000", 
+            "placeholder": "1000000", 
             "optional": False
         },
         {
             "label": "Target Rate", 
             "id": "target_rate", 
             "type": "number", 
-            "placeholder": "e.g., 0.025", 
+            "placeholder": "0.025", 
             "optional": False
         },
         {
             "label": "Market Rate", 
             "id": "market_rate", 
             "type": "number", 
-            "placeholder": "e.g., 0.03", 
+            "placeholder": "0.03", 
             "optional": False
         },
         {
             "label": "FRA Period (Years)", 
             "id": "fra_period", 
             "type": "number", 
-            "placeholder": "e.g., 0.5", 
+            "placeholder": "0.5", 
             "optional": False
         },
         {
@@ -248,10 +250,10 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Calculate the cash flows of fixed-for-floating interest rate swaps.",
         "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-cash-flows",
         "inputs": [
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-            {"label": "Floating Rate", "id": "floating_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Periods (comma-separated)", "id": "periods", "type": "array", "placeholder": "e.g., [1, 2, 3]", "optional": False},
+            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
+            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "0.03", "optional": False},
+            {"label": "Floating Rate", "id": "floating_rate", "type": "number", "placeholder": "0.025", "optional": False},
+            {"label": "Periods (comma-separated)", "id": "periods", "type": "array", "placeholder": "[1, 2, 3]", "optional": False},
         ],
         "outputs": ["Cash Flows"],
     },
@@ -261,10 +263,10 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Compute the present value of interest rate swaps using market curves.",
         "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-valuation",
         "inputs": [
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-            {"label": "Discount Factors (comma-separated)", "id": "discount_factors", "type": "array", "placeholder": "e.g., [0.95, 0.94, 0.93]", "optional": False},
-            {"label": "Floating Cash Flows (comma-separated)", "id": "floating_cash_flows", "type": "array", "placeholder": "e.g., [30000, 30000, 30000]", "optional": False},
+            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
+            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "0.03", "optional": False},
+            {"label": "Discount Factors (comma-separated)", "id": "discount_factors", "type": "array", "placeholder": "[0.95, 0.94, 0.93]", "optional": False},
+            {"label": "Floating Cash Flows (comma-separated)", "id": "floating_cash_flows", "type": "array", "placeholder": "[30000, 30000, 30000]", "optional": False},
         ],
         "outputs": ["Swap Valuation"],
     },
@@ -274,8 +276,8 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Price interest rate futures such as Eurodollar futures based on market interest rates.",
         "url": "/tools/swaps-and-interest-rate-derivatives/pricing-interest-rate-futures",
         "inputs": [
-            {"label": "Current Market Rate (%)", "id": "market_rate", "type": "number", "placeholder": "e.g., 4", "optional": False},
-            {"label": "Days to Maturity", "id": "days_to_maturity", "type": "number", "placeholder": "e.g., 90", "optional": False},
+            {"label": "Current Market Rate (%)", "id": "market_rate", "type": "number", "placeholder": "4", "optional": False},
+            {"label": "Days to Maturity", "id": "days_to_maturity", "type": "number", "placeholder": "90", "optional": False},
         ],
         "outputs": ["Future Price"],
     },
@@ -285,8 +287,8 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Analyze the spread between swap rates and government yields.",
         "url": "/tools/swaps-and-interest-rate-derivatives/swap-spread-analysis",
         "inputs": [
-            {"label": "Swap Rate", "id": "swap_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Government Yield", "id": "government_yield", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
+            {"label": "Swap Rate", "id": "swap_rate", "type": "number", "placeholder": "0.025", "optional": False},
+            {"label": "Government Yield", "id": "government_yield", "type": "number", "placeholder": "0.02", "optional": False},
         ],
         "outputs": ["Swap Spread"],
     },
@@ -296,10 +298,10 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Value options on interest rate swaps using Black’s model.",
         "url": "/tools/swaps-and-interest-rate-derivatives/swaption-valuation",
         "inputs": [
-            {"label": "Strike Rate", "id": "strike_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-            {"label": "Volatility (%)", "id": "volatility", "type": "number", "placeholder": "e.g., 20", "optional": False},
-            {"label": "Time to Maturity (Years)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "optional": False},
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
+            {"label": "Strike Rate", "id": "strike_rate", "type": "number", "placeholder": "0.03", "optional": False},
+            {"label": "Volatility (%)", "id": "volatility", "type": "number", "placeholder": "20", "optional": False},
+            {"label": "Time to Maturity (Years)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "optional": False},
+            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
         ],
         "outputs": ["Swaption Value"],
     },
@@ -309,10 +311,10 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Evaluate basis swaps where both legs are floating rates with different benchmarks.",
         "url": "/tools/swaps-and-interest-rate-derivatives/basis-swap-analysis",
         "inputs": [
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Benchmark 1 Rate", "id": "benchmark__rate_1", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-            {"label": "Benchmark 2 Rate", "id": "benchmark_rate_2", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Periods (comma-separated)", "id": "periods", "type": "array", "placeholder": "e.g., [1, 2, 3]", "optional": False},
+            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
+            {"label": "Benchmark 1 Rate", "id": "benchmark__rate_1", "type": "number", "placeholder": "0.02", "optional": False},
+            {"label": "Benchmark 2 Rate", "id": "benchmark_rate_2", "type": "number", "placeholder": "0.025", "optional": False},
+            {"label": "Periods (comma-separated)", "id": "periods", "type": "array", "placeholder": "[1, 2, 3]", "optional": False},
         ],
         "outputs": ["Basis Swap Analysis"],
     },
@@ -322,10 +324,10 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         "description": "Analyze hedging strategies for interest rate swaps.",
         "url": "/tools/swaps-and-interest-rate-derivatives/interest-rate-swap-delta-hedging",
         "inputs": [
-            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "e.g., 0.03", "optional": False},
-            {"label": "Floating Rate", "id": "floating_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-            {"label": "Hedge Ratio", "id": "hedge_ratio", "type": "number", "placeholder": "e.g., 0.8", "optional": False},
+            {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
+            {"label": "Fixed Rate", "id": "fixed_rate", "type": "number", "placeholder": "0.03", "optional": False},
+            {"label": "Floating Rate", "id": "floating_rate", "type": "number", "placeholder": "0.025", "optional": False},
+            {"label": "Hedge Ratio", "id": "hedge_ratio", "type": "number", "placeholder": "0.8", "optional": False},
         ],
         "outputs": ["Delta Hedging Strategy"],
     },

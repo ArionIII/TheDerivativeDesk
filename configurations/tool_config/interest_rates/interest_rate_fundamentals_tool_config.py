@@ -1,11 +1,13 @@
+from config import generate_input_from_file
+import os
 INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "continuous-compounding-rate": {
         "title": "m-Compounding to Continuous Compounding Rate",
         "description": "Convert m-compounding rate to continuous compounding rate.",
         "url": "/tools/basic-interest-rates-analysis/continuous-compounding-rate",
         "inputs": [
-            {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
-            {"label": "Compounding Frequency ", "id": "frequency", "type": "number", "placeholder": "e.g., 4", "optional": False},
+            {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "0.05", "optional": False},
+            {"label": "Compounding Frequency ", "id": "frequency", "type": "number", "placeholder": "4", "optional": False},
         ],
         "outputs": ["Rate (Continuous Compounding)"],
     },
@@ -14,8 +16,8 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     "description": "Convert continuous compounding rate to m-compounding rate.",
     "url": "/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate",
     "inputs": [
-        {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "e.g., 0.05", "optional": False},
-        {"label": "Compounding Frequency", "id": "frequency", "type": "number", "placeholder": "e.g., 4", "optional": False},
+        {"label": "Rate ", "id": "rate", "type": "number", "placeholder": "0.05", "optional": False},
+        {"label": "Compounding Frequency", "id": "frequency", "type": "number", "placeholder": "4", "optional": False},
     ],
     "outputs": ["Rate (m-Compounding)"],
 },
@@ -28,11 +30,11 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     #         "label": "Input Rates (comma-separated)", 
     #         "id": "input_rates", 
     #         "type": "array", 
-    #         "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+    #         "placeholder": "[0.02, 0.025, 0.03]", 
     #         "optional": False
     #     },
     #     {
-    #         "label": "Rate Type (e.g., FRA, Swap)", 
+    #         "label": "Rate Type (FRA, Swap)", 
     #         "id": "rate_type", 
     #         "type": "select", 
     #         "placeholder": "Select Rate Type (FRA or Swap)", 
@@ -44,14 +46,14 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
     #         "label": "Maturities (comma-separated)", 
     #         "id": "maturities", 
     #         "type": "array", 
-    #         "placeholder": "e.g., [0.5, 1, 1.5]", 
+    #         "placeholder": "[0.5, 1, 1.5]", 
     #         "optional": False
     #     },
     #     {
     #         "label": "Space Between Payments (Years)", 
     #         "id": "space_between_payments", 
     #         "type": "number", 
-    #         "placeholder": "e.g., 0.5 (Semi-annual)", 
+    #         "placeholder": "0.5 (Semi-annual)", 
     #         "optional": True
     #     }
     # ],
@@ -62,10 +64,10 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
         "description": "Calculate the price of a bond given its characteristics.",
         "url": "/tools/basic-interest-rates-analysis/bond-pricing",
         "inputs": [
-            {"label": "Face Value", "id": "face_value", "type": "number", "placeholder": "e.g., 1000", "optional": False},
-            {"label": "Coupon Rate (%)", "id": "coupon_rate", "type": "number", "placeholder": "e.g., 5", "optional": False},
-            {"label": "Maturity (Years)", "id": "maturity", "type": "number", "placeholder": "e.g., 10", "optional": False},
-            {"label": "Market Rate (%)", "id": "market_rate", "type": "number", "placeholder": "e.g., 4", "optional": False},
+            {"label": "Face Value", "id": "face_value", "type": "number", "placeholder": "1000", "optional": False},
+            {"label": "Coupon Rate (%)", "id": "coupon_rate", "type": "number", "placeholder": "5", "optional": False},
+            {"label": "Maturity (Years)", "id": "maturity", "type": "number", "placeholder": "10", "optional": False},
+            {"label": "Market Rate (%)", "id": "market_rate", "type": "number", "placeholder": "4", "optional": False},
         ],
         "outputs": ["Bond Price"],
     },
@@ -78,7 +80,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "label": "Bond Prices (comma-separated)", 
             "id": "bond_prices", 
             "type": "array", 
-            "placeholder": "e.g., [980, 970, 960]"
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'bond_prices_cloche.csv'))}",
         },
         {
             "label": "Bond Prices (CSV)", 
@@ -93,7 +95,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "label": "Face Values (comma-separated)", 
             "id": "face_values", 
             "type": "array", 
-            "placeholder": "e.g., [1000, 1000, 1000]"
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'face_values_cloche.csv'))}",
         },
         {
             "label": "Face Values (CSV)", 
@@ -108,7 +110,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "label": "Maturities (Years)", 
             "id": "maturities", 
             "type": "array", 
-            "placeholder": "e.g., [1, 2, 3]"
+            "placeholder":  f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'maturities_cloche.csv'))}",
         },
         {
             "label": "Maturities (CSV)", 
@@ -123,7 +125,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "label": "Coupon Rates (comma-separated, in decimal form)", 
             "id": "coupon_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.05, 0.04, 0.03]"
+            "placeholder":  f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'coupon_rates_cloche.csv'))}",
         },
         {
             "label": "Coupon Rates (CSV)", 
@@ -138,7 +140,7 @@ INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG = {
             "label": "Compounding Frequency per Year (comma-separated)", 
             "id": "m_compoundings", 
             "type": "array", 
-            "placeholder": "e.g., [2, 4, 1] (Semi-Annual, Quarterly, Annual)"
+            "placeholder":  f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'm_compoundings_cloche.csv'))}",
         },
         {
             "label": "Compounding Frequencies (CSV)", 
@@ -186,7 +188,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Initial Zero-Rates (comma-separated)", 
             "id": "libor_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.01, 0.015]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'libor_rates.csv'))}",
             "optional": False
         },
         {
@@ -202,7 +204,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Swap Rates (comma-separated)", 
             "id": "swap_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.02, 0.025, 0.03]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'swap_rates.csv'))}",
             "optional": False
         },
         {
@@ -218,7 +220,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Zero-Rate Tenors (Years)", 
             "id": "libor_tenors", 
             "type": "array", 
-            "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'libor_tenors.csv'))}",
             "optional": False
         },
         {
@@ -234,7 +236,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Swap Tenors (Years)", 
             "id": "swap_tenors", 
             "type": "array", 
-            "placeholder": "e.g., [2, 3, 5, 7, 10]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'swap_tenors.csv'))}",
             "optional": False
         },
         {
@@ -265,7 +267,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Initial Zero Rates (comma-separated)", 
             "id": "libor_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.01, 0.015, 0.02]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'libor_rates_fra.csv'))}",
             "optional": False
         },
         {
@@ -281,7 +283,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "FRA Rates (comma-separated)", 
             "id": "fra_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.02, 0.022, 0.024]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'fra_rates.csv'))}",
             "optional": False
         },
         {
@@ -297,7 +299,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Zero-Rate Maturities (Years)", 
             "id": "libor_tenors", 
             "type": "array", 
-            "placeholder": "e.g., [0.08, 0.25, 0.5, 1]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'libor_tenors_fra.csv'))}",
             "optional": False
         },
         {
@@ -313,7 +315,7 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "FRA Maturities (Years)", 
             "id": "fra_tenors", 
             "type": "array", 
-            "placeholder": "e.g., [1.5, 2, 2.5, 3]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'fra_tenors.csv'))}",
             "optional": False
         },
         {
@@ -339,10 +341,10 @@ If these conditions are not met, the zero rates calculation may fail or produce 
     #     "description": "Calculate the payoff of a Forward Rate Agreement (FRA).",
     #     "url": "/tools/interest-rates/payoff-of-fra",
     #     "inputs": [
-    #         {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "e.g., 0.02", "optional": False},
-    #         {"label": "Settlement Rate", "id": "settlement_rate", "type": "number", "placeholder": "e.g., 0.025", "optional": False},
-    #         {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "e.g., 1000000", "optional": False},
-    #         {"label": "Time (Years)", "id": "time", "type": "number", "placeholder": "e.g., 0.5", "optional": False},
+    #         {"label": "Contract Rate", "id": "contract_rate", "type": "number", "placeholder": "0.02", "optional": False},
+    #         {"label": "Settlement Rate", "id": "settlement_rate", "type": "number", "placeholder": "0.025", "optional": False},
+    #         {"label": "Notional Value", "id": "notional_value", "type": "number", "placeholder": "1000000", "optional": False},
+    #         {"label": "Time (Years)", "id": "time", "type": "number", "placeholder": "0.5", "optional": False},
     #     ],
     #     "outputs": ["FRA Payoff"],
     # },
@@ -355,21 +357,21 @@ If these conditions are not met, the zero rates calculation may fail or produce 
             "label": "Bond Cash Flows (comma-separated)", 
             "id": "cash_flows", 
             "type": "array", 
-            "placeholder": "e.g., [50, 50, 1050]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'duration_cash_flows.csv'))}",
             "optional": False
         },
         {
             "label": "Discount Rates (comma-separated)", 
             "id": "discount_rates", 
             "type": "array", 
-            "placeholder": "e.g., [0.03, 0.035, 0.04]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'duration_discount_rates.csv'))}",
             "optional": False
         },
         {
             "label": "Time Periods (Years)", 
             "id": "time_periods", 
             "type": "array", 
-            "placeholder": "e.g., [1, 2, 3]", 
+            "placeholder": f"{generate_input_from_file(os.path.join(os.getcwd(), 'static', 'templates', 'duration_time_periods.csv'))}",
             "optional": False
         },
         {

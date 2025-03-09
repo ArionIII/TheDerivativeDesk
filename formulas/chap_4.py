@@ -9,7 +9,7 @@ def convert_nominal_to_continuous(m, R_m):
         R_c = m * ln(1 + R_m / m)
 
     Args:
-        m (float): Frequency of compounding (e.g., 12 for monthly, 1 for annual).
+        m (float): Frequency of compounding (12 for monthly, 1 for annual).
         R_m (float): Nominal return.
 
     Returns:
@@ -33,7 +33,7 @@ def convert_continuous_to_nominal(m, R_c):
         R_m = m * (e^(R_c / m) - 1)
 
     Args:
-        m (float): Frequency of compounding (e.g., 12 for monthly, 1 for annual).
+        m (float): Frequency of compounding (12 for monthly, 1 for annual).
         R_c (float): Continuous return.
 
     Returns:

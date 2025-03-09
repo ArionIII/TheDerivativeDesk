@@ -7,11 +7,11 @@ HEDGING_TOOL_CONFIG = {
         ),
         "url": "/tools/hedging-basics/hedging_tool",
         "inputs": [
-            {"label": "Asset Quantity", "id": "asset_quantity", "type": "number", "placeholder": "e.g., 1000", "step": "any"},
-            {"label": "Futures Quantity", "id": "futures_quantity", "type": "number", "placeholder": "e.g., 50", "step": "any"},
-            {"label": "Hedge Ratio", "id": "hedge_ratio", "type": "number", "placeholder": "e.g., 0.9", "step": "any"},
-            {"label": "Asset Value (optional)", "id": "asset_value", "type": "number", "placeholder": "e.g., 100000", "step": "any", "optional": True},
-            {"label": "Futures Value (optional)", "id": "futures_value", "type": "number", "placeholder": "e.g., 95000", "step": "any", "optional": True}
+            {"label": "Asset Quantity", "id": "asset_quantity", "type": "number", "placeholder": "1000", "step": "any"},
+            {"label": "Futures Quantity", "id": "futures_quantity", "type": "number", "placeholder": "50", "step": "any"},
+            {"label": "Hedge Ratio", "id": "hedge_ratio", "type": "number", "placeholder": "0.9", "step": "any"},
+            {"label": "Asset Value (optional)", "id": "asset_value", "type": "number", "placeholder": "100000", "step": "any", "optional": True},
+            {"label": "Futures Value (optional)", "id": "futures_value", "type": "number", "placeholder": "95000", "step": "any", "optional": True}
         ],
         "outputs": ["Optimal Number of Futures Contracts", "Hedge Adjustment Value"],
         "visualization": False,
@@ -26,9 +26,9 @@ HEDGING_TOOL_CONFIG = {
     "description": "Calculate the minimum variance hedge ratio using standard deviations of spot and futures prices, and their correlation.",
     "url": "/tools/hedging-basics/minimum_variance_hedge_ratio",
     "inputs": [
-        {"label": "Standard Deviation of Spot Changes (σₛ)", "id": "std_change_spot", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-        {"label": "Standard Deviation of Futures Changes (σₓ)", "id": "std_change_futures", "type": "number", "placeholder": "e.g., 0.04", "step": "any"},
-        {"label": "Correlation Coefficient (ρ)", "id": "correlation", "type": "number", "placeholder": "e.g., 0.8", "step": "any"}
+        {"label": "Standard Deviation of Spot Changes (σₛ)", "id": "std_change_spot", "type": "number", "placeholder": "0.05", "step": "any"},
+        {"label": "Standard Deviation of Futures Changes (σₓ)", "id": "std_change_futures", "type": "number", "placeholder": "0.04", "step": "any"},
+        {"label": "Correlation Coefficient (ρ)", "id": "correlation", "type": "number", "placeholder": "0.8", "step": "any"}
     ],
     "outputs": ["Minimum Variance Hedge Ratio (h*)"],
     "visualization": False,
@@ -43,9 +43,9 @@ HEDGING_TOOL_CONFIG = {
         "description": "Compute the hedge for an equity portfolio using futures.",
         "url": "/tools/equity-hedging/hedge_equity_portfolio",
         "inputs": [
-            {"label": "Beta (β)", "id": "beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
-            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "e.g., 1000000", "step": "any"},
-            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "e.g., 200000", "step": "any"},
+            {"label": "Beta (β)", "id": "beta", "type": "number", "placeholder": "1.2", "step": "any"},
+            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "1000000", "step": "any"},
+            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "200000", "step": "any"},
         ],
         "outputs": ["Optimal Number of Futures Contracts"],
         "visualization": False,
@@ -60,10 +60,10 @@ HEDGING_TOOL_CONFIG = {
         "description": "Compute the hedge to change the beta of an equity portfolio to a target level.",
         "url": "/tools/equity-hedging/change_beta_portfolio",
         "inputs": [
-            {"label": "Target Beta (βₜ)", "id": "target_beta", "type": "number", "placeholder": "e.g., 0.8", "step": "any"},
-            {"label": "Current Beta (βₒ)", "id": "current_beta", "type": "number", "placeholder": "e.g., 1.2", "step": "any"},
-            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "e.g., 1000000", "step": "any"},
-            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "e.g., 200000", "step": "any"},
+            {"label": "Target Beta (βₜ)", "id": "target_beta", "type": "number", "placeholder": "0.8", "step": "any"},
+            {"label": "Current Beta (βₒ)", "id": "current_beta", "type": "number", "placeholder": "1.2", "step": "any"},
+            {"label": "Asset Value ($)", "id": "asset_value", "type": "number", "placeholder": "1000000", "step": "any"},
+            {"label": "Futures Value ($)", "id": "futures_value", "type": "number", "placeholder": "200000", "step": "any"},
         ],
         "outputs": ["Optimal Number of Futures Contracts"],
         "visualization": False,
