@@ -25,6 +25,8 @@ from configurations.sub_config.interest_rates.interest_rate_sub_categories_confi
 import os
 from web_parsing.news_rss_parser import get_news_from_rss
 from routes.stock_routes import stock_news_routes
+from configurations.sub_config.options.options_sub_config import tool_category_options_routes
+from routes.options_pricing_routes import option_pricing_routes
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -62,6 +64,8 @@ app.register_blueprint(interest_rate_fundamentals_routes)
 app.register_blueprint(tool_category_interest_rates_routes)
 app.register_blueprint(interest_rate_derivatives_routes)
 app.register_blueprint(stock_news_routes)
+app.register_blueprint(tool_category_options_routes)
+app.register_blueprint(option_pricing_routes)
 
 @app.route("/robots.txt")
 def robots():
@@ -122,6 +126,11 @@ def statistics():
 @app.route("/tools/interest-rates")
 def interest_rates():
     return render_template("interest_rates.html")
+
+# Route pour la page options
+@app.route("/tools/options")
+def options():
+    return render_template("options.html")
 
 
 @app.context_processor

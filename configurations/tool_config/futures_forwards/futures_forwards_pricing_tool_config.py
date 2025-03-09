@@ -5,9 +5,9 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the forward price for an investment asset with no income.",
         "url": "/tools/futures-forwards/forward-pricing/forward_pricing_no_income",
         "inputs": [
-            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1 (year)", "step": "any"},
+            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1 (year)", "step": "any"},
         ],
         "outputs": ["Forward Price (F₀)"],
         "visualization": False,
@@ -22,10 +22,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the forward price for an investment asset with known income.",
         "url": "/tools/futures-forwards/forward-pricing/forward_pricing_with_income",
         "inputs": [
-            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Income (I)", "id": "income", "type": "number", "placeholder": "e.g., 5", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"},
+            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Income (I)", "id": "income", "type": "number", "placeholder": "5", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"},
         ],
         "outputs": ["Forward Price (F₀)"],
         "visualization": False,
@@ -40,10 +40,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the forward price for an investment asset with known yield.",
         "url": "/tools/futures-forwards/forward-pricing/forward_pricing_with_yield",
         "inputs": [
-            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Yield Rate (q)", "id": "yield_rate", "type": "number", "placeholder": "e.g., 0.02", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"},
+            {"label": "Asset Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Yield Rate (q)", "id": "yield_rate", "type": "number", "placeholder": "0.02", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"},
         ],
         "outputs": ["Forward Price (F₀)"],
         "visualization": False,
@@ -58,10 +58,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the forward price of a foreign currency using interest rate parity.",
         "url": "/tools/futures-forwards/forward-pricing/forward_pricing_foreign_currency",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 1.25", "step": "any"},
-            {"label": "Domestic Risk-Free Rate (rₒ)", "id": "domestic_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Foreign Risk-Free Rate (rₓ)", "id": "foreign_rate", "type": "number", "placeholder": "e.g., 0.03", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"},
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "1.25", "step": "any"},
+            {"label": "Domestic Risk-Free Rate (rₒ)", "id": "domestic_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Foreign Risk-Free Rate (rₓ)", "id": "foreign_rate", "type": "number", "placeholder": "0.03", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"},
         ],
         "outputs": ["Forward Price (F₀)"],
         "visualization": False,
@@ -76,10 +76,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of a stock index considering dividend yield.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_stock_index",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "e.g., 0.02", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.02", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
@@ -94,10 +94,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of a commodity with fixed storage costs.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_with_storage",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Storage Costs (U)", "id": "storage_costs", "type": "number", "placeholder": "e.g., 5", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Storage Costs (U)", "id": "storage_costs", "type": "number", "placeholder": "5", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
@@ -112,11 +112,11 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of a commodity with proportional storage costs and convenience yield.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_proportional_costs_yield",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Proportional Storage Cost (u)", "id": "storage_cost_proportional", "type": "number", "placeholder": "e.g., 0.01", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "e.g., 0.02", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Proportional Storage Cost (u)", "id": "storage_cost_proportional", "type": "number", "placeholder": "0.01", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "0.02", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
@@ -132,11 +132,11 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of a commodity with fixed storage costs and convenience yield.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_nonproportional_costs_yield",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Storage Costs (U)", "id": "storage_costs", "type": "number", "placeholder": "e.g., 5", "step": "any"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05", "step": "any"},
-            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "e.g., 0.02", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Storage Costs (U)", "id": "storage_costs", "type": "number", "placeholder": "5", "step": "any"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05", "step": "any"},
+            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "0.02", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
@@ -151,9 +151,9 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of an investment asset using cost of carry.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Cost of Carry (c)", "id": "cost_of_carry", "type": "number", "placeholder": "e.g., 0.03", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Cost of Carry (c)", "id": "cost_of_carry", "type": "number", "placeholder": "0.03", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
@@ -168,10 +168,10 @@ FUTURES_FORWARDS_TOOL_CONFIG = {
         "description": "Calculate the futures price of a consumption asset using cost of carry and convenience yield.",
         "url": "/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry_yield",
         "inputs": [
-            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "e.g., 100", "step": "any"},
-            {"label": "Cost of Carry (c)", "id": "cost_of_carry", "type": "number", "placeholder": "e.g., 0.03", "step": "any"},
-            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "e.g., 0.02", "step": "any"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1", "step": "any"}
+            {"label": "Spot Price (S₀)", "id": "spot_price", "type": "number", "placeholder": "100", "step": "any"},
+            {"label": "Cost of Carry (c)", "id": "cost_of_carry", "type": "number", "placeholder": "0.03", "step": "any"},
+            {"label": "Convenience Yield (y)", "id": "convenience_yield", "type": "number", "placeholder": "0.02", "step": "any"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1", "step": "any"}
         ],
         "outputs": ["Futures Price (F₀)"],
         "visualization": False,
