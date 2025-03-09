@@ -46,7 +46,12 @@ GRAPH_FUNCTIONS = {
     "black-scholes-option": {
         1:plot_payoff_curve,
         2:plot_greeks_sensitivity
-}}
+},
+    "monte-carlo-option": {
+        1:plot_simulation_results_histogram,
+        2:plot_convergence_plot
+    },
+}
 
 @app.route("/api/get-graph")
 def get_graph():

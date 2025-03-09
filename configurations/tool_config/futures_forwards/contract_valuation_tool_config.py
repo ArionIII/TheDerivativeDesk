@@ -11,28 +11,28 @@ CONTRACT_VALUATION_TOOL_CONFIG = {
         "label": "Forward Price (F₀)", 
         "id": "forward_price", 
         "type": "number", 
-        "placeholder": "e.g., 1400", 
+        "placeholder": "1400", 
         "step": "any"
     },
     {
         "label": "Delivery Price (K)", 
         "id": "delivery_price", 
         "type": "number", 
-        "placeholder": "e.g., 1350", 
+        "placeholder": "1350", 
         "step": "any"
     },
     {
         "label": "Risk-Free Rate (r)", 
         "id": "risk_free_rate", 
         "type": "number", 
-        "placeholder": "e.g., 0.05", 
+        "placeholder": "0.05", 
         "step": "any"
     },
     {
         "label": "Time to Maturity (T)", 
         "id": "time_to_maturity", 
         "type": "number", 
-        "placeholder": "e.g., 1", 
+        "placeholder": "1", 
         "step": "any"
     },
     {
@@ -65,7 +65,7 @@ CONTRACT_VALUATION_TOOL_CONFIG = {
                 "label": "Cost of Carry (c)", 
                 "id": "cost_of_carry", 
                 "type": "number", 
-                "placeholder": "e.g., 0.03", 
+                "placeholder": "0.03", 
                 "step": "any",
                 "optional": False
             },
@@ -73,7 +73,7 @@ CONTRACT_VALUATION_TOOL_CONFIG = {
                 "label": "Convenience Yield (y)", 
                 "id": "convenience_yield", 
                 "type": "number", 
-                "placeholder": "e.g., 0.02", 
+                "placeholder": "0.02", 
                 "step": "any",
                 "optional": False
             }

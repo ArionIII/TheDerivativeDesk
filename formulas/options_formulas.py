@@ -18,28 +18,43 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
     - time_to_maturity: Time to maturity in years
     - risk_free_rate: Risk-free interest rate
     - volatility: Volatility of the underlying asset
-    - dividend_yield: Continuous dividend yield
+    - dividend_yield: Continuous dividend yield (set to 0 if None)
     - steps: Number of steps in the binomial tree
 
     Returns:
     - Option Price
     """
     try:
-        steps=int(steps)
         logger.info("Starting binomial pricing with dividends...")
+
+        # ✅ Vérification des types et conversion
+        underlying_price = float(underlying_price)
+        strike_price = float(strike_price)
+        time_to_maturity = float(time_to_maturity)
+        risk_free_rate = float(risk_free_rate)
+        volatility = float(volatility)
+        steps = int(steps)
+        dividend_yield = float(dividend_yield) if dividend_yield is not None and dividend_yield != '' else 0.0
+        
+        logger.info(f"Underlying Price: {underlying_price}, Strike Price: {strike_price}, Time to Maturity: {time_to_maturity}")
+        logger.info(f"Risk-Free Rate: {risk_free_rate}, Volatility: {volatility}, Dividend Yield: {dividend_yield}, Steps: {steps}")
 
         dt = time_to_maturity / steps
         discount_factor = exp(-risk_free_rate * dt)
 
-        # Ajustement du prix sous-jacent en fonction des dividendes
+        # ✅ Ajustement du prix sous-jacent en fonction des dividendes
         adjusted_underlying_price = underlying_price * exp(-dividend_yield * time_to_maturity)
 
-        # Facteurs de montée (u) et de descente (d) dans le modèle binomial
+        # ✅ Facteurs de montée (u) et de descente (d) dans le modèle binomial
         u = exp(volatility * np.sqrt(dt))
         d = 1 / u
+
+        # ✅ Probabilité neutre au risque
         p = (exp((risk_free_rate - dividend_yield) * dt) - d) / (u - d)
 
-        # Initialisation du tableau des prix finaux à la maturité
+        logger.info(f"u = {u}, d = {d}, p = {p}")
+
+        # ✅ Initialisation du tableau des prix finaux à la maturité
         option_values = np.zeros(steps + 1)
         for i in range(steps + 1):
             final_price = adjusted_underlying_price * (u ** (steps - i)) * (d ** i)
@@ -48,11 +63,12 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
             elif option_type == "PUT":
                 option_values[i] = max(strike_price - final_price, 0)
 
-        # Rétropropagation dans l'arbre binomial
+        # ✅ Rétropropagation dans l'arbre binomial
         for step in range(steps - 1, -1, -1):
             for i in range(step + 1):
                 option_value = (p * option_values[i] + (1 - p) * option_values[i + 1]) * discount_factor
 
+                # ✅ Prise en compte du style de l'option (américaine vs européenne)
                 if option_style == "American":
                     final_price = adjusted_underlying_price * (u ** (step - i)) * (d ** i)
                     if option_type == "CALL":
@@ -63,12 +79,14 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
                 option_values[i] = option_value
 
         option_price = option_values[0]
-        logger.info(f"Binomial pricing with dividends completed. Result = {option_price}")
+        logger.info(f"✅ Binomial pricing with dividends completed. Result = {option_price}")
         return {"option_price_with_dividend": ("Option Price with Dividend Adjustment:", round(option_price, 4))}
 
     except Exception as e:
         logger.error(f"Error in binomial_dividend_pricing: {e}")
         return {"error": str(e)}, 400
+
+
 
 
 def black_scholes_pricing(option_type, underlying_price, strike_price, time_to_maturity, 

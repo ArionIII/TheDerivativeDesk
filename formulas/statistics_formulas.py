@@ -685,36 +685,46 @@ def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics
     Returns:
     - A tuple (csv_path, xlsx_path) containing the paths to the saved files.
     """
+    logger.warning(dataset)
     try:
         # Vérifier et créer le répertoire de sortie si nécessaire
         os.makedirs(output_path, exist_ok=True)
 
         if isinstance(dataset, list):
-            # Cas d'une seule colonne : convertir en DataFrame
-            df = pd.DataFrame({"Series": dataset})
-            df["Log_Returns"] = np.log(df["Series"] / df["Series"].shift(1))
-            df_output = df.copy()
+            # ✅ Cas d'une liste de listes => plusieurs colonnes
+            if all(isinstance(i, list) for i in dataset):
+                # Convertir en DataFrame avec plusieurs colonnes
+                max_length = max(len(sublist) for sublist in dataset)
+                dataset_aligned = [sublist + [np.nan] * (max_length - len(sublist)) for sublist in dataset]
+                df = pd.DataFrame(dataset_aligned).transpose()
+                df.columns = [f"Series_{i+1}" for i in range(len(dataset))]
+            else:
+                # ✅ Cas d'une liste simple => une seule colonne
+                df = pd.DataFrame({"Series": dataset})
+
+            # ✅ Calcul des log-returns
+            log_returns = np.log(df / df.shift(1))
+            df_output = log_returns.copy()
+
         elif isinstance(dataset, dict):
-            # Aligner toutes les colonnes sur la même longueur
+            # ✅ Cas d'un dictionnaire de listes => plusieurs colonnes
             max_length = max(len(v) for v in dataset.values())
             dataset_aligned = {
                 key: v + [np.nan] * (max_length - len(v)) for key, v in dataset.items()
             }
             df = pd.DataFrame(dataset_aligned)
 
-            # Calcul des log-returns
+            # ✅ Calcul des log-returns
             log_returns = np.log(df / df.shift(1))
+            df_output = log_returns.copy()
 
-            # Réintégrer les noms des colonnes en haut du fichier
-            df_output = pd.DataFrame(columns=df.columns)  # Créer un header
-            df_output = pd.concat([df_output, log_returns], ignore_index=True)
         else:
             raise ValueError("Invalid dataset format. Expected list or dict of lists.")
 
-        # Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
+        # ✅ Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
         df_output.dropna(inplace=True, how="all")
 
-        # Générer un nom de fichier unique
+        # ✅ Générer un nom de fichier unique
         random_file_name = f"log_returns_{random.randint(10**9, 10**10 - 1)}"
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
@@ -727,5 +737,6 @@ def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics
 
         logger.info(f"Log returns saved to: {csv_path} and {xlsx_path}")
         return csv_path, xlsx_path
+    
     except Exception as e:
         raise ValueError(f"Error computing log returns: {e}")

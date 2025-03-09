@@ -8,13 +8,13 @@ OPTION_PRICING_TOOL_CONFIG = {
     "inputs": [
         {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
         {"label": "Style", "id": "option_style", "type": "select", "options": ["American", "European"]},
-        {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "e.g., 100"},
-        {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "e.g., 100"},
-        {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1"},
-        {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05"},
-        {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "e.g., 0.2"},
-        {"label": "Number of Steps (n)", "id": "steps", "type": "number", "placeholder": "e.g., 100"},
-        {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "e.g., 0.03", "optional":True},
+        {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+        {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+        {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
+        {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+        {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
+        {"label": "Number of Steps (n)", "id": "steps", "type": "number", "placeholder": "30"},
+        {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional":True},
     ],
     "outputs": ["Option Price"],
     "visualization": True,
@@ -35,11 +35,11 @@ OPTION_PRICING_TOOL_CONFIG = {
         "url": "/tools/options/option-pricing/black-scholes-option",
         "inputs": [
             {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
-            {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "e.g., 100"},
-            {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "e.g., 100"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05"},
-            {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "e.g., 0.2"}
+            {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+            {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
+            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+            {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"}
         ],
         "outputs": ["Option Price"],
         "visualization": True,
@@ -58,18 +58,14 @@ OPTION_PRICING_TOOL_CONFIG = {
         "url": "/tools/options/option-pricing/black-scholes-implied-volatility",
         "inputs": [
     {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
-    {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "e.g., 100"},
-    {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "e.g., 100"},
-    {"label": "Market Option Price", "id": "option_price", "type": "number", "placeholder": "e.g., 10.5"},
-    {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "e.g., 1 (in years)"},
-    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05"}
+    {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+    {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+    {"label": "Market Option Price", "id": "option_price", "type": "number", "placeholder": "10.5"},
+    {"label": "Time to Maturity (T years)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
+    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"}
 ],
 
         "outputs": ["Implied Volatility"],
-        "visualization": True,
-        "graphs": [
-            {"name": "Implied Volatility Curve"}
-        ],
         "keywords": ["black scholes", "implied volatility", "option pricing", "financial derivatives"]
     },
 
@@ -84,7 +80,7 @@ OPTION_PRICING_TOOL_CONFIG = {
             {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number"},
             {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number"},
             {"label": "Volatility (σ)", "id": "volatility", "type": "number"},
-            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "e.g., 0.03", "optional":True},
+            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional":True},
         ],
         "outputs": ["Spread Value"],
         "visualization": True,
@@ -102,11 +98,11 @@ OPTION_PRICING_TOOL_CONFIG = {
     "inputs": [
         {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
         {"label": "Option Style", "id": "option_style", "type": "select", "options": ["Asian", "European"]},
-        {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "e.g., 100"},
-        {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "e.g., 100"},
-        {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "e.g., 0.05"},
-        {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "e.g., 0.2"},
-        {"label": "Number of Simulations/Paths", "id": "num_simulations", "type": "number", "placeholder": "e.g., 10000"}
+        {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+        {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+        {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+        {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
+        {"label": "Number of Simulations/Paths", "id": "num_simulations", "type": "number", "placeholder": "10000"}
     ],
     "outputs": ["Option Price"],
     "visualization": True,

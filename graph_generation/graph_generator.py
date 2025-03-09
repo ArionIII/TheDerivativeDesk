@@ -9,6 +9,7 @@ from config import logger
 from scipy.optimize import fsolve
 from math import log, exp, sqrt
 from scipy.stats import norm
+from scipy.optimize import brentq
 
 
 
@@ -568,13 +569,14 @@ def plot_fra_fixed_vs_forward(data):
 def plot_binomial_tree_with_dividend(data):
     logger.info(f"Generating binomial tree graph with data: {data}")
 
-    underlying_price = data.get("underlying_price")
-    strike_price = data.get("strike_price")
-    time_to_maturity = data.get("time_to_maturity")
-    risk_free_rate = data.get("risk_free_rate")
-    volatility = data.get("volatility")
+    underlying_price = float(data.get("underlying_price"))
+    strike_price = float(data.get("strike_price", 0) or 0)
+    time_to_maturity = float(data.get("time_to_maturity", 0) or 0)
+    risk_free_rate = float(data.get("risk_free_rate", 0) or 0)
+    volatility = float(data.get("volatility", 0) or 0)
     steps = int(data.get("steps"))
-    dividend_yield = data.get("dividend_yield", 0)
+    dividend_yield = (data.get("dividend_yield", 0))
+    dividend_yield = float(dividend_yield) if dividend_yield else 0
 
     if None in (underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility, steps):
         raise ValueError("Missing one or more required inputs for binomial tree")
@@ -584,12 +586,12 @@ def plot_binomial_tree_with_dividend(data):
     d = np.exp((risk_free_rate - dividend_yield) * dt - volatility * np.sqrt(dt))
 
     stock_price_tree = np.zeros((steps + 1, steps + 1))
-    
+    logger.info(f"Building binomial tree with {steps} steps")
     # Construire l'arbre binomial
     for i in range(steps + 1):
         for j in range(i + 1):
             stock_price_tree[j, i] = underlying_price * (u ** (i - j)) * (d ** j)
-
+    logger.info("Built binomial tree")
     # Création du graphique
     fig, ax = plt.subplots(figsize=(10, 6))
     
@@ -599,7 +601,7 @@ def plot_binomial_tree_with_dividend(data):
             if i < steps:
                 ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j, i + 1]], 'k-', lw=0.5)
                 ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j + 1, i + 1]], 'k-', lw=0.5)
-
+    logger.info("Plotted binomial tree")
     ax.set_title("Binomial Tree with Dividend Adjustment")
     ax.set_xlabel("Time Step")
     ax.set_ylabel("Underlying Price")
@@ -609,22 +611,25 @@ def plot_binomial_tree_with_dividend(data):
 def plot_payoff_diagram_with_dividend(data):
     logger.info(f"Generating payoff diagram with data: {data}")
 
-    option_type = data.get("option_type")
-    underlying_price = data.get("underlying_price")
-    strike_price = data.get("strike_price")
+    option_type = (data.get("option_type"))
+    underlying_price = float(data.get("underlying_price"))
+    strike_price = float(data.get("strike_price"))
+    logger.info(f"Option type: {option_type}, underlying price: {underlying_price}, strike price: {strike_price}")
     dividend_yield = data.get("dividend_yield", 0)
+    dividend_yield = float(dividend_yield) if dividend_yield else 0
+    logger.info(f"Dividend yield: {dividend_yield}")
 
     if None in (option_type, underlying_price, strike_price):
         raise ValueError("Missing one or more required inputs for payoff diagram")
-
+    logger.info("Generating payoff diagram")
     # Génération de la plage de prix à la maturité
     price_range = np.linspace(0.5 * underlying_price, 1.5 * underlying_price, 100)
-
+    logger.info("Generated price range")
     if option_type == "CALL":
         payoff = np.maximum(price_range - strike_price, 0) * np.exp(-dividend_yield)
     else:
         payoff = np.maximum(strike_price - price_range, 0) * np.exp(-dividend_yield)
-
+    logger.info("Generated payoff diagram")
     # Création du graphique
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(price_range, payoff, label=f"{option_type} Option Payoff", color="blue")
@@ -688,7 +693,6 @@ def plot_greeks_sensitivity(data):
     gamma = []
     theta = []
     vega = []
-    rho = []
 
     for S in price_range:
         d1 = (log(S / strike_price) + (risk_free_rate + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
@@ -696,10 +700,8 @@ def plot_greeks_sensitivity(data):
 
         if option_type == "CALL":
             delta.append(norm.cdf(d1))
-            rho.append(strike_price * time_to_maturity * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2))
         else:
             delta.append(norm.cdf(d1) - 1)
-            rho.append(-strike_price * time_to_maturity * exp(-risk_free_rate * time_to_maturity) * norm.cdf(-d2))
 
         gamma.append(norm.pdf(d1) / (S * volatility * sqrt(time_to_maturity)))
         theta.append(-((S * norm.pdf(d1) * volatility) / (2 * sqrt(time_to_maturity))) - 
@@ -712,7 +714,6 @@ def plot_greeks_sensitivity(data):
     ax.plot(price_range, gamma, label="Gamma", color="red")
     ax.plot(price_range, theta, label="Theta", color="green")
     ax.plot(price_range, vega, label="Vega", color="purple")
-    ax.plot(price_range, rho, label="Rho", color="orange")
 
     ax.set_title(f"{option_type} Option Greeks Sensitivity")
     ax.set_xlabel("Underlying Price")
@@ -723,3 +724,104 @@ def plot_greeks_sensitivity(data):
 
     return save_plot(fig, generate_unique_filename("black_scholes_greeks"))
 
+def plot_simulation_results_histogram(data):
+    logger.info(f"Generating simulation results histogram with data: {data}")
+    
+    option_type = data.get("option_type")
+    option_style = data.get("option_style")
+    underlying_price = float(data.get("underlying_price"))
+    strike_price = float(data.get("strike_price"))
+    risk_free_rate = float(data.get("risk_free_rate"))
+    volatility = float(data.get("volatility"))
+    num_simulations = int(data.get("num_simulations"))
+    option_price = float(data.get("option_price"))
+
+    if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, num_simulations, option_price):
+        raise ValueError("Missing one or more required inputs for simulation histogram")
+
+    # ✅ Simulation des résultats (enregistre chaque payoff dans une liste)
+    np.random.seed(42)
+    dt = 1 / 365
+    payoffs = []
+
+    for _ in range(num_simulations):
+        path = [underlying_price]
+        for _ in range(int(1 / dt)):
+            path.append(path[-1] * np.exp((risk_free_rate - 0.5 * volatility**2) * dt +
+                                          volatility * np.sqrt(dt) * np.random.randn()))
+        
+        if option_type == "CALL":
+            payoff = max(0, path[-1] - strike_price)
+        else:
+            payoff = max(0, strike_price - path[-1])
+
+        payoffs.append(payoff)
+
+    # ✅ Création de l'histogramme
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.hist(payoffs, bins=50, color="skyblue", edgecolor="black", alpha=0.7)
+    
+    # ✅ Ajout d'une ligne verticale pour le prix de l'option
+    ax.axvline(option_price, color="red", linestyle="--", label=f"Option Price: {round(option_price, 4)}")
+
+    # ✅ Paramètres du graphique
+    ax.set_title(f"{option_type} Option Simulation Results Histogram")
+    ax.set_xlabel("Payoff")
+    ax.set_ylabel("Frequency")
+    ax.legend()
+
+    plt.grid(True)
+
+    # ✅ Sauvegarde du graphe
+    return save_plot(fig, generate_unique_filename("monte_carlo_histogram"))
+
+def plot_convergence_plot(data):
+    logger.info(f"Generating convergence plot with data: {data}")
+    
+    option_type = data.get("option_type")
+    option_style = data.get("option_style")
+    underlying_price = float(data.get("underlying_price"))
+    strike_price = float(data.get("strike_price"))
+    risk_free_rate = float(data.get("risk_free_rate"))
+    volatility = float(data.get("volatility"))
+    num_simulations = int(data.get("num_simulations"))
+    option_price = float(data.get("option_price"))
+
+    if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, num_simulations, option_price):
+        raise ValueError("Missing one or more required inputs for convergence plot")
+
+    # ✅ Simulation des résultats (pour la convergence)
+    np.random.seed(42)
+    dt = 1 / 365
+    payoffs = []
+    cumulative_mean = []
+
+    for i in range(num_simulations):
+        path = [underlying_price]
+        for _ in range(int(1 / dt)):
+            path.append(path[-1] * np.exp((risk_free_rate - 0.5 * volatility**2) * dt +
+                                          volatility * np.sqrt(dt) * np.random.randn()))
+        
+        if option_type == "CALL":
+            payoff = max(0, path[-1] - strike_price)
+        else:
+            payoff = max(0, strike_price - path[-1])
+
+        payoffs.append(payoff)
+        cumulative_mean.append(np.mean(payoffs) * np.exp(-risk_free_rate))
+
+    # ✅ Création du graphique de convergence
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(range(1, num_simulations + 1), cumulative_mean, label="Convergence", color="blue")
+    ax.axhline(option_price, color="red", linestyle="--", label=f"Option Price: {round(option_price, 4)}")
+
+    # ✅ Paramètres du graphique
+    ax.set_title(f"{option_type} Option Convergence Plot")
+    ax.set_xlabel("Number of Simulations")
+    ax.set_ylabel("Option Price")
+    ax.legend()
+
+    plt.grid(True)
+
+    # ✅ Sauvegarde du graphe
+    return save_plot(fig, generate_unique_filename("monte_carlo_convergence"))

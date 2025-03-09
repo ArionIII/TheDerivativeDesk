@@ -9,6 +9,11 @@ import json
 import numpy as np
 from werkzeug.datastructures import FileStorage
 import ipdb
+import os
+import pandas as pd
+from io import StringIO
+import random
+import string
 
 
 class LogColors:
@@ -433,3 +438,52 @@ def result_tuple_into_dict(result):
     else:
         result_dict = result  # Déjà un dictionnaire
     return result_dict
+
+def generate_input_from_file(filepath):
+    """
+    Generate input configuration from a CSV or XLSX file.
+
+    Args:
+        filepath (str): Path to the input file (CSV or XLSX).
+
+    Returns:
+        list or list of lists: Input data extracted from the file.
+    """
+    try:
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"File not found: {filepath}")
+        
+        # Déterminer le format du fichier
+        file_extension = os.path.splitext(filepath)[1].lower()
+
+        # Lire le fichier
+        if file_extension == ".csv":
+            # Détecter automatiquement le séparateur ("," ou ";" ou "\t")
+            with open(filepath, 'r', encoding="utf-8") as f:
+                first_line = f.readline()
+                separator = "," if "," in first_line else ";" if ";" in first_line else "\t"
+            df = pd.read_csv(filepath, sep=separator)
+
+        elif file_extension in [".xls", ".xlsx"]:
+            df = pd.read_excel(filepath, engine="openpyxl")
+
+        else:
+            raise ValueError("Unsupported file format. Only CSV and XLSX are allowed.")
+
+        # Remplacer les virgules par des points pour assurer la conversion correcte
+        df = df.applymap(lambda x: x.replace(",", ".") if isinstance(x, str) else x)
+        df = df.astype(float)  # Conversion en float
+
+        if df.shape[1] == 1:
+            # Cas 1: Une seule colonne → liste simple
+            values = df.iloc[:, 0].dropna().tolist()
+        else:
+            # Cas 2: Plusieurs colonnes → liste de listes
+            values = [df.iloc[:, i].dropna().tolist() for i in range(df.shape[1])]
+
+        return values
+    
+    except Exception as e:
+        raise ValueError(f"Error parsing file: {e}")
+
+

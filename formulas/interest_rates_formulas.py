@@ -102,7 +102,7 @@ def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m
     - bond_prices: List of bond prices.
     - maturities: List of bond maturities in years.
     - face_values: List of bond face values.
-    - coupon_rates: List of coupon rates (decimal format, e.g., 0.05 for 5%).
+    - coupon_rates: List of coupon rates (decimal format, 0.05 for 5%).
     - m_compoundings: List of compounding frequencies (1=annual, 2=semi-annual, etc.).
 
     Returns:
