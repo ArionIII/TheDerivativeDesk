@@ -39,7 +39,14 @@ GRAPH_FUNCTIONS = {
     #     1:plot_fra_break_even_vs_forward,
     #     2:plot_fra_break_even_vs_maturity,
     # }
-}
+    "binomial-dividend": {
+        1:plot_binomial_tree_with_dividend,
+        2:plot_payoff_diagram_with_dividend,
+    },
+    "black-scholes-option": {
+        1:plot_payoff_curve,
+        2:plot_greeks_sensitivity
+}}
 
 @app.route("/api/get-graph")
 def get_graph():

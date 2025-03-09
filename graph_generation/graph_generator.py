@@ -7,6 +7,9 @@ import io
 from flask import send_file
 from config import logger
 from scipy.optimize import fsolve
+from math import log, exp, sqrt
+from scipy.stats import norm
+
 
 
 def save_plot(fig, filename):
@@ -560,3 +563,163 @@ def plot_fra_fixed_vs_forward(data):
 #     ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
 
 #     return save_plot(fig, generate_unique_filename("fra_break_even_vs_maturity"))
+
+
+def plot_binomial_tree_with_dividend(data):
+    logger.info(f"Generating binomial tree graph with data: {data}")
+
+    underlying_price = data.get("underlying_price")
+    strike_price = data.get("strike_price")
+    time_to_maturity = data.get("time_to_maturity")
+    risk_free_rate = data.get("risk_free_rate")
+    volatility = data.get("volatility")
+    steps = int(data.get("steps"))
+    dividend_yield = data.get("dividend_yield", 0)
+
+    if None in (underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility, steps):
+        raise ValueError("Missing one or more required inputs for binomial tree")
+
+    dt = time_to_maturity / steps
+    u = np.exp((risk_free_rate - dividend_yield) * dt + volatility * np.sqrt(dt))
+    d = np.exp((risk_free_rate - dividend_yield) * dt - volatility * np.sqrt(dt))
+
+    stock_price_tree = np.zeros((steps + 1, steps + 1))
+    
+    # Construire l'arbre binomial
+    for i in range(steps + 1):
+        for j in range(i + 1):
+            stock_price_tree[j, i] = underlying_price * (u ** (i - j)) * (d ** j)
+
+    # Création du graphique
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    for i in range(steps + 1):
+        for j in range(i + 1):
+            ax.text(i, stock_price_tree[j, i], f"{stock_price_tree[j, i]:.2f}", ha="center", va="center", fontsize=8)
+            if i < steps:
+                ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j, i + 1]], 'k-', lw=0.5)
+                ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j + 1, i + 1]], 'k-', lw=0.5)
+
+    ax.set_title("Binomial Tree with Dividend Adjustment")
+    ax.set_xlabel("Time Step")
+    ax.set_ylabel("Underlying Price")
+    
+    return save_plot(fig, generate_unique_filename("binomial_tree_with_dividend"))
+
+def plot_payoff_diagram_with_dividend(data):
+    logger.info(f"Generating payoff diagram with data: {data}")
+
+    option_type = data.get("option_type")
+    underlying_price = data.get("underlying_price")
+    strike_price = data.get("strike_price")
+    dividend_yield = data.get("dividend_yield", 0)
+
+    if None in (option_type, underlying_price, strike_price):
+        raise ValueError("Missing one or more required inputs for payoff diagram")
+
+    # Génération de la plage de prix à la maturité
+    price_range = np.linspace(0.5 * underlying_price, 1.5 * underlying_price, 100)
+
+    if option_type == "CALL":
+        payoff = np.maximum(price_range - strike_price, 0) * np.exp(-dividend_yield)
+    else:
+        payoff = np.maximum(strike_price - price_range, 0) * np.exp(-dividend_yield)
+
+    # Création du graphique
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(price_range, payoff, label=f"{option_type} Option Payoff", color="blue")
+    ax.axhline(0, color="red", linestyle="--")
+    ax.axvline(strike_price, color="green", linestyle="--", label="Strike Price")
+
+    ax.set_title(f"{option_type} Option Payoff with Dividend")
+    ax.set_xlabel("Underlying Price at Maturity")
+    ax.set_ylabel("Payoff")
+    ax.legend()
+
+    return save_plot(fig, generate_unique_filename("payoff_with_dividend"))
+
+# ✅ Payoff Curve
+def plot_payoff_curve(data):
+    logger.info(f"Generating payoff curve with data: {data}")
+    
+    option_type = data.get("option_type")
+    underlying_price = data.get("underlying_price")
+    strike_price = data.get("strike_price")
+
+    if None in (option_type, underlying_price, strike_price):
+        raise ValueError("Missing one or more required inputs for payoff curve")
+
+    price_range = np.linspace(0.5 * strike_price, 1.5 * strike_price, 100)
+
+    if option_type == "CALL":
+        payoff = np.maximum(price_range - strike_price, 0)
+    else:
+        payoff = np.maximum(strike_price - price_range, 0)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(price_range, payoff, label=f'{option_type} Option Payoff', color='blue')
+    ax.axhline(0, color='black', linewidth=1, linestyle="--")
+    ax.axvline(strike_price, color='red', linestyle="--", label=f"Strike Price: {strike_price}")
+
+    ax.set_title(f"{option_type} Option Payoff Curve")
+    ax.set_xlabel("Underlying Price")
+    ax.set_ylabel("Payoff")
+    ax.legend()
+    plt.grid(True)
+
+    return save_plot(fig, generate_unique_filename("black_scholes_payoff"))
+
+# ✅ Greeks Sensitivity
+def plot_greeks_sensitivity(data):
+    logger.info(f"Generating greeks sensitivity with data: {data}")
+    
+    option_type = data.get("option_type")
+    underlying_price = data.get("underlying_price")
+    strike_price = data.get("strike_price")
+    time_to_maturity = data.get("time_to_maturity")
+    risk_free_rate = data.get("risk_free_rate")
+    volatility = data.get("volatility")
+
+    if None in (option_type, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility):
+        raise ValueError("Missing one or more required inputs for greeks")
+
+    price_range = np.linspace(0.5 * strike_price, 1.5 * strike_price, 100)
+    delta = []
+    gamma = []
+    theta = []
+    vega = []
+    rho = []
+
+    for S in price_range:
+        d1 = (log(S / strike_price) + (risk_free_rate + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+        d2 = d1 - volatility * sqrt(time_to_maturity)
+
+        if option_type == "CALL":
+            delta.append(norm.cdf(d1))
+            rho.append(strike_price * time_to_maturity * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2))
+        else:
+            delta.append(norm.cdf(d1) - 1)
+            rho.append(-strike_price * time_to_maturity * exp(-risk_free_rate * time_to_maturity) * norm.cdf(-d2))
+
+        gamma.append(norm.pdf(d1) / (S * volatility * sqrt(time_to_maturity)))
+        theta.append(-((S * norm.pdf(d1) * volatility) / (2 * sqrt(time_to_maturity))) - 
+                     risk_free_rate * strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2 if option_type == "CALL" else -d2))
+        vega.append(S * norm.pdf(d1) * sqrt(time_to_maturity))
+
+    # 🌟 Créer le graphe
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(price_range, delta, label="Delta", color="blue")
+    ax.plot(price_range, gamma, label="Gamma", color="red")
+    ax.plot(price_range, theta, label="Theta", color="green")
+    ax.plot(price_range, vega, label="Vega", color="purple")
+    ax.plot(price_range, rho, label="Rho", color="orange")
+
+    ax.set_title(f"{option_type} Option Greeks Sensitivity")
+    ax.set_xlabel("Underlying Price")
+    ax.set_ylabel("Value")
+    ax.axhline(0, color="black", linestyle="--", linewidth=1)
+    ax.legend()
+    plt.grid(True)
+
+    return save_plot(fig, generate_unique_filename("black_scholes_greeks"))
+

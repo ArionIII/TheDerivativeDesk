@@ -286,7 +286,7 @@ window.openSeeMore = async (ticker) => {
         document.getElementById("stock-ebitda").textContent = `EBITDA: ${formatNumber(stockDetails.ebitda)}`;
 
         // 🔹 Dividendes et Cashflow
-        document.getElementById("stock-dividend-yield").textContent = `Dividend Yield: ${formatPercentage(stockDetails.dividend_yield)}`;
+        document.getElementById("stock-dividend-yield").textContent = `Dividend Yield: ${formatPercentage((stockDetails.dividend_yield)/100)}`;
         document.getElementById("stock-dividend-rate").textContent = `Dividend Rate: $${stockDetails.dividend_rate || "N/A"}`;
         document.getElementById("stock-payout-ratio").textContent = `Payout Ratio: ${formatPercentage(stockDetails.payout_ratio)}`;
         document.getElementById("stock-free-cashflow").textContent = `Free Cash Flow: ${formatNumber(stockDetails.free_cashflow)}`;
