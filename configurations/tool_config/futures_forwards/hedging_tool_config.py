@@ -5,7 +5,7 @@ HEDGING_TOOL_CONFIG = {
             "Compute the optimal number of futures contracts or adjust for tailing the hedge "
             "with optional asset and futures value parameters."
         ),
-        "url": "/tools/hedging-basics/hedging_tool",
+        "url": "/tools/hedging-basics/optimal_number_of_futures_contracts_tailing_the_hedge",
         "inputs": [
             {"label": "Asset Quantity", "id": "asset_quantity", "type": "number", "placeholder": "1000", "step": "any"},
             {"label": "Futures Quantity", "id": "futures_quantity", "type": "number", "placeholder": "50", "step": "any"},

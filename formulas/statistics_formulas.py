@@ -673,7 +673,6 @@ def forecast_series(dataset, n_previsions, temporal_step):
     # }
 
 
-
 def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics/"):
     """
     Compute log returns for a given dataset and save results in both CSV and XLSX formats.
