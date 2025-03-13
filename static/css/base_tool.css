@@ -135,7 +135,7 @@ body {
     position: absolute; /* Positionnement absolu */
     top: 400px; /* Distance depuis le haut */
     right: 0; /* Aligner à droite */
-    width: 250px; /* Largeur fixe */
+    width: 350px; /* Largeur fixe */
     background-color: #fbf8f1; /* Blanc crème */
     border: 2px solid #e6e6e6; /* Bordure douce */
     border-radius: 8px; /* Coins arrondis */

@@ -6,7 +6,8 @@ from math import exp
 from config import logger
 
 
-def binomial_dividend_pricing(option_type, option_style, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility, dividend_yield, steps):
+def binomial_dividend_pricing(option_type, option_style, underlying_price, strike_price, 
+                              time_to_maturity, risk_free_rate, volatility, dividend_yield, steps, position_type):
     """
     Price an option using a binomial tree model adjusted for continuous dividend payments.
     
@@ -35,21 +36,18 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
         volatility = float(volatility)
         steps = int(steps)
         dividend_yield = float(dividend_yield) if dividend_yield is not None and dividend_yield != '' else 0.0
-        
+
         logger.info(f"Underlying Price: {underlying_price}, Strike Price: {strike_price}, Time to Maturity: {time_to_maturity}")
         logger.info(f"Risk-Free Rate: {risk_free_rate}, Volatility: {volatility}, Dividend Yield: {dividend_yield}, Steps: {steps}")
 
         dt = time_to_maturity / steps
         discount_factor = exp(-risk_free_rate * dt)
 
-        # ✅ Ajustement du prix sous-jacent en fonction des dividendes
-        adjusted_underlying_price = underlying_price * exp(-dividend_yield * time_to_maturity)
+        # ✅ Facteurs de montée (u) et de descente (d) ajustés pour le dividende
+        u = exp((risk_free_rate - dividend_yield) * dt + volatility * sqrt(dt))
+        d = exp((risk_free_rate - dividend_yield) * dt - volatility * sqrt(dt))
 
-        # ✅ Facteurs de montée (u) et de descente (d) dans le modèle binomial
-        u = exp(volatility * np.sqrt(dt))
-        d = 1 / u
-
-        # ✅ Probabilité neutre au risque
+        # ✅ Probabilité neutre au risque ajustée pour le dividende
         p = (exp((risk_free_rate - dividend_yield) * dt) - d) / (u - d)
 
         logger.info(f"u = {u}, d = {d}, p = {p}")
@@ -57,7 +55,7 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
         # ✅ Initialisation du tableau des prix finaux à la maturité
         option_values = np.zeros(steps + 1)
         for i in range(steps + 1):
-            final_price = adjusted_underlying_price * (u ** (steps - i)) * (d ** i)
+            final_price = underlying_price * (u ** (steps - i)) * (d ** i)
             if option_type == "CALL":
                 option_values[i] = max(final_price - strike_price, 0)
             elif option_type == "PUT":
@@ -69,8 +67,8 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
                 option_value = (p * option_values[i] + (1 - p) * option_values[i + 1]) * discount_factor
 
                 # ✅ Prise en compte du style de l'option (américaine vs européenne)
+                final_price = underlying_price * (u ** (step - i)) * (d ** i)
                 if option_style == "American":
-                    final_price = adjusted_underlying_price * (u ** (step - i)) * (d ** i)
                     if option_type == "CALL":
                         option_value = max(option_value, final_price - strike_price)
                     elif option_type == "PUT":
@@ -80,6 +78,7 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
 
         option_price = option_values[0]
         logger.info(f"✅ Binomial pricing with dividends completed. Result = {option_price}")
+
         return {"option_price_with_dividend": ("Option Price with Dividend Adjustment:", round(option_price, 4))}
 
     except Exception as e:
@@ -90,15 +89,31 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
 
 
 def black_scholes_pricing(option_type, underlying_price, strike_price, time_to_maturity, 
-                          risk_free_rate, volatility):
+                          risk_free_rate, volatility, dividend_yield):
     try:
-        d1 = (log(underlying_price / strike_price) + (risk_free_rate + (volatility ** 2) / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+        underlying_price = float(underlying_price)
+        strike_price = float(strike_price)
+        time_to_maturity = float(time_to_maturity)
+        risk_free_rate = float(risk_free_rate)
+        volatility = float(volatility)
+        dividend_yield = float(dividend_yield if dividend_yield not in [None, ""] else 0.0)
+
+
+        # Ajustement du prix sous-jacent pour le dividende
+        adjusted_underlying_price = underlying_price * exp(-dividend_yield * time_to_maturity)
+
+        # Calcul des termes d1 et d2
+        d1 = (log(adjusted_underlying_price / strike_price) + (risk_free_rate + (volatility ** 2) / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
         d2 = d1 - volatility * sqrt(time_to_maturity)
 
         if option_type == "CALL":
-            price = underlying_price * norm.cdf(d1) - strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2)
+            price = adjusted_underlying_price * norm.cdf(d1) - strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2)
+        elif option_type == "PUT":
+            # Utiliser la parité put-call : Put = Call - S * exp(-qT) + K * exp(-rT)
+            call_price = adjusted_underlying_price * norm.cdf(d1) - strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2)
+            price = call_price - adjusted_underlying_price + strike_price * exp(-risk_free_rate * time_to_maturity)
         else:
-            price = strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(-d2) - underlying_price * norm.cdf(-d1)
+            raise ValueError("Invalid option type. Must be 'CALL' or 'PUT'.")
 
         return {"option_price": ("Option Price :", round(price, 4))}
 
@@ -107,18 +122,26 @@ def black_scholes_pricing(option_type, underlying_price, strike_price, time_to_m
 
 
 
+
 def implied_volatility(option_type, underlying_price, strike_price, option_price, 
-                       time_to_maturity, risk_free_rate):
+                       time_to_maturity, risk_free_rate, dividend_yield):
     try:
         def bs_price(volatility):
-            d1 = (log(underlying_price / strike_price) + (risk_free_rate + (volatility ** 2) / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+            # Ajustement avec le rendement du dividende
+            d1 = (log(underlying_price / strike_price) + 
+                  (risk_free_rate - dividend_yield + (volatility ** 2) / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
             d2 = d1 - volatility * sqrt(time_to_maturity)
+            
             if option_type == "CALL":
-                return underlying_price * norm.cdf(d1) - strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2) - option_price
+                return (underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1) - 
+                        strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2) - option_price)
             else:
-                return strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(-d2) - underlying_price * norm.cdf(-d1) - option_price
+                return (strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(-d2) - 
+                        underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1) - option_price)
 
+        # Trouver la volatilité implicite avec Newton-Raphson
         implied_vol = newton(bs_price, 0.2, tol=1e-6, maxiter=100)
+
         return {"implied_volatility": ("Implied Volatility :", round(implied_vol, 4))}
 
     except Exception as e:
@@ -126,43 +149,79 @@ def implied_volatility(option_type, underlying_price, strike_price, option_price
 
 
 
+
 def monte_carlo_pricing(option_type, option_style, underlying_price, strike_price, 
-                        risk_free_rate, volatility, num_simulations):
+                        time_to_maturity, risk_free_rate, volatility, dividend_yield, num_steps, num_simulations):
     try:
+        # ✅ Conversion des paramètres
         num_simulations = int(num_simulations)
+        num_steps = int(num_steps)
+        time_to_maturity = float(time_to_maturity)
+        dividend_yield = float(dividend_yield) if dividend_yield is not None and dividend_yield != '' else 0.0
         np.random.seed(42)
-        dt = 1 / 365
+
+        dt = time_to_maturity / num_steps  # ✅ Pas de temps en fraction d'année
         payoffs = []
+        antithetic_payoffs = []  # Pour améliorer la convergence
 
         for _ in range(num_simulations):
             path = [underlying_price]
-            for _ in range(int(1 / dt)):
-                path.append(path[-1] * np.exp((risk_free_rate - 0.5 * volatility ** 2) * dt +
-                                              volatility * np.sqrt(dt) * np.random.randn()))
-            
+            antithetic_path = [underlying_price]
+
+            for _ in range(num_steps):
+                # ✅ Bruit gaussien standard
+                z = np.random.randn()
+
+                # ✅ Processus stochastique avec dividendes
+                next_price = path[-1] * np.exp(
+                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
+                    volatility * np.sqrt(dt) * z
+                )
+                
+                # ✅ Antithetic sampling (réduction de variance)
+                next_price_antithetic = antithetic_path[-1] * np.exp(
+                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
+                    volatility * np.sqrt(dt) * -z
+                )
+
+                path.append(next_price)
+                antithetic_path.append(next_price_antithetic)
+
+            # ✅ Payoff final selon le style d'option
             if option_style == "European":
                 if option_type == "CALL":
-                    payoff = max(0, max(path) - strike_price)
+                    payoff = max(0, path[-1] - strike_price)
+                    antithetic_payoff = max(0, antithetic_path[-1] - strike_price)
                 else:
-                    payoff = max(0, strike_price - max(path))
+                    payoff = max(0, strike_price - path[-1])
+                    antithetic_payoff = max(0, strike_price - antithetic_path[-1])
             
             elif option_style == "Asian":
                 average_price = np.mean(path)
+                antithetic_average_price = np.mean(antithetic_path)
                 if option_type == "CALL":
                     payoff = max(0, average_price - strike_price)
+                    antithetic_payoff = max(0, antithetic_average_price - strike_price)
                 else:
                     payoff = max(0, strike_price - average_price)
-            
+                    antithetic_payoff = max(0, strike_price - antithetic_average_price)
+
             else:
-                raise ValueError("Invalid option style. Must be 'AMERICAN' or 'ASIAN'.")
+                raise ValueError("Invalid option style. Must be 'European' or 'Asian'.")
 
             payoffs.append(payoff)
+            antithetic_payoffs.append(antithetic_payoff)
 
-        price = np.exp(-risk_free_rate) * np.mean(payoffs)
+        # ✅ Moyenne des payoffs et antithetic sampling (réduction de variance)
+        price = np.exp(-risk_free_rate * time_to_maturity) * (np.mean(payoffs) + np.mean(antithetic_payoffs)) / 2
+
         return {"option_price": ("Option Price :", round(price, 4))}
 
     except Exception as e:
         return {"error": str(e)}, 400
+
+
+
 
 
 

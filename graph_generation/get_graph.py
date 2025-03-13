@@ -41,7 +41,7 @@ GRAPH_FUNCTIONS = {
     # }
     "binomial-dividend": {
         1:plot_binomial_tree_with_dividend,
-        2:plot_payoff_diagram_with_dividend,
+        2:plot_pnl_diagram_with_dividend,
     },
     "black-scholes-option": {
         1:plot_payoff_curve,

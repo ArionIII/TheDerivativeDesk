@@ -10,11 +10,12 @@ OPTION_PRICING_TOOL_CONFIG = {
         {"label": "Style", "id": "option_style", "type": "select", "options": ["American", "European"]},
         {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
         {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
-        {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
+        {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "0.5"},
         {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
         {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
         {"label": "Number of Steps (n)", "id": "steps", "type": "number", "placeholder": "30"},
         {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional":True},
+        {"label": "Position Type", "id": "position_type", "type": "select", "options": ["LONG", "SHORT"]},
     ],
     "outputs": ["Option Price"],
     "visualization": True,
@@ -34,13 +35,14 @@ OPTION_PRICING_TOOL_CONFIG = {
         "description": "Price European-style options using the Black-Scholes formula.",
         "url": "/tools/options/option-pricing/black-scholes-option",
         "inputs": [
-            {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
-            {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
-            {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
-            {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"}
-        ],
+    {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
+    {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+    {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+    {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "0.5"},
+    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+    {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
+    {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional": True}
+],
         "outputs": ["Option Price"],
         "visualization": True,
         "graphs": [
@@ -49,8 +51,17 @@ OPTION_PRICING_TOOL_CONFIG = {
         ],
         "keywords": [
             "black scholes", "call option", "put option", "option pricing", "financial derivatives"
-        ]
+        ],
+        "note": """The Black-Scholes model adjusts for dividends by accounting for the reduced value of holding an asset that pays dividends. The growth rate is adjusted from **r** to **r - q**, and a discount factor **e⁻ᵠᵀ** is applied to reflect this. Dividends generally reduce the value of call options and increase the value of put options. Delta, vega, and theta are adjusted accordingly, while gamma and rho remain mostly unchanged.  
+
+### Concerning Graphs:  
+- **Delta** and **Gamma** are plotted without scaling.  
+- **Vega** is plotted on an **annual basis** per 1% change in volatility.  
+- **Theta** is converted to a **daily value** by dividing the annualized theta by 365.  
+"""
+
     },
+
 
     "black-scholes-implied-volatility": {
         "title": "Black-Scholes: Implied Volatility",
@@ -61,8 +72,9 @@ OPTION_PRICING_TOOL_CONFIG = {
     {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
     {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
     {"label": "Market Option Price", "id": "option_price", "type": "number", "placeholder": "10.5"},
-    {"label": "Time to Maturity (T years)", "id": "time_to_maturity", "type": "number", "placeholder": "1"},
-    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"}
+    {"label": "Time to Maturity (T years)", "id": "time_to_maturity", "type": "number", "placeholder": "0.5"},
+    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+    {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional": True}
 ],
 
         "outputs": ["Implied Volatility"],
@@ -96,14 +108,17 @@ OPTION_PRICING_TOOL_CONFIG = {
     "description": "Use Monte Carlo simulation to price Asian or European options.",
     "url": "/tools/options/option-pricing/monte-carlo-option",
     "inputs": [
-        {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
-        {"label": "Option Style", "id": "option_style", "type": "select", "options": ["Asian", "European"]},
-        {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
-        {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
-        {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
-        {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
-        {"label": "Number of Simulations/Paths", "id": "num_simulations", "type": "number", "placeholder": "10000"}
-    ],
+    {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
+    {"label": "Option Style", "id": "option_style", "type": "select", "options": ["Asian", "European"]},
+    {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number", "placeholder": "100"},
+    {"label": "Strike Price (K)", "id": "strike_price", "type": "number", "placeholder": "100"},
+    {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "0.5"},
+    {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
+    {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
+    {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional": True},
+    {"label": "Number of Simulations/Paths", "id": "num_simulations", "type": "number", "placeholder": "4000"},
+    {"label": "Number of Steps (intra-path)", "id": "num_steps", "type": "number", "placeholder": "365"}
+],
     "outputs": ["Option Price"],
     "visualization": True,
     "graphs": [
