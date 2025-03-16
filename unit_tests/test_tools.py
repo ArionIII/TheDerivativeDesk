@@ -223,6 +223,7 @@ def run_tests():
 # FONCTION POUR CRÉER LE FICHIER CSV
 # -----------------------------------------------------------------------------
 
+
 def generate_unique_filename_csv(prefix="test_report"):
     """Génère un nom de fichier unique avec un identifiant aléatoire."""
     random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
