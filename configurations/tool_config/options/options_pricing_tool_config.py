@@ -41,7 +41,8 @@ OPTION_PRICING_TOOL_CONFIG = {
     {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number", "placeholder": "0.5"},
     {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number", "placeholder": "0.05"},
     {"label": "Volatility (σ)", "id": "volatility", "type": "number", "placeholder": "0.2"},
-    {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional": True}
+    {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional": True},
+    {"label": "Position Type (greeks plotting)", "id": "position_type", "type": "select", "options": ["LONG", "SHORT"]},
 ],
         "outputs": ["Option Price"],
         "visualization": True,

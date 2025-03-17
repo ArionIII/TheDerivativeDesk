@@ -704,11 +704,17 @@ from numpy import log, sqrt, exp
 import numpy as np
 import matplotlib.pyplot as plt
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+from math import log, sqrt, exp
+
 def plot_greeks_sensitivity(data):
     logger.info(f"Generating greeks sensitivity with data: {data}")
     
     # ✅ Extraction des inputs depuis le dictionnaire `data`
     option_type = data.get("option_type")
+    position_type = data.get("position_type")  # Ajout de la position (LONG/SHORT)
     underlying_price = float(data.get("underlying_price"))
     strike_price = float(data.get("strike_price"))
     time_to_maturity = float(data.get("time_to_maturity"))
@@ -716,7 +722,7 @@ def plot_greeks_sensitivity(data):
     volatility = float(data.get("volatility"))
     dividend_yield = float(data.get("dividend_yield")) if data.get("dividend_yield") else 0.0
 
-    if None in (option_type, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility):
+    if None in (option_type, position_type, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility):
         raise ValueError("Missing one or more required inputs for Greeks")
 
     # ✅ Plage de prix du sous-jacent pour la courbe
@@ -732,15 +738,27 @@ def plot_greeks_sensitivity(data):
     d2 = d1 - volatility * sqrt(time_to_maturity)
 
     if option_type == "CALL":
-        final_delta = exp(-dividend_yield * time_to_maturity) * norm.cdf(d1)
+        base_delta = exp(-dividend_yield * time_to_maturity) * norm.cdf(d1)
     else:
-        final_delta = -exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1)
-    
-    final_gamma = norm.pdf(d1) / (underlying_price * volatility * sqrt(time_to_maturity))
-    final_theta = (-underlying_price * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
+        base_delta = -exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1)
+
+    base_gamma = norm.pdf(d1) / (underlying_price * volatility * sqrt(time_to_maturity))
+    base_theta = (-underlying_price * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
                   - risk_free_rate * strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2 if option_type == "CALL" else -d2)
-                  + dividend_yield * underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365  # ✅ Convertir en valeur quotidienne
-    final_vega = (underlying_price * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity))/100  # ✅ Suppression du /100
+                  + dividend_yield * underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
+    base_vega = (underlying_price * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
+    
+    # ✅ Ajustement pour la position LONG/SHORT
+    if position_type == "SHORT":
+        final_delta = -base_delta
+        final_theta = -base_theta
+        final_vega = -base_vega
+    else:
+        final_delta = base_delta
+        final_theta = base_theta
+        final_vega = base_vega
+
+    final_gamma = base_gamma  # Gamma reste inchangé
 
     # ✅ Générer la courbe complète des Greeks
     for S in price_range:
@@ -748,15 +766,21 @@ def plot_greeks_sensitivity(data):
         d2 = d1 - volatility * sqrt(time_to_maturity)
 
         if option_type == "CALL":
-            delta.append(exp(-dividend_yield * time_to_maturity) * norm.cdf(d1))
+            base_delta = exp(-dividend_yield * time_to_maturity) * norm.cdf(d1)
         else:
-            delta.append(-exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1))
+            base_delta = -exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1)
 
-        gamma.append(norm.pdf(d1) / (S * volatility * sqrt(time_to_maturity)))
-        theta.append((-S * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
+        base_gamma = norm.pdf(d1) / (S * volatility * sqrt(time_to_maturity))
+        base_theta = (-S * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
                      - risk_free_rate * strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2 if option_type == "CALL" else -d2)
-                     + dividend_yield * S * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365)  # ✅ Convertir en valeur quotidienne
-        vega.append((S * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity))/100)
+                     + dividend_yield * S * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
+        base_vega = (S * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
+
+        # ✅ Ajustement selon LONG/SHORT
+        delta.append(-base_delta if position_type == "SHORT" else base_delta)
+        gamma.append(base_gamma)  # Gamma reste inchangé
+        theta.append(-base_theta if position_type == "SHORT" else base_theta)
+        vega.append(-base_vega if position_type == "SHORT" else base_vega)
 
     # ✅ Créer le graphique
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -769,7 +793,7 @@ def plot_greeks_sensitivity(data):
     ax.axvline(underlying_price, color="black", linestyle="--", label=f"Underlying Price: {underlying_price}")
 
     # ✅ Configurations supplémentaires
-    ax.set_title(f"{option_type} Option Greeks Sensitivity (with Dividend)")
+    ax.set_title(f"{position_type} {option_type} Option Greeks Sensitivity")
     ax.set_xlabel("Underlying Price")
     ax.set_ylabel("Value")
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
@@ -778,7 +802,9 @@ def plot_greeks_sensitivity(data):
     plt.grid(True)
 
     # ✅ Sauvegarde du graphe
-    return save_plot(fig, generate_unique_filename("black_scholes_greeks_with_dividend"))
+    return save_plot(fig, generate_unique_filename(f"{position_type.lower()}_{option_type.lower()}_greeks_with_dividend"))
+
+
 
 
 

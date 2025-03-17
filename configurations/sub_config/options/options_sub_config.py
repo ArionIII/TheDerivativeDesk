@@ -61,29 +61,19 @@ OPTIONS_TOOL_CATEGORIES = {
         "parent_category": "options",
         "tools": [
             {
-                "title": "Delta",
-                "description": "Measure the sensitivity of the option price to changes in the underlying asset price.",
-                "url": "/tools/options/greeks/delta"
+            "title": "Greeks Visualizer",
+            "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta, Vega, and Rho in real-time.",
+            "url": "/tools/options/greeks/greeks-visualizer",
             },
             {
-                "title": "Gamma",
-                "description": "Measure the rate of change of Delta with respect to the underlying price.",
-                "url": "/tools/options/greeks/gamma"
+                "title": "Delta Hedging Simulator",
+            "description": "Simulate a delta-hedging strategy by adjusting the underlying position dynamically.",
+            "url": "/tools/options/greeks/delta-hedging-simulator",
             },
             {
-                "title": "Theta",
-                "description": "Measure the sensitivity of the option price to the passage of time.",
-                "url": "/tools/options/greeks/theta"
-            },
-            {
-                "title": "Vega",
-                "description": "Measure the sensitivity of the option price to changes in volatility.",
-                "url": "/tools/options/greeks/vega"
-            },
-            {
-                "title": "Rho",
-                "description": "Measure the sensitivity of the option price to changes in the risk-free interest rate.",
-                "url": "/tools/options/greeks/rho"
+                "title": "Greeks Sensitivity Explorer",
+            "description": "Explore how Greeks evolve based on changes in multiple market parameters.",
+            "url": "/tools/options/greeks/sensitivity-explorer",
             }
         ]
     },
