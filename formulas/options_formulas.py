@@ -125,6 +125,13 @@ def black_scholes_pricing(option_type, underlying_price, strike_price, time_to_m
 
 def implied_volatility(option_type, underlying_price, strike_price, option_price, 
                        time_to_maturity, risk_free_rate, dividend_yield):
+    underlying_price = float(underlying_price)
+    strike_price = float(strike_price)
+    option_price = float(option_price)
+    time_to_maturity = float(time_to_maturity)
+    risk_free_rate = float(risk_free_rate)
+    dividend_yield = float(dividend_yield if dividend_yield not in [None, ""] else 0.0)
+    
     try:
         def bs_price(volatility):
             # Ajustement avec le rendement du dividende
