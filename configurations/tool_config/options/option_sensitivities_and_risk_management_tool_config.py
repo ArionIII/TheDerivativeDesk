@@ -16,10 +16,7 @@ GREEKS_TOOL_CONFIG = {
             {"label": "Position Type", "id": "position_type", "type": "select", "options": ["LONG", "SHORT"]}
         ],
         "outputs": ["Delta", "Gamma", "Theta", "Vega", "Rho"],
-        "visualization": True,
-        "graphs": [
-            {"name": "Greeks Sensitivity Curve"}
-        ],
+        "is_live": True,
         "keywords": [
             "greeks", "sensitivity", "delta", "gamma", "theta", "vega", "rho", "visualizer"
         ],

@@ -68,6 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 results.innerHTML = `<p class="error">${resultData.error}</p>`;
                 return;
             }
+            // Si c'est un tool de visualization en temps réel
+            if (resultData.is_live) {
+                updateChart(resultData, "live-chart"); // ✅ Gère automatiquement le graphique live
+            }
+
 
             const graphs = {};
             const cleanResultData = {};
@@ -283,3 +288,137 @@ document.addEventListener("DOMContentLoaded", () => {
         return isValid;
     }
 });
+
+const activeCharts = {}; // ✅ Stockage dynamique des graphiques actifs
+
+function updateChart(resultData, chartId) {
+    console.log(`🔥 Updating chart: ${chartId}`);
+
+    // ✅ Si un graphique est déjà actif → le supprimer
+    if (activeCharts[chartId]) {
+        activeCharts[chartId].destroy?.(); // ✅ Si c'est Chart.js, on détruit le graphique
+        Plotly.purge(chartId); // ✅ Si c'est Plotly, on le supprime aussi
+    }
+
+    const ctx = document.getElementById(chartId);
+
+    if (resultData.z_axis) {
+        // ✅ Mode 3D → Utilisation de Plotly.js
+        console.log("🌐 Plotting 3D Surface Chart");
+
+        const trace = {
+            x: resultData.x_axis.value,
+            y: resultData.y_axis.value,
+            z: resultData.z_axis.value,
+            type: 'surface',
+            colorscale: 'Viridis'
+        };
+
+        const layout = {
+            title: '3D Surface Plot',
+            autosize: true,
+            scene: {
+                xaxis: { title: resultData.x_axis.label },
+                yaxis: { title: resultData.y_axis.label },
+                zaxis: { title: resultData.z_axis.label }
+            }
+        };
+
+        Plotly.newPlot(chartId, [trace], layout);
+        activeCharts[chartId] = Plotly; // ✅ Stocker l'objet Plotly
+    } else {
+        // ✅ Mode 2D → Utilisation de Chart.js
+        console.log("📈 Plotting 2D Line Chart");
+
+        const datasets = Object.keys(resultData)
+            .filter(key => !["is_live", "x_axis", "y_axis", "z_axis"].includes(key))
+            .map(key => {
+                const series = resultData[key];
+                return {
+                    label: series.label,
+                    data: series.data,
+                    borderColor: series.borderColor,
+                    fill: series.fill || false,
+                };
+            });
+
+        activeCharts[chartId] = new Chart(ctx.getContext("2d"), {
+            type: "line",
+            data: {
+                labels: resultData.x_axis.value,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: resultData.x_axis.label
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: resultData.y_axis.label
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("tool-form");
+    const sliders = form.querySelectorAll("input, select"); // ✅ Récupère tous les sliders et selects
+
+    sliders.forEach(slider => {
+        slider.addEventListener("input", () => {
+            console.log(`🔄 Value changed: ${slider.name} → ${slider.value}`);
+            updateLiveChart(); // ✅ Déclenche une mise à jour automatique
+        });
+    });
+});
+
+async function updateLiveChart() {
+    console.log("🔥 Updating live chart...");
+
+    // ✅ Récupérer les valeurs du formulaire
+    const inputData = {};
+    const formElements = document.getElementById("tool-form").elements;
+    
+    for (const element of formElements) {
+        if (element.name) {
+            inputData[element.name] = element.value;
+        }
+    }
+
+    console.log("🔎 Data sent to backend:", inputData);
+
+    try {
+        const response = await fetch(window.location.pathname, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(inputData)
+        });
+
+        if (!response.ok) throw new Error("Failed to update live chart");
+
+        const resultData = await response.json();
+
+        console.log("✅ New chart data received:", resultData);
+
+        // ✅ Appeler le gestionnaire de graphique avec les nouvelles données
+        if (resultData.is_live) {
+            updateChart(resultData, "live-chart");
+        } else {
+            updateChart(resultData, "static-chart");
+        }
+
+    } catch (error) {
+        console.error("❌ Error updating chart:", error);
+    }
+}

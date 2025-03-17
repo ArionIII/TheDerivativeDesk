@@ -28,6 +28,7 @@ from routes.stock_routes import stock_news_routes
 from configurations.sub_config.options.options_sub_config import tool_category_options_routes
 from routes.options_pricing_routes import option_pricing_routes
 from unit_tests.test_tools import test_bp
+from routes.option_sensitivities_and_risk_management_routes import greeks_routes    
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -68,6 +69,7 @@ app.register_blueprint(stock_news_routes)
 app.register_blueprint(tool_category_options_routes)
 app.register_blueprint(option_pricing_routes)
 app.register_blueprint(test_bp)
+app.register_blueprint(greeks_routes)
 
 @app.route("/robots.txt")
 def robots():

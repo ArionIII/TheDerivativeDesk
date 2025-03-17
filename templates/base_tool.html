@@ -142,7 +142,15 @@
     </section>
     {% endif %}
 
-
+    {% if tool.is_live %}
+    <!-- ✅ Live Graph Section -->
+    <section class="live-graph-section">
+        <h2>Live Graph</h2>
+        <div class="live-graph-container">
+            <canvas id="live-chart"></canvas>
+        </div>
+    </section>
+    {% endif %}
 
     <!-- Actions Section -->
     <section class="actions-section">
@@ -251,6 +259,12 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>

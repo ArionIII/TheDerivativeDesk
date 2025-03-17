@@ -61,9 +61,9 @@ OPTIONS_TOOL_CATEGORIES = {
         "parent_category": "options",
         "tools": [
             {
-                "title": "Greeks Visualizer",
+            "title": "Greeks Visualizer",
             "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta, Vega, and Rho in real-time.",
-            "url": "/tools/options/greeks/visualizer",
+            "url": "/tools/options/greeks/greeks-visualizer",
             },
             {
                 "title": "Delta Hedging Simulator",
