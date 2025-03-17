@@ -157,6 +157,7 @@ def implied_volatility(option_type, underlying_price, strike_price, option_price
 
 
 
+
 def monte_carlo_pricing(option_type, option_style, underlying_price, strike_price, 
                         time_to_maturity, risk_free_rate, volatility, dividend_yield, num_steps, num_simulations):
     try:
@@ -165,64 +166,67 @@ def monte_carlo_pricing(option_type, option_style, underlying_price, strike_pric
         num_steps = int(num_steps)
         time_to_maturity = float(time_to_maturity)
         dividend_yield = float(dividend_yield) if dividend_yield is not None and dividend_yield != '' else 0.0
+        
         np.random.seed(42)
 
         dt = time_to_maturity / num_steps  # ✅ Pas de temps en fraction d'année
-        payoffs = []
-        antithetic_payoffs = []  # Pour améliorer la convergence
+        discount_factor = np.exp(-risk_free_rate * time_to_maturity)  # ✅ Facteur d'actualisation
+        
+        payoffs = np.zeros(num_simulations)
+        antithetic_payoffs = np.zeros(num_simulations)
 
-        for _ in range(num_simulations):
-            path = [underlying_price]
-            antithetic_path = [underlying_price]
+        # ✅ Simulation Monte Carlo
+        for i in range(num_simulations):
+            path = np.zeros(num_steps + 1)
+            antithetic_path = np.zeros(num_steps + 1)
+            path[0] = underlying_price
+            antithetic_path[0] = underlying_price
 
-            for _ in range(num_steps):
-                # ✅ Bruit gaussien standard
+            for t in range(1, num_steps + 1):
                 z = np.random.randn()
 
-                # ✅ Processus stochastique avec dividendes
-                next_price = path[-1] * np.exp(
-                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
+                # ✅ Euler-Maruyama process for price path
+                path[t] = path[t - 1] * np.exp(
+                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt + 
                     volatility * np.sqrt(dt) * z
                 )
-                
-                # ✅ Antithetic sampling (réduction de variance)
-                next_price_antithetic = antithetic_path[-1] * np.exp(
-                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
+                antithetic_path[t] = antithetic_path[t - 1] * np.exp(
+                    (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt + 
                     volatility * np.sqrt(dt) * -z
                 )
 
-                path.append(next_price)
-                antithetic_path.append(next_price_antithetic)
-
-            # ✅ Payoff final selon le style d'option
             if option_style == "European":
                 if option_type == "CALL":
-                    payoff = max(0, path[-1] - strike_price)
-                    antithetic_payoff = max(0, antithetic_path[-1] - strike_price)
+                    payoffs[i] = max(0, path[-1] - strike_price)
+                    antithetic_payoffs[i] = max(0, antithetic_path[-1] - strike_price)
+                elif option_type == "PUT":
+                    payoffs[i] = max(0, strike_price - path[-1])
+                    antithetic_payoffs[i] = max(0, strike_price - antithetic_path[-1])
                 else:
-                    payoff = max(0, strike_price - path[-1])
-                    antithetic_payoff = max(0, strike_price - antithetic_path[-1])
+                    raise ValueError("Invalid option type. Must be 'CALL' or 'PUT'.")
             
             elif option_style == "Asian":
                 average_price = np.mean(path)
                 antithetic_average_price = np.mean(antithetic_path)
                 if option_type == "CALL":
-                    payoff = max(0, average_price - strike_price)
-                    antithetic_payoff = max(0, antithetic_average_price - strike_price)
+                    payoffs[i] = max(0, average_price - strike_price)
+                    antithetic_payoffs[i] = max(0, antithetic_average_price - strike_price)
+                elif option_type == "PUT":
+                    payoffs[i] = max(0, strike_price - average_price)
+                    antithetic_payoffs[i] = max(0, strike_price - antithetic_average_price)
                 else:
-                    payoff = max(0, strike_price - average_price)
-                    antithetic_payoff = max(0, strike_price - antithetic_average_price)
+                    raise ValueError("Invalid option type. Must be 'CALL' or 'PUT'.")
 
             else:
                 raise ValueError("Invalid option style. Must be 'European' or 'Asian'.")
 
-            payoffs.append(payoff)
-            antithetic_payoffs.append(antithetic_payoff)
+        # ✅ Combinaison des résultats avec réduction de variance
+        combined_payoffs = (payoffs + antithetic_payoffs) / 2
+        
+        # ✅ Prix de l'option basé sur le payoff actualisé
+        option_price = discount_factor * np.mean(combined_payoffs)
 
-        # ✅ Moyenne des payoffs et antithetic sampling (réduction de variance)
-        price = np.exp(-risk_free_rate * time_to_maturity) * (np.mean(payoffs) + np.mean(antithetic_payoffs)) / 2
-
-        return {"option_price": ("Option Price :", round(price, 4))}
+        return {"option_price": ("Option Price (€) :", round(option_price, 4))}
 
     except Exception as e:
         return {"error": str(e)}, 400

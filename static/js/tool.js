@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Process inputs
         formData.forEach((value, key) => {
+            console.log("Key:", key, "Value:", value);  
             const inputElement = document.querySelector(`[name="${key}"]`);
 
             // Handle CSV inputs

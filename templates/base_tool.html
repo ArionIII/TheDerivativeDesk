@@ -29,6 +29,7 @@
 
         <!-- ✅ Classic Inputs -->
         {% for input in tool.inputs %}
+        {# DEBUG: {{ input }} #}
             {% if input.type == "number" or input.type == "text" %}
                 <label for="{{ input.id }}">
                     {{ input.label }}
@@ -49,6 +50,30 @@
                     {% if not input.optional %} required {% endif %}
                 >
             {% endif %}
+        {% endfor %}
+
+        <!-- ✅ Classic Inputs Array -->
+        {% for input in tool.inputs %}
+        {% if input.type == "array" %}
+        <label for="{{ input.id }}">
+            {{ input.label }}
+            {% if not input.optional %}
+                <span class="required">*</span>
+            {% endif %}
+        </label>
+        <input 
+                    type="{{ input.type }}" 
+                    id="{{ input.id }}" 
+                    name="{{ input.id }}"
+                    {% if input.optional %} 
+                        placeholder="{{ input.placeholder }}" 
+                    {% else %} 
+                        value="{{ input.placeholder }}"
+                    {% endif %}
+                    {% if input.step %} step="{{ input.step }}" {% endif %}
+                    {% if not input.optional %} required {% endif %}
+                >
+        {% endif %}
         {% endfor %}
 
         <!-- ✅ Range Inputs (Sliders) -->
@@ -90,23 +115,24 @@
 
         <!-- ✅ File Inputs -->
         {% for input in tool.inputs %}
-            {% if input.type == "file" %}
-                <label for="{{ input.id }}">
-                    {{ input.label }}
-                    {% if input.optional %}<span class="optional">(Optional)</span>{% endif %}
-                    {% if input.template %}
-                        <a href="{{ input.template }}" class="btn-download" download>Download Template</a>
-                    {% endif %}
-                </label>
-                <input 
-                    type="file" 
-                    id="{{ input.id }}" 
-                    name="{{ input.id }}"
-                    accept="{{ input.accept }}"
-                    {% if input.data_target %} data-target="{{ input.data_target }}" {% endif %}
-                    {% if not input.optional %} required {% endif %}
-                >
-            {% endif %}
+        {% if input.type == "file" %}
+        <div class="file-input-container">
+            <label for="{{ input.id }}">
+                {{ input.label }}
+                <span class="optional">(Optional - replaces {{ input.data_target }})</span>
+                {% if input.template %}
+                    <a href="{{ input.template }}" class="btn-download" download>Download CSV template</a>
+                {% endif %}
+            </label>
+            <input 
+                type="file" 
+                id="{{ input.id }}" 
+                name="{{ input.id }}" 
+                accept=".csv, .xlsx"
+                data_target="{{ input.data_target }}"
+            >
+        </div>
+    {% endif %}
         {% endfor %}
 
         <!-- ✅ Submit Button -->

@@ -95,6 +95,8 @@ def handle_statistical_tool_request(tool_key, sub_category_key):
             return jsonify({"error": str(e)}), 400
 
     # Render the tool page
+    logger.info(f"Rendering tool page for: {tool_key} in {sub_category_key}")
+    logger.warning(tool_config)
     return render_template("base_tool.html", tool=tool_config)
 
 

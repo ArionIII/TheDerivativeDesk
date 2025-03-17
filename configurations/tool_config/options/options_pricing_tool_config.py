@@ -82,26 +82,26 @@ OPTION_PRICING_TOOL_CONFIG = {
         "keywords": ["black scholes", "implied volatility", "option pricing", "financial derivatives"]
     },
 
-    "american-vs-european-spread": {
-        "title": "American vs European Option Spread",
-        "description": "Compare the prices of American and European options with the same parameters.",
-        "url": "/tools/options/option-pricing/american-vs-european-spread",
-        "inputs": [
-            {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
-            {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number"},
-            {"label": "Strike Price (K)", "id": "strike_price", "type": "number"},
-            {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number"},
-            {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number"},
-            {"label": "Volatility (σ)", "id": "volatility", "type": "number"},
-            {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional":True},
-        ],
-        "outputs": ["Spread Value"],
-        "visualization": True,
-        "graphs": [
-            {"name": "Spread vs Time"}
-        ],
-        "keywords": ["american options", "european options", "spread", "option pricing"]
-    },
+    # "american-vs-european-spread": {
+    #     "title": "American vs European Option Spread",
+    #     "description": "Compare the prices of American and European options with the same parameters.",
+    #     "url": "/tools/options/option-pricing/american-vs-european-spread",
+    #     "inputs": [
+    #         {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
+    #         {"label": "Underlying Price (S₀)", "id": "underlying_price", "type": "number"},
+    #         {"label": "Strike Price (K)", "id": "strike_price", "type": "number"},
+    #         {"label": "Time to Maturity (T)", "id": "time_to_maturity", "type": "number"},
+    #         {"label": "Risk-Free Rate (r)", "id": "risk_free_rate", "type": "number"},
+    #         {"label": "Volatility (σ)", "id": "volatility", "type": "number"},
+    #         {"label": "Dividend Yield (q)", "id": "dividend_yield", "type": "number", "placeholder": "0.03", "optional":True},
+    #     ],
+    #     "outputs": ["Spread Value"],
+    #     "visualization": True,
+    #     "graphs": [
+    #         {"name": "Spread vs Time"}
+    #     ],
+    #     "keywords": ["american options", "european options", "spread", "option pricing"]
+    # },
 
     ## MONTE CARLO ##
     "monte-carlo-option": {

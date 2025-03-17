@@ -819,7 +819,7 @@ def plot_simulation_results_histogram(data):
     strike_price = float(data.get("strike_price"))
     risk_free_rate = float(data.get("risk_free_rate"))
     volatility = float(data.get("volatility"))
-    dividend_yield = float(data.get("dividend_yield", 0))
+    dividend_yield = float(data.get("dividend_yield") or 0)
     num_simulations = int(data.get("num_simulations"))
     num_steps = int(data.get("num_steps"))
     option_price = float(data.get("option_price"))
@@ -874,42 +874,64 @@ def plot_convergence_plot(data):
     strike_price = float(data.get("strike_price"))
     risk_free_rate = float(data.get("risk_free_rate"))
     volatility = float(data.get("volatility"))
-    dividend_yield = float(data.get("dividend_yield", 0))
+    dividend_yield = float(data.get("dividend_yield") or 0)
     num_simulations = int(data.get("num_simulations"))
     num_steps = int(data.get("num_steps"))
+    time_to_maturity = float(data.get("time_to_maturity"))
     option_price = float(data.get("option_price"))
 
     if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, dividend_yield, num_simulations, num_steps, option_price):
         raise ValueError("Missing one or more required inputs for convergence plot")
 
     # ✅ Fix: dt basé sur le temps de maturité divisé par le nombre de pas
-    dt = data.get("time_to_maturity") / num_steps
+    dt = time_to_maturity / num_steps
+    discount_factor = np.exp(-risk_free_rate * time_to_maturity)  # ✅ Facteur d'actualisation
     payoffs = []
     cumulative_mean = []
 
-    np.random.seed(42)
-    for i in range(num_simulations):
-        path = [underlying_price]
-        for _ in range(num_steps):
-            path.append(path[-1] * np.exp(
-                (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
-                volatility * np.sqrt(dt) * np.random.randn()
-            ))
+    np.random.seed(42)  # ✅ Fixer le seed pour la reproductibilité
 
-        if option_type == "CALL":
-            payoff = max(0, path[-1] - strike_price)
+    for i in range(num_simulations):
+        path = np.zeros(num_steps + 1)
+        path[0] = underlying_price
+        
+        for t in range(1, num_steps + 1):
+            z = np.random.randn()
+            path[t] = path[t - 1] * np.exp(
+                (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
+                volatility * np.sqrt(dt) * z
+            )
+
+        # ✅ Payoff en fonction du type d'option
+        if option_style == "European":
+            if option_type == "CALL":
+                payoff = max(0, path[-1] - strike_price)
+            elif option_type == "PUT":
+                payoff = max(0, strike_price - path[-1])
+            else:
+                raise ValueError("Invalid option type. Must be 'CALL' or 'PUT'.")
+
+        elif option_style == "Asian":
+            average_price = np.mean(path)
+            if option_type == "CALL":
+                payoff = max(0, average_price - strike_price)
+            elif option_type == "PUT":
+                payoff = max(0, strike_price - average_price)
+            else:
+                raise ValueError("Invalid option type. Must be 'CALL' or 'PUT'.")
+
         else:
-            payoff = max(0, strike_price - path[-1])
+            raise ValueError("Invalid option style. Must be 'European' or 'Asian'.")
 
         payoffs.append(payoff)
-        cumulative_mean.append(np.mean(payoffs) * np.exp(-risk_free_rate * data.get("time_to_maturity")))
+        cumulative_mean.append(np.mean(payoffs) * discount_factor)
 
     # ✅ Création du graphique de convergence
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(range(1, num_simulations + 1), cumulative_mean, label="Convergence", color="blue")
     ax.axhline(option_price, color="red", linestyle="--", label=f"Theoretical Option Price: {round(option_price, 4)}")
 
-    ax.set_title(f"{option_type} Option Convergence Plot")
+    ax.set_title(f"{option_style} {option_type} Option Convergence Plot")
     ax.set_xlabel("Number of Simulations")
     ax.set_ylabel("Option Price")
     ax.legend()
