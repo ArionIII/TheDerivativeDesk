@@ -62,16 +62,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const resultData = await response.json();
-
+            
+            // Si c'est un tool de visualization en temps réel
+            if (resultData.is_live) {
+                updateChart(resultData, "live-chart"); // ✅ Gère automatiquement le graphique live
+            }
             // Update results dynamically
             if (resultData.error) {
                 results.innerHTML = `<p class="error">${resultData.error}</p>`;
                 return;
             }
-            // Si c'est un tool de visualization en temps réel
-            if (resultData.is_live) {
-                updateChart(resultData, "live-chart"); // ✅ Gère automatiquement le graphique live
-            }
+            
 
 
             const graphs = {};
@@ -289,7 +290,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
+// VIZUALIZATION TOOLS
+
 const activeCharts = {}; // ✅ Stockage dynamique des graphiques actifs
+const chartVisibilityState = {}; // ✅ Stockage de l'état de visibilité des séries
 
 function updateChart(resultData, chartId) {
     console.log(`🔥 Updating chart: ${chartId}`);
@@ -302,8 +307,8 @@ function updateChart(resultData, chartId) {
 
     const ctx = document.getElementById(chartId);
 
+    // ✅ Si z_axis est présent → Graphique 3D avec Plotly
     if (resultData.z_axis) {
-        // ✅ Mode 3D → Utilisation de Plotly.js
         console.log("🌐 Plotting 3D Surface Chart");
 
         const trace = {
@@ -327,21 +332,84 @@ function updateChart(resultData, chartId) {
         Plotly.newPlot(chartId, [trace], layout);
         activeCharts[chartId] = Plotly; // ✅ Stocker l'objet Plotly
     } else {
-        // ✅ Mode 2D → Utilisation de Chart.js
+        // ✅ Mode 2D → Graphique avec Chart.js
         console.log("📈 Plotting 2D Line Chart");
 
+        // ✅ Construction automatique des datasets (supporte plusieurs axes Y)
         const datasets = Object.keys(resultData)
-            .filter(key => !["is_live", "x_axis", "y_axis", "z_axis"].includes(key))
+            .filter(key => !["is_live", "x_axis", "primary_y_axis", "secondary_y_axis", "z_axis"].includes(key))
             .map(key => {
                 const series = resultData[key];
+
+                // ✅ Si la série a été masquée précédemment → Restaurer l'état
+                const isHidden = chartVisibilityState[chartId]?.[series.label] ?? false;
+
                 return {
                     label: series.label,
                     data: series.data,
                     borderColor: series.borderColor,
                     fill: series.fill || false,
+                    yAxisID: series.yAxisID || "primary", // ✅ Assignation dynamique de l'axe
+                    hidden: isHidden // ✅ Application de l'état enregistré
                 };
             });
 
+        // ✅ Construction dynamique des échelles Y
+        const scales = {
+            x: {
+                title: {
+                    display: true,
+                    text: resultData.x_axis.label,
+                    font: {
+                        size: 16,
+                        weight: 'bold',
+                        family: 'Arial'
+                    }
+                }
+            }
+        };
+
+        // ✅ Si `primary_y_axis` existe → Premier axe Y
+        if (resultData.primary_y_axis) {
+            scales.primary = {
+                type: 'linear',
+                position: 'left',
+                title: {
+                    display: true,
+                    text: resultData.primary_y_axis.label,
+                    font: {
+                        size: 16,
+                        weight: 'bold',
+                        family: 'Arial'
+                    },
+                },
+                grid: {
+                    drawOnChartArea: false
+                }
+            };
+        }
+
+        // ✅ Si `secondary_y_axis` existe → Deuxième axe Y
+        if (resultData.secondary_y_axis) {
+            scales.secondary = {
+                type: 'linear',
+                position: 'right',
+                title: {
+                    display: true,
+                    text: resultData.secondary_y_axis.label,
+                    font: {
+                        size: 16,
+                        weight: 'bold',
+                        family: 'Arial'
+                    },
+                },
+                grid: {
+                    drawOnChartArea: false
+                }
+            };
+        }
+
+        // ✅ Crée le graphique avec Chart.js
         activeCharts[chartId] = new Chart(ctx.getContext("2d"), {
             type: "line",
             data: {
@@ -350,17 +418,25 @@ function updateChart(resultData, chartId) {
             },
             options: {
                 responsive: true,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: resultData.x_axis.label
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: resultData.y_axis.label
+                scales: scales,
+                plugins: {
+                    legend: {
+                        onClick: (e, legendItem, legend) => {
+                            // ✅ Inverser la visibilité de la série sélectionnée
+                            const index = legendItem.datasetIndex;
+                            const chart = legend.chart;
+                            const currentState = !chart.data.datasets[index].hidden;
+                            chart.data.datasets[index].hidden = currentState;
+
+                            // ✅ Mettre à jour l'état de visibilité dans chartVisibilityState
+                            const datasetLabel = chart.data.datasets[index].label;
+                            chartVisibilityState[chartId] = {
+                                ...chartVisibilityState[chartId],
+                                [datasetLabel]: currentState
+                            };
+
+                            // ✅ Recalculer automatiquement le graphique
+                            chart.update();
                         }
                     }
                 }
@@ -369,6 +445,7 @@ function updateChart(resultData, chartId) {
     }
 }
 
+// ✅ Gestion des sliders et mises à jour
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("tool-form");
     const sliders = form.querySelectorAll("input, select"); // ✅ Récupère tous les sliders et selects
