@@ -62,7 +62,7 @@ OPTIONS_TOOL_CATEGORIES = {
         "tools": [
             {
             "title": "Greeks Visualizer",
-            "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta, Vega, and Rho in real-time.",
+            "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta and Vega in real-time.",
             "url": "/tools/options/greeks/greeks-visualizer",
             },
             {

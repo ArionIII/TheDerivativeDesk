@@ -430,8 +430,9 @@ def generate_forward_rate_curve(data):
     maturities = np.array(data.get("maturities", []))
     #TODO
     forward_rates = np.array(data.get("Forward Rate", []))
+    forward_period = float((data.get("forward_period", "1")))
     fig, ax = plt.subplots(figsize=(9, 6))
-    ax.plot(maturities[1:], forward_rates, marker="o", linestyle="-", color="blue", markersize=6, linewidth=2, label="Forward Rate Curve")
+    ax.plot(maturities[1:], forward_rates, marker="o", linestyle="-", color="blue", markersize=6, linewidth=2, label=f"{forward_period}-year Forward Rate Curve")
 
     ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
     ax.set_ylabel("Forward Rate", fontsize=12, fontweight="bold")
@@ -448,9 +449,10 @@ def generate_spot_vs_forward_comparison(data):
     #TODO
     forward_rates = np.array(data.get("Forward Rate", []))
     spot_rates = np.array(data.get("spot_rates", []))
+    forward_period = float((data.get("forward_period", "1")))
     fig, ax = plt.subplots(figsize=(9, 6))
     ax.plot(maturities, spot_rates, marker="o", linestyle="-", color="red", markersize=6, linewidth=2, label="Spot Rates")
-    ax.plot(maturities[1:], forward_rates, marker="s", linestyle="--", color="blue", markersize=6, linewidth=2, label="Forward Rates")
+    ax.plot(maturities[1:], forward_rates, marker="s", linestyle="--", color="blue", markersize=6, linewidth=2, label=f"{forward_period}-year Forward Rates")
 
     ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
     ax.set_ylabel("Rate", fontsize=12, fontweight="bold")

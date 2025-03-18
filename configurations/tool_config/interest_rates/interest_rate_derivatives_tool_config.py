@@ -24,7 +24,7 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
         {
             "label": "Settlement Rates (CSV)", 
             "id": "file_settlement_rates", 
-            "type": "file", 
+            "type": "file",
             "accept": ".csv", 
             "data_target": "settlement_rates", 
             "template": "/static/templates/settlement_rates.csv", 
@@ -132,7 +132,14 @@ INTEREST_RATE_DERIVATIVES_TOOL_CONFIG = {
             "optional": False
         },
         {
-            "label": "Upload Spot Rate Data (CSV)", 
+            "label": "Forward Period (Years)", 
+            "id": "forward_period", 
+            "type": "number", 
+            "placeholder": "0.5",
+            "optional": False
+        },
+        {
+            "label": "Upload Spot Rates Data (CSV)", 
             "id": "file_spot_rates", 
             "type": "file", 
             "accept": ".csv", 

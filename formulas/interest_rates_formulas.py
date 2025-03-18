@@ -10,6 +10,7 @@ import pandas as pd
 import random
 from scipy.interpolate import CubicSpline
 from scipy.optimize import fsolve
+from scipy.interpolate import interp1d
 
 def continuous_compounding_rate(rate, frequency):
     logger.info(f"Calculating continuous compounding rate with rate_m: {rate} and frequency_m: {frequency}")
@@ -475,14 +476,15 @@ def calculate_fra_break_even_rate(forward_rates, interval_between_payments):
     except Exception as e:
         return {"error": str(e)}, 400
     
-def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/outputs/interest-rates-and-fixed-income/"):
-    """
-    Calcule toute la courbe des taux forward à partir d'une liste de taux spot et de maturités,
-    puis enregistre les résultats en CSV et XLSX.
-    """
 
+
+def calculate_forward_rate_curve(spot_rates, maturities, forward_period, output_path="static/outputs/interest-rates-and-fixed-income/"):
+    """
+    Calcule toute la courbe des taux forward à période constante à partir d'une liste de taux spot et de maturités.
+    """
     try:
         os.makedirs(output_path, exist_ok=True)
+
         # Vérification et conversion en numpy array
         spot_rates = np.array(spot_rates, dtype=float)
         maturities = np.array(maturities, dtype=float)
@@ -493,24 +495,38 @@ def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/out
         if any(np.diff(maturities) <= 0):
             raise ValueError("Maturities must be strictly increasing.")
 
-        # Calcul des taux forward pour chaque intervalle
+        # Interpolation de la courbe des taux spot (en mode linéaire)
+        spot_curve = interp1d(maturities, spot_rates, kind='linear', fill_value="extrapolate")
+
         forward_rates = []
-        forward_periods = []  # Stocker les périodes couvertes
+        forward_periods = []
+        start_maturities = []
+        end_maturities = []
 
-        for i in range(len(spot_rates) - 1):
-            spot_rate_1, spot_rate_2 = spot_rates[i], spot_rates[i + 1]
-            time_period_1, time_period_2 = maturities[i], maturities[i + 1]
+        for t in maturities:
+            end_maturity = t + forward_period
 
-            # Calcul du taux forward
-            forward_rate = ((1 + spot_rate_2) ** time_period_2 / (1 + spot_rate_1) ** time_period_1) ** (1 / (time_period_2 - time_period_1)) - 1
+            # Si la maturité finale dépasse la dernière donnée, on ne calcule rien
+            if end_maturity > max(maturities):
+                continue
+
+            # Lecture du taux spot interpolé si besoin
+            spot_rate_1 = spot_curve(t)
+            spot_rate_2 = spot_curve(end_maturity)
+
+            # Calcul du taux forward constant
+            forward_rate = ((1 + spot_rate_2) ** end_maturity / (1 + spot_rate_1) ** t) ** (1 / forward_period) - 1
+
             forward_rates.append(forward_rate)
-            forward_periods.append(f"{time_period_1} → {time_period_2}")  # Exprime la période en texte
+            forward_periods.append(f"{round(t, 2)} → {round(end_maturity, 2)}")
+            start_maturities.append(t)
+            end_maturities.append(end_maturity)
 
-        # Création d'un DataFrame pour les résultats avec colonnes explicites
+        # Création d'un DataFrame pour les résultats
         df_forward_rates = pd.DataFrame({
             "Forward Period": forward_periods,
-            "Start Maturity (Years)": maturities[:-1],
-            "End Maturity (Years)": maturities[1:],
+            "Start Maturity (Years)": start_maturities,
+            "End Maturity (Years)": end_maturities,
             "Forward Rate": forward_rates
         })
 
@@ -529,6 +545,7 @@ def calculate_forward_rate_curve(spot_rates, maturities, output_path="static/out
 
     except Exception as e:
         return {"error": str(e)}, 400
+
     
 
 def calculate_hedging_strategy_analysis(current_position,target_rate,market_rate,fra_period,position_type):

@@ -3,7 +3,7 @@ GREEKS_TOOL_CONFIG = {
     ## GREEKS VISUALIZER ##
     "greeks-visualizer": {
         "title": "Greeks Visualizer",
-        "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta, Vega, and Rho in real-time.",
+        "description": "Dynamically adjust parameters and observe the behavior of Delta, Gamma, Theta and Vega in real-time.",
         "url": "/tools/options/greeks/greeks-visualizer",
         "inputs": [
             {"label": "Option Type", "id": "option_type", "type": "select", "options": ["CALL", "PUT"]},
