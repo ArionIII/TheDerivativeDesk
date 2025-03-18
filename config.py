@@ -473,7 +473,6 @@ def generate_input_from_file(filepath):
         # Remplacer les virgules par des points pour assurer la conversion correcte
         df = df.applymap(lambda x: x.replace(",", ".") if isinstance(x, str) else x)
         df = df.astype(float)  # Conversion en float
-
         if df.shape[1] == 1:
             # Cas 1: Une seule colonne → liste simple
             values = df.iloc[:, 0].dropna().tolist()
