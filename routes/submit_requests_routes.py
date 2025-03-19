@@ -2,13 +2,14 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from bson import ObjectId
-from config import db
+from config import db, logger
 
 requests_bp = Blueprint("requests", __name__)
 
 @requests_bp.route("/create", methods=["POST"])
 @jwt_required()
 def create_request():
+    logger.warning('CREATE REQUEST')
     user_id = get_jwt_identity()
     data = request.get_json()
 
