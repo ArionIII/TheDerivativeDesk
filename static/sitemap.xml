@@ -9,467 +9,537 @@
 
 <url>
   <loc>https://www.thederivativedesk.com/</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/news</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/blog</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/about</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/contact</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/login</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/register</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.thederivativedesk.com/tools/inferential-statistics/multiple-regression</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <loc>https://www.thederivativedesk.com/tools/options/greeks/greeks-visualizer</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/basic-interest-rates-analysis/determining-zero-rates</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/option-pricing/black-scholes-option</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/basic-interest-rates-analysis/duration-and-convexity</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.thederivativedesk.com/tools/time-series-analysis/log-returns-calculator</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/forward-rate-agreements/forward-rate-calculation</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.thederivativedesk.com/tools/term-structure-construction/extending-libor-curve-with-swap-rates</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <loc>https://www.thederivativedesk.com/tools/inferential-statistics/multiple-regression</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/interest-rates</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/descriptive-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/inferential-statistics</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/probability-tools</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/time-series-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/markov-chains-and-random-walks</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/monte-carlo-simulations</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/bayesian-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/linear-algebra</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/statistics/advanced-calculations</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-pricing</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/hedging-basics</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/equity-hedging</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-contract-value</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/delivery-timing</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/interest-rates/basic-interest-rates-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/interest-rates/term-structure-construction</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/interest-rates/forward-rate-agreements</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/binomial-trees</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/black-scholes</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/monte-carlo</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/greeks</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/trading-strategies</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/exotic-options</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/graphs</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/scenario-analysis</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/mean</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/median</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/mode</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/range</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/iqr</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/skewness</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/kurtosis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/descriptive-analysis/comprehensive-basic-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/t-test</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/z-test</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/chi-square</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/confidence-intervals</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/p-value</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/anova</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/inferential-statistics/simple-regression</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/pdf</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/cdf</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/z-score</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/binomial-distribution</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/poisson-distribution</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/probability-tools/t-distribution</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/time-series-analysis/moving-averages</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/time-series-analysis/exponential-smoothing</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/time-series-analysis/autocorrelation</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/time-series-analysis/AR-MA-ARMA-previsions</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/time-series-analysis/log-returns-calculator</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/markov-chains-and-random-walks/transition-matrices</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/markov-chains-and-random-walks/random-walks</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/monte-carlo-simulations/monte-carlo</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/bayesian-analysis/bayesian-updating</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/linear-algebra-tools/matrix-multiplication</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/linear-algebra-tools/inverse-matrices</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/linear-algebra-tools/singular-value-decomposition</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/advanced-calculations/principal-component-analysis</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/advanced-calculations/eigenvalues-eigenvectors</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-pricing/forward_pricing_no_income</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-pricing/forward_pricing_with_income</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-pricing/forward_pricing_with_yield</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/forward-pricing/forward_pricing_foreign_currency</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_stock_index</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_with_storage</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_proportional_costs_yield</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_nonproportional_costs_yield</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry_yield</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/hedging-basics/optimal_number_of_futures_contracts_tailing_the_hedge</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/hedging-basics/minimum_variance_hedge_ratio</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/equity-hedging/hedge_equity_portfolio</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/equity-hedging/change_beta_portfolio</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/value-forward-contracts/value_forward_contracts</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/delivery-timing-decision/delivery_timing_decision</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/basic-interest-rates-analysis/continuous-compounding-rate</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/basic-interest-rates-analysis/m-to-continuous-compounding-rate</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/basic-interest-rates-analysis/bond-pricing</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/term-structure-construction/extending-libor-curve-with-swap-rates</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/term-structure-construction/extending-zero-curve-with-fra</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/forward-rate-agreements/payoff-of-fra</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/forward-rate-agreements/valuation-of-fra</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/forward-rate-agreements/fra-break-even-rate</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 <url>
   <loc>https://www.thederivativedesk.com/tools/forward-rate-agreements/hedging-with-fra</loc>
-  <lastmod>2025-02-21T00:11:19+00:00</lastmod>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/option-pricing/binomial-dividend</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/option-pricing/black-scholes-implied-volatility</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://www.thederivativedesk.com/tools/options/option-pricing/monte-carlo-option</loc>
+  <lastmod>2025-03-19T00:24:03+00:00</lastmod>
   <priority>0.41</priority>
 </url>
 
