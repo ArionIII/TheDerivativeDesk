@@ -29,7 +29,7 @@ from configurations.sub_config.options.options_sub_config import tool_category_o
 from routes.options_pricing_routes import option_pricing_routes
 from unit_tests.test_tools import test_bp
 from routes.option_sensitivities_and_risk_management_routes import greeks_routes    
-
+from routes.submit_requests_routes import requests_bp
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -70,7 +70,7 @@ app.register_blueprint(tool_category_options_routes)
 app.register_blueprint(option_pricing_routes)
 app.register_blueprint(test_bp)
 app.register_blueprint(greeks_routes)
-
+app.register_blueprint(requests_bp, url_prefix='/requests')
 @app.route("/robots.txt")
 def robots():
     return send_from_directory("static", "robots.txt", mimetype="text/plain")

@@ -9,9 +9,25 @@
 
 {% block content %}
 <header class="tool-header">
+    <div class="tool-request-buttons">
+        <button class="tool-btn-feature" onclick="openToolRequestModal('feature')">Request New Feature</button>
+        <button class="tool-btn-issue" onclick="openToolRequestModal('issue')">Report Issue</button>
+    </div>
     <h1>{{ tool.title }}</h1>
     <p>{{ tool.description }}</p>
 </header>
+
+<!-- Modal -->
+<div id="tool-request-modal" class="tool-modal">
+    <div class="tool-modal-content">
+        <span class="tool-close-btn" onclick="closeToolRequestModal()">&times;</span>
+        <h3 id="tool-modal-title">Submit a Request</h3>
+        <textarea id="tool-request-description" placeholder="Describe your request..." rows="4"></textarea>
+        <button class="tool-submit-btn" onclick="submitToolRequest()">Submit</button>
+    </div>
+</div>
+
+
 <main>
     <!-- Note Section -->
     {% if tool.note %}
@@ -295,6 +311,7 @@
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
+<script src="/static/js/submit_requests.js" defer></script>
 <script src="/static/js/tool.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/static/js/stock.js"></script>

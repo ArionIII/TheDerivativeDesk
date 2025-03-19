@@ -1,15 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from pymongo import MongoClient
 from flask import session
-
 import os
+from config import db
 
 auth_routes = Blueprint("auth_routes", __name__)
 
 # Connect to MongoDB
-client = MongoClient(os.getenv("MONGO_URI"))
-db = client.get_database("TheDerivativeDesk")
+
 users_collection = db.get_collection("users")
 
 

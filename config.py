@@ -14,7 +14,10 @@ import pandas as pd
 from io import StringIO
 import random
 import string
+from pymongo import MongoClient
 
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client.get_database("TheDerivativeDesk")
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue

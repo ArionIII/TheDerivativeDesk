@@ -368,3 +368,86 @@ body {
     width: 100%;
     max-height: 400px;
 }
+
+/* SUBMIT REQUETS */
+/* ✅ Boutons spécifiques */
+.tool-request-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.tool-btn-feature, .tool-btn-issue {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    color: white;
+}
+
+.tool-btn-feature {
+    background-color: #008335;
+}
+
+.tool-btn-issue {
+    background-color: #f44336;
+}
+
+/* ✅ Modal spécifique */
+.tool-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.show {
+    display:block;
+}
+
+.tool-modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+}
+
+.tool-close-btn {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#tool-request-description {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.tool-submit-btn {
+    background-color: #2edc76;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.tool-submit-btn:hover {
+    background-color: #27c66a;
+}
+
+.hidden {
+    display:none;
+}
