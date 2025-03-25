@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 🔹 Récupérer les détails du stock avec `detailed=true`
+    //  Récupérer les détails du stock avec `detailed=true`
     const response = await fetch(
       `/api/stocks?search=${stock.ticker}&limit=1&detailed=true`,
     );
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const stockDetails = data.stocks[0];
 
-    // 🔹 Construire l'objet avec des valeurs correctes
+    //  Construire l'objet avec des valeurs correctes
     const newAction = {
       title: stockDetails.title,
       ticker: stockDetails.ticker,
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const stockDetails = await fetchStockDetails(ticker);
 
     if (stockDetails) {
-      // 🔹 Informations générales
+      //  Informations générales
       document.getElementById("modal-action-title").textContent =
         `${stockDetails.name} (${stockDetails.ticker})`;
       document.getElementById("stock-sector").textContent =
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-website").innerHTML =
         `<a href="${stockDetails.website}" target="_blank">${stockDetails.website}</a>`;
 
-      // 🔹 Prix et performances
+      //  Prix et performances
       document.getElementById("stock-current-price").textContent =
         `Current Price: $${stockDetails.current_price || "N/A"}`;
       document.getElementById("stock-52-week-high").textContent =
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-average-volume").textContent =
         `Avg Volume (10d): ${formatNumber(stockDetails.average_volume_10d)}`;
 
-      // 🔹 Ratios financiers
+      //  Ratios financiers
       document.getElementById("stock-pe-ratio").textContent =
         `P/E Ratio: ${stockDetails.pe_ratio || "N/A"}`;
       document.getElementById("stock-forward-pe").textContent =
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-price-to-sales").textContent =
         `P/S Ratio: ${stockDetails.price_to_sales || "N/A"}`;
 
-      // 🔹 Rentabilité et marges
+      //  Rentabilité et marges
       document.getElementById("stock-roa").textContent =
         `Return on Assets (ROA): ${formatPercentage(stockDetails.return_on_assets)}`;
       document.getElementById("stock-roe").textContent =
@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-ebitda").textContent =
         `EBITDA: ${formatNumber(stockDetails.ebitda)}`;
 
-      // 🔹 Dividendes et Cashflow
+      //  Dividendes et Cashflow
       document.getElementById("stock-dividend-yield").textContent =
         `Dividend Yield: ${formatPercentage(stockDetails.dividend_yield / 100)}`;
       document.getElementById("stock-dividend-rate").textContent =
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-free-cashflow").textContent =
         `Free Cash Flow: ${formatNumber(stockDetails.free_cashflow)}`;
 
-      // 🔹 Analyst Ratings
+      //  Analyst Ratings
       document.getElementById("stock-recommendation").textContent =
         `Recommendation: ${stockDetails.recommendation || "N/A"}`;
       document.getElementById("stock-target-price").textContent =
@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stock-target-low").textContent =
         `Target Low: $${stockDetails.target_low_price || "N/A"}`;
 
-      // 🔹 Render the stock chart
+      //  Render the stock chart
       const ctx = document
         .getElementById("detailed-stock-chart")
         .getContext("2d");
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
         stockDetails.chart_data.volumes,
       );
 
-      // 🔹 Show the modal
+      //  Show the modal
       const modal = document.getElementById("see-more-modal");
       modal.classList.add("show");
       modal.style.display = "block";
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // 🔹 Utilitaires pour formater les nombres et pourcentages
+  //  Utilitaires pour formater les nombres et pourcentages
   const formatNumber = (num) => {
     return num !== "N/A" && num !== null ? num.toLocaleString() : "N/A";
   };

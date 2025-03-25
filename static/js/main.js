@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // 🔹 Cacher les suggestions si l'utilisateur clique en dehors
+    //  Cacher les suggestions si l'utilisateur clique en dehors
     document.addEventListener("click", (e) => {
       if (
         !suggestionsContainerTools.contains(e.target) &&

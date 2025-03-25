@@ -14,7 +14,7 @@ body {
   max-width: 100vw; /* Empêche le contenu d'excéder la largeur de l'écran */
 }
 
-/* 🔹 User Actions Section (Login/Register) */
+/*  User Actions Section (Login/Register) */
 .user-actions {
   position: absolute;
   top: 20px;
@@ -24,7 +24,7 @@ body {
   gap: 15px;
 }
 
-/* 🔹 Search Bar Placement */
+/*  Search Bar Placement */
 .search-bar-for-tools-container {
   width: 100%; /* Prend toute la largeur disponible */
   max-width: 600px; /* Limite la largeur pour éviter qu'elle ne devienne trop grande */
@@ -33,7 +33,7 @@ body {
   right: 0;
 }
 
-/* 🔹 Barre de recherche */
+/*  Barre de recherche */
 .search-bar-for-tools {
   display: flex;
   flex: 1;
@@ -59,7 +59,7 @@ body {
   color: #333;
 }
 
-/* 🔹 Conteneur des suggestions */
+/*  Conteneur des suggestions */
 .suggestions-container-tools {
   display: none;
   position: absolute;
@@ -76,12 +76,12 @@ body {
   padding: 10px 0;
 }
 
-/* 🔹 Afficher les suggestions quand elles sont actives */
+/*  Afficher les suggestions quand elles sont actives */
 .suggestions-container-tools.active {
   display: block !important;
 }
 
-/* 🔹 Style des éléments de suggestion */
+/*  Style des éléments de suggestion */
 .suggestion-item-tools {
   padding: 10px 15px;
   display: flex;
@@ -101,12 +101,12 @@ body {
   color: #777;
 }
 
-/* 🔹 Effet Hover */
+/*  Effet Hover */
 .suggestion-item-tools:hover {
   background-color: #e59d50; /* Couleur plus lisible */
 }
 
-/* 🔹 Scrollbar personnalisée */
+/*  Scrollbar personnalisée */
 .suggestions-container-tools::-webkit-scrollbar {
   width: 8px;
 }

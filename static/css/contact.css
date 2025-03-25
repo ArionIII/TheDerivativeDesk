@@ -1,4 +1,4 @@
-/* 🔹 Section Contact */
+/*  Section Contact */
 .contact-us {
   padding: 40px 20px; /* Ajout de padding pour aérer */
   text-align: center;
@@ -6,7 +6,7 @@
   color: var(--secondary-color);
 }
 
-/* 🔹 Conteneur du formulaire */
+/*  Conteneur du formulaire */
 .contact-us form {
   max-width: 500px; /* Largeur maximale du formulaire */
   margin: 0 auto;
@@ -16,7 +16,7 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre pour profondeur */
 }
 
-/* 🔹 Champs de formulaire */
+/*  Champs de formulaire */
 .form-group {
   margin-bottom: 20px; /* Espacement entre les inputs */
   text-align: left; /* Aligner les labels et inputs */
@@ -29,7 +29,7 @@ label {
   margin-bottom: 5px;
 }
 
-/* 🔹 Champs de saisie */
+/*  Champs de saisie */
 input,
 textarea {
   width: 100%;
@@ -45,7 +45,7 @@ textarea {
     box-shadow 0.3s ease-in-out;
 }
 
-/* 🔹 Effet focus sur les champs */
+/*  Effet focus sur les champs */
 input:focus,
 textarea:focus {
   border-color: var(--primary-color);
@@ -53,7 +53,7 @@ textarea:focus {
   outline: none;
 }
 
-/* 🔹 Bouton */
+/*  Bouton */
 button {
   width: 100%;
   padding: 12px;
@@ -69,13 +69,13 @@ button {
     transform 0.2s ease;
 }
 
-/* 🔹 Effet hover sur le bouton */
+/*  Effet hover sur le bouton */
 button:hover {
   background-color: var(--primary-color-hover, #ff6f00);
   transform: translateY(-2px);
 }
 
-/* 🔹 Responsive */
+/*  Responsive */
 @media (max-width: 600px) {
   .contact-us form {
     max-width: 100%;

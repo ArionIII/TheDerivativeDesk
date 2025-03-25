@@ -154,12 +154,12 @@ def parse_array(raw_value):
         except ValueError:
             pass
 
-    # 🔹 Cas d'un texte normal (ex: "One-Sample", "Test Type")
+    #  Cas d'un texte normal (ex: "One-Sample", "Test Type")
     if isinstance(raw_value, str) and not any(char in raw_value for char in "[],"):
         logger.info("Recognized as a standard string, returning as is.")
         return raw_value  # Ex: "One-Sample"
 
-    # 🔹 Vérification si c'est un JSON valide (ex: "[1,2,3]" ou "[[1,2],[3,4]]")
+    #  Vérification si c'est un JSON valide (ex: "[1,2,3]" ou "[[1,2],[3,4]]")
     try:
         parsed_json = json.loads(raw_value)  # Essayer de charger en JSON
         if isinstance(parsed_json, list):
@@ -178,7 +178,7 @@ def parse_array(raw_value):
     except json.JSONDecodeError:
         logger.info("Not a JSON list, checking further.")
 
-    # 🔹 Cas où la valeur est une simple liste sous forme de string (ex: "1,2,3")
+    #  Cas où la valeur est une simple liste sous forme de string (ex: "1,2,3")
     if "," in raw_value:
         logger.info("Recognized as a CSV-style list, converting to float list.")
         return [float(x.strip()) for x in raw_value.split(",") if x.strip()]
@@ -384,7 +384,7 @@ def parse_input_data(request, tool_config):
     logger.warning("📥 Processing input data...")
     column_names = []
 
-    # 🔹 1️⃣ Parsing des fichiers (prioritaires)
+    #  1️⃣ Parsing des fichiers (prioritaires)
     if "files" in data_source and data_source["files"]:
         logger.warning(" Processing uploaded files...")
         column_names, parsed_files = process_uploaded_files_with_target(
@@ -397,7 +397,7 @@ def parse_input_data(request, tool_config):
         logger.error("parsed data 1")
         logger.error(parsed_data)
 
-    # 🔹 2️⃣ Parsing du JSON
+    #  2️⃣ Parsing du JSON
     if "json" in data_source and data_source["json"]:
         for key, value in data_source["json"].items():
             # Ajouter seulement si l'input n'a pas déjà été remplacé par un fichier
@@ -405,7 +405,7 @@ def parse_input_data(request, tool_config):
                 parsed_data[key] = value
         logger.error("parsed data 2", parsed_data)
 
-    # 🔹 3️⃣ Parsing du formulaire (`form`)
+    #  3️⃣ Parsing du formulaire (`form`)
     if "form" in data_source and data_source["form"]:
         parsed_values = [parse_array(value) for value in data_source["form"].values()]
         parsed_form_data = {

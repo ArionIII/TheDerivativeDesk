@@ -100,7 +100,7 @@ def get_random_stocks():
 
             return jsonify({"stocks": [stock_data]})
 
-        # **🔹 Mode normal : sélection aléatoire avec toutes les vérifications**
+        # ** Mode normal : sélection aléatoire avec toutes les vérifications**
         logger.info(f"Fetching random stocks data ({num_stocks} stocks)")
         possible_tickers = list(ALL_TICKERS.keys())
         selected_tickers = random.sample(
