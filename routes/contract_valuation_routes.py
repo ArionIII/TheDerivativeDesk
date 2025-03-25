@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, jsonify
-from math import exp
 from config import logger
 from formulas.chap_3 import *
 from formulas.chap_5 import *

@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 from config import logger
 
-import os
 import datetime
 
 # Global variable to store the last fetch day

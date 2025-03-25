@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from config import logger, parse_inputs, parse_input_data, extract_values, convert_numpy_types, result_tuple_into_dict
+from config import logger, parse_input_data, extract_values, convert_numpy_types, result_tuple_into_dict
 from configurations.tool_config.options.option_sensitivities_and_risk_management_tool_config import GREEKS_TOOL_CONFIG
 from formulas.options_formulas import *  
 from graph_generation.get_graph import GRAPH_FUNCTIONS

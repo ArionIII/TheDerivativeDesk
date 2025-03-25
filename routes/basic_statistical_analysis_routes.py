@@ -1,11 +1,8 @@
-import csv
-from io import StringIO
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger, parse_csv_and_xlsx, parse_inputs, extract_values, get_data_source, parse_array, convert_numpy_types, process_uploaded_files_with_target, parse_input_data
+from config import logger, extract_values, convert_numpy_types, parse_input_data
 from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
 from graph_generation.get_graph import GRAPH_FUNCTIONS
-from werkzeug.datastructures import FileStorage
 
 # Blueprints for the three sub-categories
 descriptive_statistics_routes = Blueprint("descriptive_statistics_routes", __name__)

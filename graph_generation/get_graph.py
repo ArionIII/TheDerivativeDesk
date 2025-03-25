@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request
 from graph_generation.graph_generator import *
 
 app = Flask(__name__)

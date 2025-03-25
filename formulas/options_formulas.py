@@ -2,7 +2,6 @@ import numpy as np
 from scipy.optimize import newton
 from math import log, sqrt, exp
 from scipy.stats import norm
-from math import exp
 from config import logger
 
 

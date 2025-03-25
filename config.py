@@ -1,19 +1,12 @@
 # colored_logger.py
 import logging
 import os
-import csv
 from io import StringIO
-from flask import Blueprint, render_template, request, jsonify
+from flask import request
 import pandas as pd
 import json
 import numpy as np
 from werkzeug.datastructures import FileStorage
-import ipdb
-import os
-import pandas as pd
-from io import StringIO
-import random
-import string
 
 
 class LogColors:

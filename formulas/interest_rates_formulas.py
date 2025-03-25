@@ -1,14 +1,10 @@
 from math import exp
 import numpy as np
 from config import logger
-import scipy.interpolate as interp
-from scipy.optimize import newton
-import QuantLib as ql
 from scipy.interpolate import CubicSpline
 import os
 import pandas as pd
 import random
-from scipy.interpolate import CubicSpline
 from scipy.optimize import fsolve
 from scipy.interpolate import interp1d
 
@@ -605,7 +601,7 @@ def calculate_swap_spread_analysis(swap_rate, treasury_yield):
     return {"swap_spread_analysis": ("Swap Spread Analysis :", spread)}
 
 def calculate_swaption_valuation(notional_value, volatility, time_to_maturity, strike_price, forward_rate):
-    from math import exp, sqrt, log
+    from math import sqrt, log
     from scipy.stats import norm
     d1 = (log(forward_rate / strike_price) + (volatility ** 2 / 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
     d2 = d1 - volatility * sqrt(time_to_maturity)

@@ -6,20 +6,11 @@ from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import norm, t
 from scipy.stats import binom, poisson
 from config import logger
-import math
 import random
 import pandas as pd
-import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller, acf, pacf
 from statsmodels.tsa.arima.model import ARIMA
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, mean_squared_error
-import matplotlib.pyplot as plt
 import os
-import openpyxl
-import json
-import numpy as np
-import scipy.stats as stats
 
 def calculate_mean(dataset):
     """
@@ -163,10 +154,10 @@ def anova(group_a, group_b, group_c=None):
     logger.info(f"Group B: {group_b}")
     logger.info(f"Group C: {group_c}")
     if group_c is not None and group_c!="":
-        logger.info(f"Performing ANOVA test for three groups")
+        logger.info("Performing ANOVA test for three groups")
         f_stat, p_value = stats.f_oneway(group_a, group_b, group_c)
     else:
-        logger.info(f"Performing ANOVA test for two groups")
+        logger.info("Performing ANOVA test for two groups")
         f_stat, p_value = stats.f_oneway(group_a, group_b)
     logger.info(f"F-Statistic: {f_stat}, P-Value: {p_value}")
     return {

@@ -4,13 +4,10 @@ from flask import Blueprint, jsonify, request, send_file
 from config import logger
 import matplotlib.pyplot as plt
 from io import BytesIO
-import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib
-import time
-from web_parsing.fetch_tickers_and_titles import fetch_index_tickers, combine_tickers_and_titles
+from web_parsing.fetch_tickers_and_titles import combine_tickers_and_titles
 import feedparser
-import ipdb
 
 matplotlib.use("Agg")
 GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={ticker}+stock&hl=en-US&gl=US&ceid=US:en"

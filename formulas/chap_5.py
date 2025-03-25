@@ -1,7 +1,5 @@
-import numpy as np
 import math
 ### Chapitre 5 - Determination of forward & futures prices
-import math
 
 def calculate_forward_price_no_income(spot_price, risk_free_rate, time_to_maturity):
     """

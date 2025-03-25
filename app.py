@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
-from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
 from routes.futures_forward_routes import forwards_routes, futures_routes
 from routes.hedging_routes import hedging_basics_routes, equity_hedging_routes
 from routes.search_routes import search_routes

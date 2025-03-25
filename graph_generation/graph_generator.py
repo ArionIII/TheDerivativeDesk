@@ -3,13 +3,9 @@ import random
 import string
 import numpy as np
 import matplotlib.pyplot as plt
-import io
-from flask import send_file
 from config import logger
-from scipy.optimize import fsolve
 from math import log, exp, sqrt
 from scipy.stats import norm
-from scipy.optimize import brentq
 
 
 
@@ -701,14 +697,8 @@ def plot_payoff_curve(data):
 
     return save_plot(fig, generate_unique_filename("black_scholes_payoff"))
 
-from scipy.stats import norm
 from numpy import log, sqrt, exp
-import numpy as np
-import matplotlib.pyplot as plt
 
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
 from math import log, sqrt, exp
 
 def plot_greeks_sensitivity(data):
