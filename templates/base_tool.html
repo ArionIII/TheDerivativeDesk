@@ -27,7 +27,7 @@
     <h2>Inputs</h2>
     <form id="tool-form" enctype="multipart/form-data">
 
-        <!-- ✅ Classic Inputs -->
+        <!--  Classic Inputs -->
         {% for input in tool.inputs %}
         {# DEBUG: {{ input }} #}
             {% if input.type == "number" or input.type == "text" %}
@@ -52,7 +52,7 @@
             {% endif %}
         {% endfor %}
 
-        <!-- ✅ Classic Inputs Array -->
+        <!--  Classic Inputs Array -->
         {% for input in tool.inputs %}
         {% if input.type == "array" %}
         <label for="{{ input.id }}">
@@ -76,7 +76,7 @@
         {% endif %}
         {% endfor %}
 
-        <!-- ✅ Range Inputs (Sliders) -->
+        <!--  Range Inputs (Sliders) -->
         {% for input in tool.inputs %}
             {% if input.type == "range" %}
                 <label for="{{ input.id }}">
@@ -99,7 +99,7 @@
             {% endif %}
         {% endfor %}
 
-        <!-- ✅ Dropdown Inputs -->
+        <!--  Dropdown Inputs -->
         {% for input in tool.inputs %}
             {% if input.type == "select" %}
                 <label for="{{ input.id }}">{{ input.label }}</label>
@@ -113,7 +113,7 @@
             {% endif %}
         {% endfor %}
 
-        <!-- ✅ File Inputs -->
+        <!--  File Inputs -->
         {% for input in tool.inputs %}
         {% if input.type == "file" %}
         <div class="file-input-container">
@@ -135,7 +135,7 @@
     {% endif %}
         {% endfor %}
 
-        <!-- ✅ Submit Button -->
+        <!--  Submit Button -->
         <button type="submit" class="btn-submit">Calculate</button>
     </form>
 </section>
@@ -169,7 +169,7 @@
     {% endif %}
 
     {% if tool.is_live %}
-    <!-- ✅ Live Graph Section -->
+    <!--  Live Graph Section -->
     <section class="live-graph-section">
         <h2>Live Graph</h2>
         <div class="live-graph-container">

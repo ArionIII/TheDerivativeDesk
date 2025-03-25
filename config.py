@@ -277,7 +277,7 @@ def extract_values(results):
 def get_data_source(request):
     """Détecte la source des données envoyées (JSON, form-data ou fichier)"""
     if request.content_type.startswith("multipart/form-data"):
-        logger.info("📂 Requête multipart/form-data détectée")
+        logger.info(" Requête multipart/form-data détectée")
 
         # Récupérer les fichiers
         files_data = request.files if request.files else {}
@@ -332,11 +332,11 @@ def process_uploaded_files_with_target(data_source, tool_config):
 
     # Vérifier si des fichiers sont présents
     if "files" in data_source and data_source["files"]:
-        logger.warning("📂 Processing uploaded files...")
+        logger.warning(" Processing uploaded files...")
 
         for file_key, file_obj in data_source["files"].items():
             if isinstance(file_obj, FileStorage) and file_obj.filename:
-                logger.info(f"📌 Détection du fichier : {file_obj.filename}")
+                logger.info(f" Détection du fichier : {file_obj.filename}")
 
                 # Trouver `data_target` correspondant à l'ID du fichier
                 target_name = next(
@@ -346,12 +346,12 @@ def process_uploaded_files_with_target(data_source, tool_config):
                 # Parser le fichier CSV/XLSX
                 try:
                     column_names, parsed_data = parse_csv_and_xlsx(file_obj)
-                    logger.warning(f"✅ Fichier {file_obj.filename} chargé avec succès.")
+                    logger.warning(f" Fichier {file_obj.filename} chargé avec succès.")
                     parsed_datasets[target_name] = parsed_data
-                    logger.warning(f"✅ Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
+                    logger.warning(f" Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
                 except Exception as e:
-                    logger.error(f"❌ Erreur lors du traitement de {file_obj.filename} : {e}")
-    logger.warning(f"✅ Parsed datasets: {parsed_datasets}")
+                    logger.error(f" Erreur lors du traitement de {file_obj.filename} : {e}")
+    logger.warning(f" Parsed datasets: {parsed_datasets}")
     return column_names, parsed_datasets
 
 
@@ -364,9 +364,9 @@ def parse_input_data(request, tool_config):
     
     # 🔹 1️⃣ Parsing des fichiers (prioritaires)
     if "files" in data_source and data_source["files"]:
-        logger.warning("📂 Processing uploaded files...")
+        logger.warning(" Processing uploaded files...")
         column_names, parsed_files = process_uploaded_files_with_target(data_source, tool_config)
-        logger.warning(f"✅ Parsed files: {parsed_files}")
+        logger.warning(f" Parsed files: {parsed_files}")
         
         # Priorité aux fichiers : on écrase les valeurs existantes
         parsed_data.update(parsed_files)
@@ -394,7 +394,7 @@ def parse_input_data(request, tool_config):
         logger.error('parsed data 3')
         logger.error(parsed_data)
 
-    logger.info(f"✅ Parsed data: {parsed_data}")
+    logger.info(f" Parsed data: {parsed_data}")
     return column_names, parsed_data
 
 def reassign_params_if_header(tool_config, params, column_names):

@@ -166,7 +166,6 @@ def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m
                 logger.info(f"Taux zéro calculé pour maturité {T} ans : {r}")
             zero_rates[T] = r  # Store the annualized zero rate
 
-
         # Convert to DataFrame for display
         df = pd.DataFrame({
             "Maturity": zero_rates.keys(),
@@ -178,10 +177,10 @@ def determining_zero_rates(bond_prices, maturities, face_values, coupon_rates, m
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         logger.info(f"zero-rates saved to: {csv_path} and {xlsx_path}")
@@ -238,10 +237,10 @@ def extending_libor_curve_with_swap_rates(libor_rates, swap_rates, libor_tenors,
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df_interpolated.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df_interpolated.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         return csv_path, xlsx_path
@@ -321,10 +320,10 @@ def extending_zero_curve_with_fra(libor_rates, fra_rates, libor_tenors, fra_teno
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df_interpolated.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df_interpolated.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         return csv_path, xlsx_path
@@ -535,10 +534,10 @@ def calculate_forward_rate_curve(spot_rates, maturities, forward_period, output_
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV
+        #  Sauvegarde du CSV
         df_forward_rates.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df_forward_rates.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         return csv_path, xlsx_path

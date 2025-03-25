@@ -613,7 +613,7 @@ def plot_binomial_tree_with_dividend(data):
 def plot_pnl_diagram_with_dividend(data):
     logger.info(f"Generating P&L diagram with data: {data}")
 
-    # ✅ Extraction et conversion des paramètres
+    #  Extraction et conversion des paramètres
     option_type = data.get("option_type")
     underlying_price = float(data.get("underlying_price"))
     strike_price = float(data.get("strike_price"))
@@ -629,34 +629,34 @@ def plot_pnl_diagram_with_dividend(data):
     if None in (option_type, underlying_price, strike_price, option_price):
         raise ValueError("Missing one or more required inputs for P&L diagram")
 
-    # ✅ Génération de la plage de prix à la maturité
+    #  Génération de la plage de prix à la maturité
     price_range = np.linspace(0.5 * underlying_price, 1.5 * underlying_price, 100)
 
-    # ✅ Calcul du P&L en fonction du type d'option et de la position
+    #  Calcul du P&L en fonction du type d'option et de la position
     if option_type == "CALL":
         pnl = np.maximum(price_range - strike_price, 0) - option_price
     else:
         pnl = np.maximum(strike_price - price_range, 0) - option_price
     
-    # 🔄 Si la position est SHORT, on inverse le payoff
+    #  Si la position est SHORT, on inverse le payoff
     if position_type == "SHORT":
         pnl = -pnl
 
-    # ✅ Création du graphique
+    #  Création du graphique
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(price_range, pnl, label=f"{position_type} {option_type} Option P&L", color="blue", linewidth=2)
     
-    # ✅ Ligne de coût initial
+    #  Ligne de coût initial
     ax.axhline(-option_price if position_type == "LONG" else option_price, color="red", linestyle="--", label=f"Initial Cost ({-option_price if position_type == 'LONG' else option_price})")
 
-    # ✅ Ligne du prix d'exercice (K)
+    #  Ligne du prix d'exercice (K)
     ax.axvline(strike_price, color="green", linestyle="--", label=f"Strike Price (K={strike_price})")
 
-    # ✅ Breakeven point = K + c pour un CALL, K - c pour un PUT
+    #  Breakeven point = K + c pour un CALL, K - c pour un PUT
     breakeven = strike_price + option_price if option_type == "CALL" else strike_price - option_price
     ax.axvline(breakeven, color="orange", linestyle="--", label=f"Breakeven at {round(breakeven, 2)}")
 
-    # ✅ Titres et légende
+    #  Titres et légende
     ax.set_title(f"{position_type} {option_type} Option P&L at Maturity")
     ax.set_xlabel("Underlying Price at Maturity")
     ax.set_ylabel("Profit / Loss")
@@ -665,12 +665,12 @@ def plot_pnl_diagram_with_dividend(data):
 
     plt.grid(True)
 
-    # ✅ Sauvegarde du graphe
+    #  Sauvegarde du graphe
     return save_plot(fig, generate_unique_filename(f"pnl_with_dividend_{position_type.lower()}"))
 
 
 
-# ✅ Payoff Curve
+#  Payoff Curve
 def plot_payoff_curve(data):
     logger.info(f"Generating payoff curve with data: {data}")
     
@@ -714,7 +714,7 @@ from math import log, sqrt, exp
 def plot_greeks_sensitivity(data):
     logger.info(f"Generating greeks sensitivity with data: {data}")
     
-    # ✅ Extraction des inputs depuis le dictionnaire `data`
+    #  Extraction des inputs depuis le dictionnaire `data`
     option_type = data.get("option_type")
     position_type = data.get("position_type")  # Ajout de la position (LONG/SHORT)
     underlying_price = float(data.get("underlying_price"))
@@ -727,7 +727,7 @@ def plot_greeks_sensitivity(data):
     if None in (option_type, position_type, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility):
         raise ValueError("Missing one or more required inputs for Greeks")
 
-    # ✅ Plage de prix du sous-jacent pour la courbe
+    #  Plage de prix du sous-jacent pour la courbe
     price_range = np.linspace(0.5 * strike_price, 1.5 * strike_price, 100)
     
     delta = []
@@ -735,7 +735,7 @@ def plot_greeks_sensitivity(data):
     theta = []
     vega = []
 
-    # ✅ Calculer la valeur fixe des Greeks au prix du sous-jacent (pour affichage dans la légende)
+    #  Calculer la valeur fixe des Greeks au prix du sous-jacent (pour affichage dans la légende)
     d1 = (log(underlying_price / strike_price) + (risk_free_rate - dividend_yield + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
     d2 = d1 - volatility * sqrt(time_to_maturity)
 
@@ -750,7 +750,7 @@ def plot_greeks_sensitivity(data):
                   + dividend_yield * underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
     base_vega = (underlying_price * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
     
-    # ✅ Ajustement pour la position LONG/SHORT
+    #  Ajustement pour la position LONG/SHORT
     if position_type == "SHORT":
         final_delta = -base_delta
         final_theta = -base_theta
@@ -762,7 +762,7 @@ def plot_greeks_sensitivity(data):
 
     final_gamma = base_gamma  # Gamma reste inchangé
 
-    # ✅ Générer la courbe complète des Greeks
+    #  Générer la courbe complète des Greeks
     for S in price_range:
         d1 = (log(S / strike_price) + (risk_free_rate - dividend_yield + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
         d2 = d1 - volatility * sqrt(time_to_maturity)
@@ -778,23 +778,23 @@ def plot_greeks_sensitivity(data):
                      + dividend_yield * S * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
         base_vega = (S * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
 
-        # ✅ Ajustement selon LONG/SHORT
+        #  Ajustement selon LONG/SHORT
         delta.append(-base_delta if position_type == "SHORT" else base_delta)
         gamma.append(base_gamma)  # Gamma reste inchangé
         theta.append(-base_theta if position_type == "SHORT" else base_theta)
         vega.append(-base_vega if position_type == "SHORT" else base_vega)
 
-    # ✅ Créer le graphique
+    #  Créer le graphique
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(price_range, delta, label=f"Delta (Current: {round(final_delta, 4)})", color="blue")
     ax.plot(price_range, gamma, label=f"Gamma (Current: {round(final_gamma, 4)})", color="red")
     ax.plot(price_range, theta, label=f"Theta (Current: {round(final_theta, 4)})", color="green")
     ax.plot(price_range, vega, label=f"Vega (Current: {round(final_vega, 4)})", color="purple")
 
-    # ✅ Marquer le prix actuel du sous-jacent avec une ligne verticale
+    #  Marquer le prix actuel du sous-jacent avec une ligne verticale
     ax.axvline(underlying_price, color="black", linestyle="--", label=f"Underlying Price: {underlying_price}")
 
-    # ✅ Configurations supplémentaires
+    #  Configurations supplémentaires
     ax.set_title(f"{position_type} {option_type} Option Greeks Sensitivity")
     ax.set_xlabel("Underlying Price")
     ax.set_ylabel("Value")
@@ -803,7 +803,7 @@ def plot_greeks_sensitivity(data):
 
     plt.grid(True)
 
-    # ✅ Sauvegarde du graphe
+    #  Sauvegarde du graphe
     return save_plot(fig, generate_unique_filename(f"{position_type.lower()}_{option_type.lower()}_greeks_with_dividend"))
 
 
@@ -829,7 +829,7 @@ def plot_simulation_results_histogram(data):
     if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, dividend_yield, num_simulations, num_steps, option_price):
         raise ValueError("Missing one or more required inputs for simulation histogram")
 
-    # ✅ Fix: dt basé sur le temps de maturité divisé par le nombre de pas
+    #  Fix: dt basé sur le temps de maturité divisé par le nombre de pas
     dt = data.get("time_to_maturity") / num_steps
     payoffs = []
 
@@ -842,7 +842,7 @@ def plot_simulation_results_histogram(data):
                 volatility * np.sqrt(dt) * np.random.randn()
             ))
         
-        # ✅ Payoff final basé sur le type d'option
+        #  Payoff final basé sur le type d'option
         if option_type == "CALL":
             payoff = max(0, path[-1] - strike_price)
         else:
@@ -850,11 +850,11 @@ def plot_simulation_results_histogram(data):
 
         payoffs.append(payoff)
 
-    # ✅ Création de l'histogramme
+    #  Création de l'histogramme
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.hist(payoffs, bins=50, color="skyblue", edgecolor="black", alpha=0.7)
 
-    # ✅ Ajout d'une ligne verticale pour le prix de l'option simulé
+    #  Ajout d'une ligne verticale pour le prix de l'option simulé
     ax.axvline(option_price, color="red", linestyle="--", label=f"Theoretical Option Price: {round(option_price, 4)}")
 
     ax.set_title(f"{option_type} Option Simulation Results Histogram")
@@ -863,7 +863,7 @@ def plot_simulation_results_histogram(data):
     ax.legend()
     plt.grid(True)
 
-    # ✅ Sauvegarde du graphe
+    #  Sauvegarde du graphe
     return save_plot(fig, generate_unique_filename("monte_carlo_histogram"))
 
 # ==================================
@@ -885,13 +885,13 @@ def plot_convergence_plot(data):
     if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, dividend_yield, num_simulations, num_steps, option_price):
         raise ValueError("Missing one or more required inputs for convergence plot")
 
-    # ✅ Fix: dt basé sur le temps de maturité divisé par le nombre de pas
+    #  Fix: dt basé sur le temps de maturité divisé par le nombre de pas
     dt = time_to_maturity / num_steps
-    discount_factor = np.exp(-risk_free_rate * time_to_maturity)  # ✅ Facteur d'actualisation
+    discount_factor = np.exp(-risk_free_rate * time_to_maturity)  #  Facteur d'actualisation
     payoffs = []
     cumulative_mean = []
 
-    np.random.seed(42)  # ✅ Fixer le seed pour la reproductibilité
+    np.random.seed(42)  #  Fixer le seed pour la reproductibilité
 
     for i in range(num_simulations):
         path = np.zeros(num_steps + 1)
@@ -904,7 +904,7 @@ def plot_convergence_plot(data):
                 volatility * np.sqrt(dt) * z
             )
 
-        # ✅ Payoff en fonction du type d'option
+        #  Payoff en fonction du type d'option
         if option_style == "European":
             if option_type == "CALL":
                 payoff = max(0, path[-1] - strike_price)
@@ -928,7 +928,7 @@ def plot_convergence_plot(data):
         payoffs.append(payoff)
         cumulative_mean.append(np.mean(payoffs) * discount_factor)
 
-    # ✅ Création du graphique de convergence
+    #  Création du graphique de convergence
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(range(1, num_simulations + 1), cumulative_mean, label="Convergence", color="blue")
     ax.axhline(option_price, color="red", linestyle="--", label=f"Theoretical Option Price: {round(option_price, 4)}")
@@ -939,5 +939,5 @@ def plot_convergence_plot(data):
     ax.legend()
     plt.grid(True)
 
-    # ✅ Sauvegarde du graphe
+    #  Sauvegarde du graphe
     return save_plot(fig, generate_unique_filename("monte_carlo_convergence"))

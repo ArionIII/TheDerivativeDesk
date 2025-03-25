@@ -234,22 +234,22 @@ def multiple_regression(independent_variables, dependent_variables):
     - `dependent_variables` as a list of `n` values.
     """
 
-    logger.warning(f"✅ Y length: {len(dependent_variables)}")
-    logger.warning(f"✅ X number of variables: {len(independent_variables)}")
+    logger.warning(f" Y length: {len(dependent_variables)}")
+    logger.warning(f" X number of variables: {len(independent_variables)}")
     for i, x_list in enumerate(independent_variables):
-        logger.warning(f"✅ Independent Variable {i+1} Length: {len(x_list)}")
+        logger.warning(f" Independent Variable {i+1} Length: {len(x_list)}")
 
-    # ✅ Transposer X pour qu'il soit sous forme (100,3) au lieu de (3,100)
+    #  Transposer X pour qu'il soit sous forme (100,3) au lieu de (3,100)
     X = np.array(independent_variables).T  # (100,3)
 
-    # ✅ Convertir `dependent_variables` en un vecteur (100,)
+    #  Convertir `dependent_variables` en un vecteur (100,)
     Y = np.array(dependent_variables)  # (100,)
 
     logger.warning(f"📊 X shape: {X.shape}, Y shape: {Y.shape}")
 
     # Vérifier que les dimensions correspondent
     if X.shape[0] != Y.shape[0]:
-        raise ValueError(f"❌ Mismatch: X has {X.shape[0]} rows but Y has {Y.shape[0]} rows.")
+        raise ValueError(f" Mismatch: X has {X.shape[0]} rows but Y has {Y.shape[0]} rows.")
 
     # Régression multiple
     model = LinearRegression()
@@ -367,10 +367,10 @@ def calculate_moving_averages(dataset, window_size, output_path="static/outputs/
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         logger.info(f"Moving averages saved to: {csv_path} and {xlsx_path}")
@@ -492,10 +492,10 @@ def perform_monte_carlo_simulations(num_simulations, output_path="static/outputs
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
         
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
         
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df.to_excel(xlsx_path, index=False, engine="openpyxl")
         
         return csv_path, xlsx_path
@@ -643,7 +643,7 @@ def forecast_series(dataset, n_previsions, temporal_step):
     # Faire la prévision
     forecast_values = result.forecast(steps=n_previsions).tolist()
     
-    # ✅ Convertir explicitement forecast_index en int Python natif pour éviter l'erreur `int32`
+    #  Convertir explicitement forecast_index en int Python natif pour éviter l'erreur `int32`
     forecast_series = {int(index.item()): value for index, value in zip(forecast_index, forecast_values)}
 
     logger.info("Forecast has been made")
@@ -690,7 +690,7 @@ def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics
         os.makedirs(output_path, exist_ok=True)
 
         if isinstance(dataset, list):
-            # ✅ Cas d'une liste de listes => plusieurs colonnes
+            #  Cas d'une liste de listes => plusieurs colonnes
             if all(isinstance(i, list) for i in dataset):
                 # Convertir en DataFrame avec plusieurs colonnes
                 max_length = max(len(sublist) for sublist in dataset)
@@ -698,40 +698,40 @@ def compute_log_returns_csv_xlsx(dataset, output_path="static/outputs/statistics
                 df = pd.DataFrame(dataset_aligned).transpose()
                 df.columns = [f"Series_{i+1}" for i in range(len(dataset))]
             else:
-                # ✅ Cas d'une liste simple => une seule colonne
+                #  Cas d'une liste simple => une seule colonne
                 df = pd.DataFrame({"Series": dataset})
 
-            # ✅ Calcul des log-returns
+            #  Calcul des log-returns
             log_returns = np.log(df / df.shift(1))
             df_output = log_returns.copy()
 
         elif isinstance(dataset, dict):
-            # ✅ Cas d'un dictionnaire de listes => plusieurs colonnes
+            #  Cas d'un dictionnaire de listes => plusieurs colonnes
             max_length = max(len(v) for v in dataset.values())
             dataset_aligned = {
                 key: v + [np.nan] * (max_length - len(v)) for key, v in dataset.items()
             }
             df = pd.DataFrame(dataset_aligned)
 
-            # ✅ Calcul des log-returns
+            #  Calcul des log-returns
             log_returns = np.log(df / df.shift(1))
             df_output = log_returns.copy()
 
         else:
             raise ValueError("Invalid dataset format. Expected list or dict of lists.")
 
-        # ✅ Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
+        #  Supprimer les lignes vides uniquement si toutes les colonnes sont NaN
         df_output.dropna(inplace=True, how="all")
 
-        # ✅ Générer un nom de fichier unique
+        #  Générer un nom de fichier unique
         random_file_name = f"log_returns_{random.randint(10**9, 10**10 - 1)}"
         csv_path = os.path.join(output_path, f"{random_file_name}.csv")
         xlsx_path = os.path.join(output_path, f"{random_file_name}.xlsx")
 
-        # ✅ Sauvegarde du CSV (compatible Excel)
+        #  Sauvegarde du CSV (compatible Excel)
         df_output.to_csv(csv_path, index=False, sep=",", decimal=".", encoding="utf-8-sig")
 
-        # ✅ Sauvegarde du fichier Excel
+        #  Sauvegarde du fichier Excel
         df_output.to_excel(xlsx_path, index=False, engine="openpyxl")
 
         logger.info(f"Log returns saved to: {csv_path} and {xlsx_path}")

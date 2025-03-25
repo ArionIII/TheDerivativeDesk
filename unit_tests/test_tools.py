@@ -118,7 +118,7 @@ def test_tool(tool_key, tool_config):
             resp = requests.post(full_url, json=payload, timeout=10)
             status_code = resp.status_code
             
-            # ✅ Si le statut est 200 => Success
+            #  Si le statut est 200 => Success
             if 200 <= status_code < 300:
                 if expected_result is not None:
                     actual_result = resp.json()
@@ -132,7 +132,7 @@ def test_tool(tool_key, tool_config):
                     test_passed = True
                     error_msg = None
 
-            # ✅ Si le statut est ≥ 400 => Échec + Capture de l'erreur détaillée
+            #  Si le statut est ≥ 400 => Échec + Capture de l'erreur détaillée
             else:
                 test_passed = False
 
@@ -207,11 +207,11 @@ def run_tests():
             "details": all_results
         }
 
-        # ✅ Écriture du fichier CSV propre
+        #  Écriture du fichier CSV propre
         csv_file = os.path.join(OUTPUT_DIR, generate_unique_filename_csv())
         write_csv_report(all_results, csv_file)
 
-        logger.info(f"✅ Test report saved to {csv_file}")
+        logger.info(f" Test report saved to {csv_file}")
 
         return jsonify(report), 200
 
@@ -233,7 +233,7 @@ def write_csv_report(results, filename):
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
 
-        # ✅ En-tête des colonnes
+        #  En-tête des colonnes
         writer.writerow([
             "Tool Name",
             "Input Payload",
@@ -246,7 +246,7 @@ def write_csv_report(results, filename):
             tool_name = result.get("tool", "")
             input_payload = json.dumps(result.get("input_payload", {}), indent=None)
             status_code = result.get("status_code", "")
-            passed = "✅" if result.get("passed") else "❌"
+            passed = "" if result.get("passed") else ""
             error = result.get("error", "")
 
             writer.writerow([

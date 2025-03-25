@@ -28,7 +28,7 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
     try:
         logger.info("Starting binomial pricing with dividends...")
 
-        # ✅ Vérification des types et conversion
+        #  Vérification des types et conversion
         underlying_price = float(underlying_price)
         strike_price = float(strike_price)
         time_to_maturity = float(time_to_maturity)
@@ -43,16 +43,16 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
         dt = time_to_maturity / steps
         discount_factor = exp(-risk_free_rate * dt)
 
-        # ✅ Facteurs de montée (u) et de descente (d) ajustés pour le dividende
+        #  Facteurs de montée (u) et de descente (d) ajustés pour le dividende
         u = exp((risk_free_rate - dividend_yield) * dt + volatility * sqrt(dt))
         d = exp((risk_free_rate - dividend_yield) * dt - volatility * sqrt(dt))
 
-        # ✅ Probabilité neutre au risque ajustée pour le dividende
+        #  Probabilité neutre au risque ajustée pour le dividende
         p = (exp((risk_free_rate - dividend_yield) * dt) - d) / (u - d)
 
         logger.info(f"u = {u}, d = {d}, p = {p}")
 
-        # ✅ Initialisation du tableau des prix finaux à la maturité
+        #  Initialisation du tableau des prix finaux à la maturité
         option_values = np.zeros(steps + 1)
         for i in range(steps + 1):
             final_price = underlying_price * (u ** (steps - i)) * (d ** i)
@@ -61,12 +61,12 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
             elif option_type == "PUT":
                 option_values[i] = max(strike_price - final_price, 0)
 
-        # ✅ Rétropropagation dans l'arbre binomial
+        #  Rétropropagation dans l'arbre binomial
         for step in range(steps - 1, -1, -1):
             for i in range(step + 1):
                 option_value = (p * option_values[i] + (1 - p) * option_values[i + 1]) * discount_factor
 
-                # ✅ Prise en compte du style de l'option (américaine vs européenne)
+                #  Prise en compte du style de l'option (américaine vs européenne)
                 final_price = underlying_price * (u ** (step - i)) * (d ** i)
                 if option_style == "American":
                     if option_type == "CALL":
@@ -77,7 +77,7 @@ def binomial_dividend_pricing(option_type, option_style, underlying_price, strik
                 option_values[i] = option_value
 
         option_price = option_values[0]
-        logger.info(f"✅ Binomial pricing with dividends completed. Result = {option_price}")
+        logger.info(f" Binomial pricing with dividends completed. Result = {option_price}")
 
         return {"option_price_with_dividend": ("Option Price with Dividend Adjustment:", round(option_price, 4))}
 
@@ -161,7 +161,7 @@ def implied_volatility(option_type, underlying_price, strike_price, option_price
 def monte_carlo_pricing(option_type, option_style, underlying_price, strike_price, 
                         time_to_maturity, risk_free_rate, volatility, dividend_yield, num_steps, num_simulations):
     try:
-        # ✅ Conversion des paramètres
+        #  Conversion des paramètres
         num_simulations = int(num_simulations)
         num_steps = int(num_steps)
         time_to_maturity = float(time_to_maturity)
@@ -169,13 +169,13 @@ def monte_carlo_pricing(option_type, option_style, underlying_price, strike_pric
         
         np.random.seed(42)
 
-        dt = time_to_maturity / num_steps  # ✅ Pas de temps en fraction d'année
-        discount_factor = np.exp(-risk_free_rate * time_to_maturity)  # ✅ Facteur d'actualisation
+        dt = time_to_maturity / num_steps  #  Pas de temps en fraction d'année
+        discount_factor = np.exp(-risk_free_rate * time_to_maturity)  #  Facteur d'actualisation
         
         payoffs = np.zeros(num_simulations)
         antithetic_payoffs = np.zeros(num_simulations)
 
-        # ✅ Simulation Monte Carlo
+        #  Simulation Monte Carlo
         for i in range(num_simulations):
             path = np.zeros(num_steps + 1)
             antithetic_path = np.zeros(num_steps + 1)
@@ -185,7 +185,7 @@ def monte_carlo_pricing(option_type, option_style, underlying_price, strike_pric
             for t in range(1, num_steps + 1):
                 z = np.random.randn()
 
-                # ✅ Euler-Maruyama process for price path
+                #  Euler-Maruyama process for price path
                 path[t] = path[t - 1] * np.exp(
                     (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt + 
                     volatility * np.sqrt(dt) * z
@@ -220,10 +220,10 @@ def monte_carlo_pricing(option_type, option_style, underlying_price, strike_pric
             else:
                 raise ValueError("Invalid option style. Must be 'European' or 'Asian'.")
 
-        # ✅ Combinaison des résultats avec réduction de variance
+        #  Combinaison des résultats avec réduction de variance
         combined_payoffs = (payoffs + antithetic_payoffs) / 2
         
-        # ✅ Prix de l'option basé sur le payoff actualisé
+        #  Prix de l'option basé sur le payoff actualisé
         option_price = discount_factor * np.mean(combined_payoffs)
 
         return {"option_price": ("Option Price (€) :", round(option_price, 4))}
@@ -269,21 +269,21 @@ def plot_greeks_sensitivity_formula(option_type, underlying_price, strike_price,
     volatility = float(volatility)
     dividend_yield = float(dividend_yield)
 
-    # ✅ Plage de prix du sous-jacent pour la courbe
+    #  Plage de prix du sous-jacent pour la courbe
     multiplier = max(1.05, 1 + (volatility * sqrt(max(0.01, time_to_maturity))))
     lower_bound = max(0.5 * strike_price, strike_price * (1 - multiplier))
     upper_bound = max(lower_bound + 0.01, strike_price * (1 + multiplier))
 
-    # ✅ Plage de prix dynamique propre et réaliste
+    #  Plage de prix dynamique propre et réaliste
     price_range = np.linspace(lower_bound, upper_bound, 100)
     
     delta = []
     gamma = []
     theta = []
     vega = []
-    call_value = []  # ✅ Courbe de valeur du call
+    call_value = []  #  Courbe de valeur du call
 
-    # ✅ Générer la courbe complète des Greeks
+    #  Générer la courbe complète des Greeks
     for S in price_range:
         d1 = (log(S / strike_price) + (risk_free_rate - dividend_yield + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
         d2 = d1 - volatility * sqrt(time_to_maturity)
@@ -301,11 +301,11 @@ def plot_greeks_sensitivity_formula(option_type, underlying_price, strike_price,
                       + dividend_yield * S * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365)
         vega.append((S * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100)
 
-        call_value.append(call_price)  # ✅ Stocker la valeur du call
+        call_value.append(call_price)  #  Stocker la valeur du call
 
     logger.warning('End of plot_greeks_sensitivity_formula')
 
-    # ✅ Retourner le résultat sous forme de JSON (pour le frontend)
+    #  Retourner le résultat sous forme de JSON (pour le frontend)
     # TOOL DE VISUALISATION VISUALIZATION
     # S'inspirer de ca pour la suite pour faire d'autres tools de visualisation :
     # is_live : True
@@ -325,14 +325,14 @@ def plot_greeks_sensitivity_formula(option_type, underlying_price, strike_price,
         },
         "secondary_y_axis": {
             "label": "Option Value",
-            "value": list(map(lambda x: round(x, 2), call_value))  # ✅ Ajout d'une échelle secondaire
+            "value": list(map(lambda x: round(x, 2), call_value))  #  Ajout d'une échelle secondaire
         },
         "delta": {
             "label": "Delta",
             "data": delta if position_type == "LONG" else [-d for d in delta],
             "borderColor": "blue",
             "fill": False,
-            "yAxisID": "primary"  # ✅ Assignation de l'axe Y
+            "yAxisID": "primary"  #  Assignation de l'axe Y
         },
         "gamma": {
             "label": "Gamma",
@@ -360,6 +360,6 @@ def plot_greeks_sensitivity_formula(option_type, underlying_price, strike_price,
             "data": call_value if position_type == "LONG" else [-c for c in call_value],
             "borderColor": "orange",
             "fill": False,
-            "yAxisID": "secondary"  # ✅ Courbe sur le 2ème axe Y
+            "yAxisID": "secondary"  #  Courbe sur le 2ème axe Y
         }
     }

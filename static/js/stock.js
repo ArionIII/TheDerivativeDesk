@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             item.dataset.price = stock.price;
             item.dataset.change = stock.change;
             item.dataset.change_monthly = stock.change_monthly;
-            item.innerHTML = `<strong>🛠️ ${stock.title} (${stock.ticker})</strong>`;
+            item.innerHTML = `<strong>${stock.title} (${stock.ticker})</strong>`;
     
             item.addEventListener("click", () => {
                 console.log(`Clicked suggestion: ${stock.ticker}`);
