@@ -1,95 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <head>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
     <!-- Google Logo -->
-    <meta property="og:title" content="The Derivative Desk">
-    <meta property="og:description" content="Interactive calculators for derivatives, options pricing, risk metrics, data visualization.">
-    <meta property="og:image" content="https://www.thederivativedesk.com/static/logo_tdd_google-modified_opti.png">
-    <meta property="og:url" content="https://www.thederivativedesk.com">
-    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Derivative Desk" />
+    <meta
+      property="og:description"
+      content="Interactive calculators for derivatives, options pricing, risk metrics, data visualization."
+    />
+    <meta
+      property="og:image"
+      content="https://www.thederivativedesk.com/static/logo_tdd_google-modified_opti.png"
+    />
+    <meta property="og:url" content="https://www.thederivativedesk.com" />
+    <meta property="og:type" content="website" />
 
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Your one-stop solution for financial derivatives calculations and education.">
-    <meta name="keywords" content="Derivatives, Financial Tools, Education, Risk Management">
-    <meta name="author" content="The Derivative Desk">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Your one-stop solution for financial derivatives calculations and education."
+    />
+    <meta
+      name="keywords"
+      content="Derivatives, Financial Tools, Education, Risk Management"
+    />
+    <meta name="author" content="The Derivative Desk" />
     <title>{% block title %}The Derivative Desk{% endblock %}</title>
-    {% block styles %}
-    {% endblock %}
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/variables.css">
-</head>
-<body class="light-mode">
+    {% block styles %} {% endblock %}
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/variables.css" />
+  </head>
+  <body class="light-mode">
     <div id="site-banner" class="site-banner">
-        <p>
-            This site is under construction! Some categories are unavailable, and I will be adding charts, inter-tool connections, extra settings, and improved usability.
-        </p>
-        <button onclick="closeBanner()">Got it</button>
+      <p>
+        This site is under construction! Some categories are unavailable, and I
+        will be adding charts, inter-tool connections, extra settings, and
+        improved usability.
+      </p>
+      <button onclick="closeBanner()">Got it</button>
     </div>
-    
 
-    
-    {% include 'navbar.html' %} <!-- Inclure la barre de navigation -->
+    {% include 'navbar.html' %}
+    <!-- Inclure la barre de navigation -->
 
     <!-- User Actions -->
     <div class="user-actions">
-        {% if not user_authenticated %}
-            <a href="/login" class="btn-action">Login</a>
-            <a href="/register" class="btn-action">Register</a>
-        {% else %}
-            <div class="user-profile">
-                <img src="{{ user.profile_picture or '/static/images/default-profile.png' }}" alt="{{ user.first_name }}" class="profile-picture">
-                <span class="user-name">{{ user.first_name }}</span>
-                <a href="/logout" class="btn-action">Logout</a>
-            </div>
-        {% endif %}
+      {% if not user_authenticated %}
+      <a href="/login" class="btn-action">Login</a>
+      <a href="/register" class="btn-action">Register</a>
+      {% else %}
+      <div class="user-profile">
+        <img
+          src="{{ user.profile_picture or '/static/images/default-profile.png' }}"
+          alt="{{ user.first_name }}"
+          class="profile-picture"
+        />
+        <span class="user-name">{{ user.first_name }}</span>
+        <a href="/logout" class="btn-action">Logout</a>
+      </div>
+      {% endif %}
     </div>
 
-    <!-- 🔹 Search Bar for Tools (juste en dessous, sans empilement) -->
+    <!--  Search Bar for Tools (juste en dessous, sans empilement) -->
     <div class="search-bar-for-tools-container">
-        <div class="search-bar-for-tools">
-            <input 
-                type="text" 
-                name="q" 
-                id="search-input-tools"
-                placeholder="Search tools..." 
-                aria-label="Search tools"
-            >
-        </div>
-        <div class="suggestions-container-tools" id="suggestions-container-tools"></div>
+      <div class="search-bar-for-tools">
+        <input
+          type="text"
+          name="q"
+          id="search-input-tools"
+          placeholder="Search tools..."
+          aria-label="Search tools"
+        />
+      </div>
+      <div
+        class="suggestions-container-tools"
+        id="suggestions-container-tools"
+      ></div>
     </div>
-    
-    
 
-    <main class="site-main">
-        {% block content %}{% endblock %}
-    </main>
+    <main class="site-main">{% block content %}{% endblock %}</main>
 
-    {% include 'footer.html' %} <!-- Inclure le footer -->
+    {% include 'footer.html' %}
+    <!-- Inclure le footer -->
 
     <script src="/static/js/main.js"></script>
-    <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
 
     <!-- Google Logo -->
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "The Derivative Desk",
-      "url": "https://www.thederivativedesk.com",
-      "logo": "https://www.thederivativedesk.com/static/image/logo_tdd_google-modified.png"
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "The Derivative Desk",
+        "url": "https://www.thederivativedesk.com",
+        "logo": "https://www.thederivativedesk.com/static/image/logo_tdd_google-modified.png"
+      }
     </script>
-    
 
-    {% block scripts %}
-    {% endblock %}
-</body>
+    {% block scripts %} {% endblock %}
+  </body>
 </html>

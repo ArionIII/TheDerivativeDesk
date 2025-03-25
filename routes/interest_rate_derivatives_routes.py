@@ -1,11 +1,22 @@
 from flask import Blueprint, render_template, request, jsonify
-from config import logger, parse_input_data, extract_values, convert_numpy_types, result_tuple_into_dict
-from configurations.tool_config.interest_rates.interest_rate_derivatives_tool_config import INTEREST_RATE_DERIVATIVES_TOOL_CONFIG
-from formulas.interest_rates_formulas import *  
+from config import (
+    logger,
+    parse_input_data,
+    extract_values,
+    convert_numpy_types,
+    result_tuple_into_dict,
+)
+from configurations.tool_config.interest_rates.interest_rate_derivatives_tool_config import (
+    INTEREST_RATE_DERIVATIVES_TOOL_CONFIG,
+)
+from formulas.interest_rates_formulas import *
 from graph_generation.get_graph import GRAPH_FUNCTIONS
 import markdown
+
 # Blueprint for New Interest Rate Tools
-interest_rate_derivatives_routes = Blueprint("interest_rate_derivatives_routes", __name__)
+interest_rate_derivatives_routes = Blueprint(
+    "interest_rate_derivatives_routes", __name__
+)
 
 # Tool Functions
 NEW_TOOL_FUNCTIONS = {
@@ -22,6 +33,7 @@ NEW_TOOL_FUNCTIONS = {
     "calculate-basis-swap-analysis": calculate_basis_swap_analysis,
     "calculate-interest-rate-swap-delta-hedging": calculate_interest_rate_swap_delta_hedging,
 }
+
 
 # Generic Request Handler for New Interest Rate Tools
 def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
@@ -50,15 +62,17 @@ def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
 
             # Initialize the final result dictionary
             final_result = result
-            logger.info('final result')
+            logger.info("final result")
             logger.info(final_result)
 
             # Plotting the graphs if needed
             graphs_output = {}
             if tool_key in GRAPH_FUNCTIONS:
-                logger.warning('Tool requires graphs.')
+                logger.warning("Tool requires graphs.")
                 result_graph = extract_values(result)
-                graph_input = params | result_graph  # Combine input and computed results
+                graph_input = (
+                    params | result_graph
+                )  # Combine input and computed results
 
                 logger.warning(f"Graph input parameters: {graph_input}")
                 logger.info(f"Generating graphs for tool: {tool_key}")
@@ -69,13 +83,17 @@ def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
                 graphs = []
                 for i in range(n_graphs):
                     logger.error("Starting graph generation...")
-                    graph_function = GRAPH_FUNCTIONS[tool_key][i + 1]  # Retrieve correct graph function
+                    graph_function = GRAPH_FUNCTIONS[tool_key][
+                        i + 1
+                    ]  # Retrieve correct graph function
                     logger.info(f"Using graph function: {graph_function}")
 
                     graph = graph_function(graph_input)
                     graphs.append(graph)
 
-                graphs_output = {f'graph_{i + 1}': graph for i, graph in enumerate(graphs)}
+                graphs_output = {
+                    f"graph_{i + 1}": graph for i, graph in enumerate(graphs)
+                }
                 logger.info(f"Graphs successfully generated: {graphs}")
 
             # Convert results into a dictionary format
@@ -91,17 +109,22 @@ def handle_new_interest_rate_tool_request(tool_key, sub_category_key):
 
     # Render the tool page if it's a GET request
     if tool_config.get("note"):
-        tool_config['note'] = markdown.markdown(tool_config['note'])
+        tool_config["note"] = markdown.markdown(tool_config["note"])
         return render_template("base_tool.html", tool=tool_config)
 
     return render_template("base_tool.html", tool=tool_config)
 
 
 # Routes
-@interest_rate_derivatives_routes.route("/tools/forward-rate-agreements/<tool_key>", methods=["GET", "POST"])
+@interest_rate_derivatives_routes.route(
+    "/tools/forward-rate-agreements/<tool_key>", methods=["GET", "POST"]
+)
 def handle_new_interest_rate_tool(tool_key):
     return handle_new_interest_rate_tool_request(tool_key, "new-interest-rate-tools")
 
-@interest_rate_derivatives_routes.route("/tools/swaps-and-interest-rate-derivatives/<tool_key>", methods=["GET", "POST"])
+
+@interest_rate_derivatives_routes.route(
+    "/tools/swaps-and-interest-rate-derivatives/<tool_key>", methods=["GET", "POST"]
+)
 def handle_new_swap_analysis_tool(tool_key):
     return handle_new_interest_rate_tool_request(tool_key, "new-swap-analysis")

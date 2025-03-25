@@ -1,13 +1,21 @@
 from flask import Blueprint, render_template, request, jsonify
 from formulas.statistics_formulas import *
-from config import logger, extract_values, convert_numpy_types, parse_input_data, reassign_params_if_header
-from configurations.tool_config.statistics.time_series_and_modeling_tool_config import TIME_SERIES_AND_MODELING_TOOL_CONFIG
+from config import (
+    logger,
+    extract_values,
+    convert_numpy_types,
+    parse_input_data,
+    reassign_params_if_header,
+)
+from configurations.tool_config.statistics.time_series_and_modeling_tool_config import (
+    TIME_SERIES_AND_MODELING_TOOL_CONFIG,
+)
 from graph_generation.get_graph import GRAPH_FUNCTIONS
 
 # Blueprint for Time Series and Modeling
 time_series_and_modeling_routes = Blueprint("time_series_and_modeling_routes", __name__)
 
-TOOL_FUNCTIONS = ({
+TOOL_FUNCTIONS = {
     # Time Series and Modeling
     "moving-averages": calculate_moving_averages,
     "exponential-smoothing": calculate_exponential_smoothing,
@@ -18,7 +26,7 @@ TOOL_FUNCTIONS = ({
     "log-returns-calculator": compute_log_returns_csv_xlsx,
     "transition-matrices": calculate_transition_matrices,
     "random-walks": simulate_random_walk,
-})
+}
 
 
 def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
@@ -34,7 +42,9 @@ def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
             column_names, params = parse_input_data(request, tool_config)
             logger.warning(column_names)
             if column_names:
-                params, column_names = reassign_params_if_header(tool_config, params, column_names)
+                params, column_names = reassign_params_if_header(
+                    tool_config, params, column_names
+                )
             logger.warning("Params were parsed")
             logger.error(params)
             logger.error(column_names)
@@ -43,7 +53,7 @@ def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
             if not calculation_function:
                 logger.error(f"No calculation logic for tool: {tool_key}")
                 return "Calculation logic not implemented", 500
-            
+
             logger.error("Moment before result")
             result = calculation_function(**params)
             logger.warning("Result")
@@ -62,16 +72,18 @@ def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
                 logger.warning(f"Number of graphs: {n_graphs}")
                 graphs = []
                 for i in range(n_graphs):
-                    graph_function = GRAPH_FUNCTIONS[tool_key][i+1]
+                    graph_function = GRAPH_FUNCTIONS[tool_key][i + 1]
                     logger.info(f"Graph function: {graph_function}")
                     graph = graph_function(graph_input)
                     graphs.append(graph)
-                graphs_output = {f'graph_{i+1}': graph for i, graph in enumerate(graphs)}
+                graphs_output = {
+                    f"graph_{i+1}": graph for i, graph in enumerate(graphs)
+                }
                 logger.info(f"Graphs: {graphs}")
                 final_result = result | graphs_output
 
             # Execute the function and return results
-            
+
             logger.warning("final_result")
             logger.warning(final_result)
             return jsonify(convert_numpy_types(final_result))
@@ -85,10 +97,19 @@ def handle_time_series_and_modeling_tool_request(tool_key, sub_category_key):
 
 
 # Routes for Time Series and Modeling
-@time_series_and_modeling_routes.route("/tools/time-series-analysis/<tool_key>", methods=["GET", "POST"])
+@time_series_and_modeling_routes.route(
+    "/tools/time-series-analysis/<tool_key>", methods=["GET", "POST"]
+)
 def handle_time_series_tool(tool_key):
-    return handle_time_series_and_modeling_tool_request(tool_key, "time_series_and_modeling")
+    return handle_time_series_and_modeling_tool_request(
+        tool_key, "time_series_and_modeling"
+    )
 
-@time_series_and_modeling_routes.route("/tools/markov-chains-and-random-walks/<tool_key>", methods=["GET", "POST"])
+
+@time_series_and_modeling_routes.route(
+    "/tools/markov-chains-and-random-walks/<tool_key>", methods=["GET", "POST"]
+)
 def handle_modeling_tool(tool_key):
-    return handle_time_series_and_modeling_tool_request(tool_key, "time_series_and_modeling")
+    return handle_time_series_and_modeling_tool_request(
+        tool_key, "time_series_and_modeling"
+    )

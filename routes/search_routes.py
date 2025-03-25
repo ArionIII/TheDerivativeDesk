@@ -1,27 +1,62 @@
 from flask import Blueprint, render_template, request, jsonify
 from config import logger
-from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import FUTURES_FORWARDS_TOOL_CONFIG
-from configurations.tool_config.futures_forwards.hedging_tool_config import HEDGING_TOOL_CONFIG
-from configurations.tool_config.futures_forwards.contract_valuation_tool_config import CONTRACT_VALUATION_TOOL_CONFIG
-from configurations.tool_config.interest_rates.interest_rate_derivatives_tool_config import INTEREST_RATE_DERIVATIVES_TOOL_CONFIG
-from configurations.tool_config.interest_rates.interest_rate_fundamentals_tool_config import INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG
-from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
-from configurations.tool_config.statistics.linear_algebra_and_advanced_calculations_tool_config import LINEAR_ALGEBRA_AND_ADVANCED_CALCULATION_TOOL_CONFIG
-from configurations.tool_config.statistics.simulation_and_bayesian_analysis_config import SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG
-from configurations.tool_config.statistics.time_series_and_modeling_tool_config import TIME_SERIES_AND_MODELING_TOOL_CONFIG 
-from configurations.tool_config.options.option_sensitivities_and_risk_management_tool_config import GREEKS_TOOL_CONFIG
-from configurations.tool_config.options.options_pricing_tool_config import OPTION_PRICING_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.futures_forwards_pricing_tool_config import (
+    FUTURES_FORWARDS_TOOL_CONFIG,
+)
+from configurations.tool_config.futures_forwards.hedging_tool_config import (
+    HEDGING_TOOL_CONFIG,
+)
+from configurations.tool_config.futures_forwards.contract_valuation_tool_config import (
+    CONTRACT_VALUATION_TOOL_CONFIG,
+)
+from configurations.tool_config.interest_rates.interest_rate_derivatives_tool_config import (
+    INTEREST_RATE_DERIVATIVES_TOOL_CONFIG,
+)
+from configurations.tool_config.interest_rates.interest_rate_fundamentals_tool_config import (
+    INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG,
+)
+from configurations.tool_config.statistics.basic_statistical_analysis_tool_config import (
+    BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG,
+)
+from configurations.tool_config.statistics.linear_algebra_and_advanced_calculations_tool_config import (
+    LINEAR_ALGEBRA_AND_ADVANCED_CALCULATION_TOOL_CONFIG,
+)
+from configurations.tool_config.statistics.simulation_and_bayesian_analysis_config import (
+    SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG,
+)
+from configurations.tool_config.statistics.time_series_and_modeling_tool_config import (
+    TIME_SERIES_AND_MODELING_TOOL_CONFIG,
+)
+from configurations.tool_config.options.option_sensitivities_and_risk_management_tool_config import (
+    GREEKS_TOOL_CONFIG,
+)
+from configurations.tool_config.options.options_pricing_tool_config import (
+    OPTION_PRICING_TOOL_CONFIG,
+)
 
 
-ALL_TOOLS = FUTURES_FORWARDS_TOOL_CONFIG | HEDGING_TOOL_CONFIG | CONTRACT_VALUATION_TOOL_CONFIG | INTEREST_RATE_DERIVATIVES_TOOL_CONFIG | INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG | BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG | LINEAR_ALGEBRA_AND_ADVANCED_CALCULATION_TOOL_CONFIG | SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG | TIME_SERIES_AND_MODELING_TOOL_CONFIG | OPTION_PRICING_TOOL_CONFIG | GREEKS_TOOL_CONFIG  
+ALL_TOOLS = (
+    FUTURES_FORWARDS_TOOL_CONFIG
+    | HEDGING_TOOL_CONFIG
+    | CONTRACT_VALUATION_TOOL_CONFIG
+    | INTEREST_RATE_DERIVATIVES_TOOL_CONFIG
+    | INTEREST_RATE_FUNDAMENTALS_TOOL_CONFIG
+    | BASIC_STATISTICAL_ANALYSIS_TOOL_CONFIG
+    | LINEAR_ALGEBRA_AND_ADVANCED_CALCULATION_TOOL_CONFIG
+    | SIMULATION_AND_BAYESIAN_ANALYSIS_TOOL_CONFIG
+    | TIME_SERIES_AND_MODELING_TOOL_CONFIG
+    | OPTION_PRICING_TOOL_CONFIG
+    | GREEKS_TOOL_CONFIG
+)
 
 
 search_routes = Blueprint("search", __name__)
 
+
 @search_routes.route("/search", methods=["GET"])
 def search():
     query = request.args.get("q", "").strip().lower()
-    
+
     if not query:
         return render_template("search.html", results=[])
 
@@ -71,14 +106,16 @@ def search():
 
         # Ajouter le résultat si score > 0
         if score > 0:
-            results.append({
-                "name": tool["title"],
-                "url": tool['url'],
-                "description": tool["description"],
-                "score": score
-            })
+            results.append(
+                {
+                    "name": tool["title"],
+                    "url": tool["url"],
+                    "description": tool["description"],
+                    "score": score,
+                }
+            )
 
-    # Tri des résultats : 
+    # Tri des résultats :
     # 1. D'abord par score (décroissant)
     # 2. Si égalité, on priorise l'exact match sur le titre
     results = sorted(results, key=lambda x: (-x["score"], x["name"] != query))
@@ -152,18 +189,19 @@ def suggest():
 
         # Ajouter le résultat si score > 0
         if score > 0:
-            suggestions.append({
-                "name": tool["title"],
-                "url": tool["url"],
-                "description": tool["description"],
-                "score": score
-            })
+            suggestions.append(
+                {
+                    "name": tool["title"],
+                    "url": tool["url"],
+                    "description": tool["description"],
+                    "score": score,
+                }
+            )
 
     # Trier les suggestions par score (décroissant) et ensuite par ordre alphabétique en cas d'égalité
     suggestions = sorted(suggestions, key=lambda x: (-x["score"], x["name"]))
 
     logger.info(f"Returning {len(suggestions)} suggestions")
     logger.info(suggestions)
-    
-    return jsonify(suggestions)
 
+    return jsonify(suggestions)

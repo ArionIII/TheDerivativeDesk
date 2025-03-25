@@ -8,7 +8,6 @@ from math import log, exp, sqrt
 from scipy.stats import norm
 
 
-
 def save_plot(fig, filename):
     """Sauvegarde le graphe en fichier et retourne le chemin."""
     filepath = os.path.join("static/graphs", filename)
@@ -20,7 +19,7 @@ def save_plot(fig, filename):
 
 def generate_unique_filename(prefix="graph"):
     """Génère un nom de fichier unique avec un identifiant aléatoire."""
-    random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    random_suffix = "".join(random.choices(string.ascii_letters + string.digits, k=8))
     return f"{prefix}_{random_suffix}.png"
 
 
@@ -29,7 +28,7 @@ def generate_coefficients_graph(data):
     logger.info(f"Generating coefficients graph with data: {data}")
     """Génère un graphique des coefficients estimés."""
     coefficients = data.get("coefficients", [])
-    
+
     if not coefficients:
         raise ValueError("Missing coefficients")
 
@@ -46,6 +45,7 @@ def generate_coefficients_graph(data):
 
     return save_plot(fig, generate_unique_filename("multiple_regression_1"))
 
+
 def generate_observed_vs_predicted_graph(data):
     logger.warning(f"Generating observed vs predicted graph with data: {data}")
     """Génère un graphique des valeurs observées vs prédictions."""
@@ -55,12 +55,11 @@ def generate_observed_vs_predicted_graph(data):
     logger.info(f"Dependent variables: {dependent_variables}")
     if independent_variables.size == 0 or dependent_variables.size == 0:
         raise ValueError("Missing observed or predicted values")
-    
+
     # Vérifier et ajuster la forme de independent_variables
-    if independent_variables.shape[0] < independent_variables.shape[1]:  
+    if independent_variables.shape[0] < independent_variables.shape[1]:
         # Si le nombre de lignes est inférieur au nombre de colonnes, on transpose
         independent_variables = independent_variables.T
-
 
     # Calcul des valeurs prédites avec les coefficients et l'intercept
     coefficients = np.array(data.get("coefficients", [])).flatten()
@@ -75,12 +74,25 @@ def generate_observed_vs_predicted_graph(data):
             f"but coefficients has {coefficients.shape[0]} elements."
         )
 
-    predicted_values = independent_variables @ coefficients + intercept  # Produit matriciellogg
-    logger.warning('Now plotting 2nd graph for multiple regression')
+    predicted_values = (
+        independent_variables @ coefficients + intercept
+    )  # Produit matriciellogg
+    logger.warning("Now plotting 2nd graph for multiple regression")
     # Création du graphique
     fig, ax = plt.subplots()
-    ax.scatter(dependent_variables, predicted_values, color="green", label="Observed vs Predicted")
-    ax.plot(dependent_variables, dependent_variables, color="red", linestyle="dashed", label="Perfect Fit")
+    ax.scatter(
+        dependent_variables,
+        predicted_values,
+        color="green",
+        label="Observed vs Predicted",
+    )
+    ax.plot(
+        dependent_variables,
+        dependent_variables,
+        color="red",
+        linestyle="dashed",
+        label="Perfect Fit",
+    )
     ax.set_xlabel("Observed Values")
     ax.set_ylabel("Predicted Values")
     ax.set_title("Graph Observed vs Predicted")
@@ -92,24 +104,34 @@ def generate_observed_vs_predicted_graph(data):
 def generate_zero_rates_curve(data):
     """
     Génère un graphique représentant la courbe des taux zéro (Zero-Coupon Yield Curve).
-    
+
     Paramètres :
     - maturities : Liste des maturités (X-axis)
     - zero_rates : Liste des taux zéro correspondants (Y-axis)
-    
+
     Retourne :
     - Le chemin du fichier où le graphique est sauvegardé.
     """
     maturities = np.array(data.get("maturities", []))
     zero_rates = np.array(data.get("Zero Rate (Continuous Compounding)", []))
-    logger.info(f"Generating zero rates curve with maturities: {maturities} and zero rates: {zero_rates}")
+    logger.info(
+        f"Generating zero rates curve with maturities: {maturities} and zero rates: {zero_rates}"
+    )
 
     if maturities.size == 0 or zero_rates.size == 0:
         raise ValueError("Missing maturities or zero rates")
 
     # Création du graphique
     fig, ax = plt.subplots()
-    ax.plot(maturities, zero_rates, marker="o", linestyle="-", color="blue", alpha=0.7, label="Zero Rates")
+    ax.plot(
+        maturities,
+        zero_rates,
+        marker="o",
+        linestyle="-",
+        color="blue",
+        alpha=0.7,
+        label="Zero Rates",
+    )
     ax.set_xlabel("Maturities (Years)")
     ax.set_ylabel("Zero Rate (%)")
     ax.set_title("Zero-Coupon Yield Curve")
@@ -134,12 +156,14 @@ def generate_zero_rates_vs_bond_prices(data):
     - Le chemin du fichier où le graphique est sauvegardé.
     """
     maturities = np.array(data.get("maturities", []))
-    #Obligé de prendre cette valeur pcq on output un CSV donc on perd l'id, et on ne garde que le display name
-    #TODO: à changer (pas tres propre comme méthode)
+    # Obligé de prendre cette valeur pcq on output un CSV donc on perd l'id, et on ne garde que le display name
+    # TODO: à changer (pas tres propre comme méthode)
     zero_rates = np.array(data.get("Zero Rate (Continuous Compounding)", []))
     bond_prices = np.array(data.get("bond_prices", []))
-    
-    logger.info(f"Generating zero rates vs bond prices graph with maturities: {maturities}, zero rates: {zero_rates}, and bond prices: {bond_prices}")
+
+    logger.info(
+        f"Generating zero rates vs bond prices graph with maturities: {maturities}, zero rates: {zero_rates}, and bond prices: {bond_prices}"
+    )
 
     if maturities.size == 0 or zero_rates.size == 0 or bond_prices.size == 0:
         raise ValueError("Missing maturities, zero rates, or bond prices")
@@ -150,13 +174,29 @@ def generate_zero_rates_vs_bond_prices(data):
     # Courbe des taux zéro
     ax1.set_xlabel("Maturities (Years)")
     ax1.set_ylabel("Zero Rate (%)", color="blue")
-    ax1.plot(maturities, zero_rates, marker="o", linestyle="-", color="blue", alpha=0.7, label="Zero Rates")
+    ax1.plot(
+        maturities,
+        zero_rates,
+        marker="o",
+        linestyle="-",
+        color="blue",
+        alpha=0.7,
+        label="Zero Rates",
+    )
     ax1.tick_params(axis="y", labelcolor="blue")
 
     # Deuxième axe pour les prix des obligations
     ax2 = ax1.twinx()
     ax2.set_ylabel("Bond Prices", color="green")
-    ax2.plot(maturities, bond_prices, marker="s", linestyle="--", color="green", alpha=0.7, label="Bond Prices")
+    ax2.plot(
+        maturities,
+        bond_prices,
+        marker="s",
+        linestyle="--",
+        color="green",
+        alpha=0.7,
+        label="Bond Prices",
+    )
     ax2.tick_params(axis="y", labelcolor="green")
 
     # Titre et légende
@@ -166,6 +206,7 @@ def generate_zero_rates_vs_bond_prices(data):
     logger.info("Generated zero rates vs bond prices graph")
 
     return save_plot(fig, generate_unique_filename("zero_rates_vs_bond_prices"))
+
 
 def generate_duration_contribution_graph(data):
     """
@@ -188,11 +229,15 @@ def generate_duration_contribution_graph(data):
         raise ValueError("Missing time periods, cash flows, or discount rates")
 
     # Calcul de la contribution à la duration
-    duration_contributions = (time_periods * cash_flows) / ((1 + discount_rates) ** time_periods)
+    duration_contributions = (time_periods * cash_flows) / (
+        (1 + discount_rates) ** time_periods
+    )
 
     # Conversion en pourcentage
     total_duration_contribution = np.sum(duration_contributions)
-    duration_contributions_percent = (duration_contributions / total_duration_contribution) * 100
+    duration_contributions_percent = (
+        duration_contributions / total_duration_contribution
+    ) * 100
 
     # Création du graphique
     fig, ax = plt.subplots()
@@ -203,6 +248,7 @@ def generate_duration_contribution_graph(data):
     ax.grid(axis="y")
 
     return save_plot(fig, generate_unique_filename("duration_contribution_percent"))
+
 
 def generate_cash_flow_discounting_graph(data):
     """
@@ -229,7 +275,15 @@ def generate_cash_flow_discounting_graph(data):
 
     # Création du graphique
     fig, ax = plt.subplots()
-    ax.plot(time_periods, discounted_cash_flows, marker="o", linestyle="-", color="green", alpha=0.7, label="Discounted Cash Flows")
+    ax.plot(
+        time_periods,
+        discounted_cash_flows,
+        marker="o",
+        linestyle="-",
+        color="green",
+        alpha=0.7,
+        label="Discounted Cash Flows",
+    )
     ax.set_xlabel("Time Periods")
     ax.set_ylabel("Discounted Cash Flow Value")
     ax.set_title("Valeur actualisée des Cash Flows")
@@ -237,7 +291,7 @@ def generate_cash_flow_discounting_graph(data):
     ax.legend()
 
     return save_plot(fig, generate_unique_filename("cash_flow_discounting"))
-    
+
 
 def generate_extended_zero_rate_curve_graph_fixed(data):
     """
@@ -265,21 +319,34 @@ def generate_extended_zero_rate_curve_graph_fixed(data):
 
         # Création du graphique avec un design amélioré
         fig, ax = plt.subplots(figsize=(9, 6))
-        ax.plot(maturities, extended_rates, marker="s", linestyle="-", 
-                color="crimson", alpha=0.9, markersize=5, linewidth=2, label="Extended Zero Rates")
+        ax.plot(
+            maturities,
+            extended_rates,
+            marker="s",
+            linestyle="-",
+            color="crimson",
+            alpha=0.9,
+            markersize=5,
+            linewidth=2,
+            label="Extended Zero Rates",
+        )
 
         ax.set_xlabel("Maturity (Years)", fontsize=12, fontweight="bold")
         ax.set_ylabel("Zero Rates (%)", fontsize=12, fontweight="bold")
-        ax.set_title("Extended LIBOR Curve", fontsize=14, fontweight="bold", color="darkblue")
+        ax.set_title(
+            "Extended LIBOR Curve", fontsize=14, fontweight="bold", color="darkblue"
+        )
         ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
         ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
         ax.set_facecolor("#f5f5f5")
 
-        return save_plot(fig, generate_unique_filename("extended_zero_curve_swap_rates"))
+        return save_plot(
+            fig, generate_unique_filename("extended_zero_curve_swap_rates")
+        )
 
     except Exception as e:
         raise ValueError(f"Error generating extended zero rate curve graph: {e}")
-    
+
 
 def generate_extended_zero_rate_curve_graph_fra(data):
     """
@@ -308,18 +375,32 @@ def generate_extended_zero_rate_curve_graph_fra(data):
         # Création du graphique avec un design amélioré
         fig, ax = plt.subplots(figsize=(9, 6))
 
-        #TODO : Impossible actuellement car je ne garde pas les maturités initiales (à changer, et c'est pareil pour SWAP rates : ca bloque l'affichage des taux libor initiaux, ce qui est dommage).
+        # TODO : Impossible actuellement car je ne garde pas les maturités initiales (à changer, et c'est pareil pour SWAP rates : ca bloque l'affichage des taux libor initiaux, ce qui est dommage).
         # # Affichage des LIBOR Zero Rates initiaux
-        # ax.plot(maturities[:len(libor_rates)], libor_rates, marker="o", linestyle="--", 
+        # ax.plot(maturities[:len(libor_rates)], libor_rates, marker="o", linestyle="--",
         #         color="royalblue", alpha=0.8, markersize=6, linewidth=2, label="LIBOR Zero Rates")
 
         # Affichage des taux étendus via FRA
-        ax.plot(maturities, extended_rates, marker="s", linestyle="-", 
-                color="darkorange", alpha=0.9, markersize=5, linewidth=2, label="Extended Zero Rates (FRA)")
+        ax.plot(
+            maturities,
+            extended_rates,
+            marker="s",
+            linestyle="-",
+            color="darkorange",
+            alpha=0.9,
+            markersize=5,
+            linewidth=2,
+            label="Extended Zero Rates (FRA)",
+        )
 
         ax.set_xlabel("Maturity (Years)", fontsize=12, fontweight="bold")
         ax.set_ylabel("Zero Rates (%)", fontsize=12, fontweight="bold")
-        ax.set_title("Extended Zero Curve with FRA Rates", fontsize=14, fontweight="bold", color="darkblue")
+        ax.set_title(
+            "Extended Zero Curve with FRA Rates",
+            fontsize=14,
+            fontweight="bold",
+            color="darkblue",
+        )
         ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
         ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
         ax.set_facecolor("#f5f5f5")
@@ -327,8 +408,10 @@ def generate_extended_zero_rate_curve_graph_fra(data):
         return save_plot(fig, generate_unique_filename("extended_zero_curve_fra_rates"))
 
     except Exception as e:
-        raise ValueError(f"Error generating extended zero rate curve graph with FRA: {e}")
-    
+        raise ValueError(
+            f"Error generating extended zero rate curve graph with FRA: {e}"
+        )
+
 
 def generate_fra_payoff_evolution_graph(data):
     """
@@ -357,18 +440,39 @@ def generate_fra_payoff_evolution_graph(data):
             raise ValueError("Missing settlement rates")
 
         # Calcul des payoffs pour chaque période
-        payoff_per_period = notional_value * (settlement_rates - contract_rate) * interval / (1 + settlement_rates * interval)
+        payoff_per_period = (
+            notional_value
+            * (settlement_rates - contract_rate)
+            * interval
+            / (1 + settlement_rates * interval)
+        )
         periods = np.arange(1, len(settlement_rates) + 1)
 
         # Création du graphique
         fig, ax = plt.subplots(figsize=(9, 6))
-        ax.plot(periods, payoff_per_period, marker="o", linestyle="-", color="green", markersize=6, linewidth=2, label="FRA Payoff per Period")
+        ax.plot(
+            periods,
+            payoff_per_period,
+            marker="o",
+            linestyle="-",
+            color="green",
+            markersize=6,
+            linewidth=2,
+            label="FRA Payoff per Period",
+        )
 
-        ax.axhline(0, color="black", linestyle="--", linewidth=1.2)  # Ligne horizontale zéro
+        ax.axhline(
+            0, color="black", linestyle="--", linewidth=1.2
+        )  # Ligne horizontale zéro
 
         ax.set_xlabel("Periods", fontsize=12, fontweight="bold")
         ax.set_ylabel("Payoff (€)", fontsize=12, fontweight="bold")
-        ax.set_title("Evolution of FRA Payoff Over Time", fontsize=14, fontweight="bold", color="darkblue")
+        ax.set_title(
+            "Evolution of FRA Payoff Over Time",
+            fontsize=14,
+            fontweight="bold",
+            color="darkblue",
+        )
         ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
         ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
         ax.set_facecolor("#f5f5f5")
@@ -406,12 +510,32 @@ def generate_fra_fixed_vs_floating_rates_graph(data):
 
         # Création du graphique
         fig, ax = plt.subplots(figsize=(9, 6))
-        ax.plot(periods, settlement_rates, marker="o", linestyle="-", color="red", markersize=6, linewidth=2, label="Floating Rates (Market)")
-        ax.axhline(contract_rate, color="blue", linestyle="--", linewidth=2, label="Fixed Contract Rate")
+        ax.plot(
+            periods,
+            settlement_rates,
+            marker="o",
+            linestyle="-",
+            color="red",
+            markersize=6,
+            linewidth=2,
+            label="Floating Rates (Market)",
+        )
+        ax.axhline(
+            contract_rate,
+            color="blue",
+            linestyle="--",
+            linewidth=2,
+            label="Fixed Contract Rate",
+        )
 
         ax.set_xlabel("Periods", fontsize=12, fontweight="bold")
         ax.set_ylabel("Interest Rates (%)", fontsize=12, fontweight="bold")
-        ax.set_title("Comparison of Fixed vs Floating Rates", fontsize=14, fontweight="bold", color="darkblue")
+        ax.set_title(
+            "Comparison of Fixed vs Floating Rates",
+            fontsize=14,
+            fontweight="bold",
+            color="darkblue",
+        )
         ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
         ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
         ax.set_facecolor("#f5f5f5")
@@ -421,14 +545,24 @@ def generate_fra_fixed_vs_floating_rates_graph(data):
     except Exception as e:
         raise ValueError(f"Error generating FRA fixed vs floating rates graph: {e}")
 
+
 def generate_forward_rate_curve(data):
     logger.warning(data)
     maturities = np.array(data.get("maturities", []))
-    #TODO
+    # TODO
     forward_rates = np.array(data.get("Forward Rate", []))
     forward_period = float((data.get("forward_period", "1")))
     fig, ax = plt.subplots(figsize=(9, 6))
-    ax.plot(maturities[1:], forward_rates, marker="o", linestyle="-", color="blue", markersize=6, linewidth=2, label=f"{forward_period}-year Forward Rate Curve")
+    ax.plot(
+        maturities[1:],
+        forward_rates,
+        marker="o",
+        linestyle="-",
+        color="blue",
+        markersize=6,
+        linewidth=2,
+        label=f"{forward_period}-year Forward Rate Curve",
+    )
 
     ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
     ax.set_ylabel("Forward Rate", fontsize=12, fontweight="bold")
@@ -439,26 +573,46 @@ def generate_forward_rate_curve(data):
 
     return save_plot(fig, generate_unique_filename("forward_rate_curve"))
 
+
 # Function to generate spot vs forward rate comparison plot
 def generate_spot_vs_forward_comparison(data):
     maturities = np.array(data.get("maturities", []))
-    #TODO
+    # TODO
     forward_rates = np.array(data.get("Forward Rate", []))
     spot_rates = np.array(data.get("spot_rates", []))
     forward_period = float((data.get("forward_period", "1")))
     fig, ax = plt.subplots(figsize=(9, 6))
-    ax.plot(maturities, spot_rates, marker="o", linestyle="-", color="red", markersize=6, linewidth=2, label="Spot Rates")
-    ax.plot(maturities[1:], forward_rates, marker="s", linestyle="--", color="blue", markersize=6, linewidth=2, label=f"{forward_period}-year Forward Rates")
+    ax.plot(
+        maturities,
+        spot_rates,
+        marker="o",
+        linestyle="-",
+        color="red",
+        markersize=6,
+        linewidth=2,
+        label="Spot Rates",
+    )
+    ax.plot(
+        maturities[1:],
+        forward_rates,
+        marker="s",
+        linestyle="--",
+        color="blue",
+        markersize=6,
+        linewidth=2,
+        label=f"{forward_period}-year Forward Rates",
+    )
 
     ax.set_xlabel("Maturities (Years)", fontsize=12, fontweight="bold")
     ax.set_ylabel("Rate", fontsize=12, fontweight="bold")
-    ax.set_title("Spot Rates vs Forward Rates", fontsize=14, fontweight="bold", color="darkblue")
+    ax.set_title(
+        "Spot Rates vs Forward Rates", fontsize=14, fontweight="bold", color="darkblue"
+    )
     ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
     ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
     ax.set_facecolor("#f5f5f5")
 
     return save_plot(fig, generate_unique_filename("forward_rate_vs_spot_rate_curve"))
-
 
 
 def plot_fra_payoff(data):
@@ -477,9 +631,9 @@ def plot_fra_payoff(data):
     """
     try:
         forward_rates = np.array(data.get("forward_rates", []), dtype=float)
-        contract_rate = float(data.get('contract_rate'))
-        notional_value = float(data.get('notional_value'))
-        interval_between_payments = float(data.get('interval_between_payments'))
+        contract_rate = float(data.get("contract_rate"))
+        notional_value = float(data.get("notional_value"))
+        interval_between_payments = float(data.get("interval_between_payments"))
 
         # Vérification des données
         if forward_rates.size == 0:
@@ -487,18 +641,36 @@ def plot_fra_payoff(data):
 
         periods = np.arange(1, len(forward_rates) + 1)
         payoffs = [
-            notional_value * (R_s - contract_rate) * interval_between_payments / (1 + R_s * interval_between_payments)
+            notional_value
+            * (R_s - contract_rate)
+            * interval_between_payments
+            / (1 + R_s * interval_between_payments)
             for R_s in forward_rates
         ]
 
         # Création du graphique
         fig, ax = plt.subplots(figsize=(9, 6))
-        ax.plot(periods, payoffs, marker="o", linestyle="-", color="green", linewidth=2, label="FRA Payoff")
+        ax.plot(
+            periods,
+            payoffs,
+            marker="o",
+            linestyle="-",
+            color="green",
+            linewidth=2,
+            label="FRA Payoff",
+        )
 
-        ax.axhline(0, color="black", linestyle="--", linewidth=1.2)  # Ligne horizontale zéro
+        ax.axhline(
+            0, color="black", linestyle="--", linewidth=1.2
+        )  # Ligne horizontale zéro
         ax.set_xlabel("Périodes", fontsize=12, fontweight="bold")
         ax.set_ylabel("Payoff (€)", fontsize=12, fontweight="bold")
-        ax.set_title("Évolution du Payoff du FRA", fontsize=14, fontweight="bold", color="darkblue")
+        ax.set_title(
+            "Évolution du Payoff du FRA",
+            fontsize=14,
+            fontweight="bold",
+            color="darkblue",
+        )
         ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
         ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
 
@@ -510,20 +682,40 @@ def plot_fra_payoff(data):
 
 def plot_fra_fixed_vs_forward(data):
     forward_rates = np.array(data.get("forward_rates", []), dtype=float)
-    contract_rate = float(data.get('contract_rate'))
+    contract_rate = float(data.get("contract_rate"))
     periods = np.arange(1, len(forward_rates) + 1)
 
     fig, ax = plt.subplots(figsize=(9, 6))
-    ax.plot(periods, forward_rates, marker="o", linestyle="--", color="blue", linewidth=2, label="Forward Rates")
-    ax.axhline(y=contract_rate, color="red", linestyle="-", linewidth=2, label="Fixed Rate (Contract)")
+    ax.plot(
+        periods,
+        forward_rates,
+        marker="o",
+        linestyle="--",
+        color="blue",
+        linewidth=2,
+        label="Forward Rates",
+    )
+    ax.axhline(
+        y=contract_rate,
+        color="red",
+        linestyle="-",
+        linewidth=2,
+        label="Fixed Rate (Contract)",
+    )
 
     ax.set_xlabel("Périodes", fontsize=12, fontweight="bold")
     ax.set_ylabel("Taux (%)", fontsize=12, fontweight="bold")
-    ax.set_title("Comparaison du Taux Contractuel et des Taux Forward", fontsize=14, fontweight="bold", color="darkblue")
+    ax.set_title(
+        "Comparaison du Taux Contractuel et des Taux Forward",
+        fontsize=14,
+        fontweight="bold",
+        color="darkblue",
+    )
     ax.grid(True, linestyle="--", linewidth=0.6, alpha=0.7)
     ax.legend(fontsize=11, loc="best", frameon=True, shadow=True, fancybox=True)
 
     return save_plot(fig, generate_unique_filename("fra_valuation_fix_vs_float"))
+
 
 # def plot_fra_break_even_vs_forward(data):
 #     forward_rates = np.array(data.get("forward_rates", []), dtype=float)
@@ -573,10 +765,17 @@ def plot_binomial_tree_with_dividend(data):
     risk_free_rate = float(data.get("risk_free_rate", 0) or 0)
     volatility = float(data.get("volatility", 0) or 0)
     steps = int(data.get("steps"))
-    dividend_yield = (data.get("dividend_yield", 0))
+    dividend_yield = data.get("dividend_yield", 0)
     dividend_yield = float(dividend_yield) if dividend_yield else 0
 
-    if None in (underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility, steps):
+    if None in (
+        underlying_price,
+        strike_price,
+        time_to_maturity,
+        risk_free_rate,
+        volatility,
+        steps,
+    ):
         raise ValueError("Missing one or more required inputs for binomial tree")
 
     dt = time_to_maturity / steps
@@ -588,23 +787,41 @@ def plot_binomial_tree_with_dividend(data):
     # Construire l'arbre binomial
     for i in range(steps + 1):
         for j in range(i + 1):
-            stock_price_tree[j, i] = underlying_price * (u ** (i - j)) * (d ** j)
+            stock_price_tree[j, i] = underlying_price * (u ** (i - j)) * (d**j)
     logger.info("Built binomial tree")
     # Création du graphique
     fig, ax = plt.subplots(figsize=(10, 6))
-    
+
     for i in range(steps + 1):
         for j in range(i + 1):
-            ax.text(i, stock_price_tree[j, i], f"{stock_price_tree[j, i]:.2f}", ha="center", va="center", fontsize=8)
+            ax.text(
+                i,
+                stock_price_tree[j, i],
+                f"{stock_price_tree[j, i]:.2f}",
+                ha="center",
+                va="center",
+                fontsize=8,
+            )
             if i < steps:
-                ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j, i + 1]], 'k-', lw=0.5)
-                ax.plot([i, i + 1], [stock_price_tree[j, i], stock_price_tree[j + 1, i + 1]], 'k-', lw=0.5)
+                ax.plot(
+                    [i, i + 1],
+                    [stock_price_tree[j, i], stock_price_tree[j, i + 1]],
+                    "k-",
+                    lw=0.5,
+                )
+                ax.plot(
+                    [i, i + 1],
+                    [stock_price_tree[j, i], stock_price_tree[j + 1, i + 1]],
+                    "k-",
+                    lw=0.5,
+                )
     logger.info("Plotted binomial tree")
     ax.set_title("Binomial Tree with Dividend Adjustment")
     ax.set_xlabel("Time Step")
     ax.set_ylabel("Underlying Price")
-    
+
     return save_plot(fig, generate_unique_filename("binomial_tree_with_dividend"))
+
 
 def plot_pnl_diagram_with_dividend(data):
     logger.info(f"Generating P&L diagram with data: {data}")
@@ -617,7 +834,9 @@ def plot_pnl_diagram_with_dividend(data):
     dividend_yield = data.get("dividend_yield", 0)
     position_type = data.get("position_type", "LONG")  # Par défaut en LONG
 
-    logger.info(f"Option type: {option_type}, Underlying Price: {underlying_price}, Strike Price: {strike_price}, Option Price: {option_price}, Dividend Yield: {dividend_yield}, Position Type: {position_type}")
+    logger.info(
+        f"Option type: {option_type}, Underlying Price: {underlying_price}, Strike Price: {strike_price}, Option Price: {option_price}, Dividend Yield: {dividend_yield}, Position Type: {position_type}"
+    )
 
     if dividend_yield:
         dividend_yield = float(dividend_yield)
@@ -633,24 +852,49 @@ def plot_pnl_diagram_with_dividend(data):
         pnl = np.maximum(price_range - strike_price, 0) - option_price
     else:
         pnl = np.maximum(strike_price - price_range, 0) - option_price
-    
+
     #  Si la position est SHORT, on inverse le payoff
     if position_type == "SHORT":
         pnl = -pnl
 
     #  Création du graphique
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(price_range, pnl, label=f"{position_type} {option_type} Option P&L", color="blue", linewidth=2)
-    
+    ax.plot(
+        price_range,
+        pnl,
+        label=f"{position_type} {option_type} Option P&L",
+        color="blue",
+        linewidth=2,
+    )
+
     #  Ligne de coût initial
-    ax.axhline(-option_price if position_type == "LONG" else option_price, color="red", linestyle="--", label=f"Initial Cost ({-option_price if position_type == 'LONG' else option_price})")
+    ax.axhline(
+        -option_price if position_type == "LONG" else option_price,
+        color="red",
+        linestyle="--",
+        label=f"Initial Cost ({-option_price if position_type == 'LONG' else option_price})",
+    )
 
     #  Ligne du prix d'exercice (K)
-    ax.axvline(strike_price, color="green", linestyle="--", label=f"Strike Price (K={strike_price})")
+    ax.axvline(
+        strike_price,
+        color="green",
+        linestyle="--",
+        label=f"Strike Price (K={strike_price})",
+    )
 
     #  Breakeven point = K + c pour un CALL, K - c pour un PUT
-    breakeven = strike_price + option_price if option_type == "CALL" else strike_price - option_price
-    ax.axvline(breakeven, color="orange", linestyle="--", label=f"Breakeven at {round(breakeven, 2)}")
+    breakeven = (
+        strike_price + option_price
+        if option_type == "CALL"
+        else strike_price - option_price
+    )
+    ax.axvline(
+        breakeven,
+        color="orange",
+        linestyle="--",
+        label=f"Breakeven at {round(breakeven, 2)}",
+    )
 
     #  Titres et légende
     ax.set_title(f"{position_type} {option_type} Option P&L at Maturity")
@@ -662,14 +906,15 @@ def plot_pnl_diagram_with_dividend(data):
     plt.grid(True)
 
     #  Sauvegarde du graphe
-    return save_plot(fig, generate_unique_filename(f"pnl_with_dividend_{position_type.lower()}"))
-
+    return save_plot(
+        fig, generate_unique_filename(f"pnl_with_dividend_{position_type.lower()}")
+    )
 
 
 #  Payoff Curve
 def plot_payoff_curve(data):
     logger.info(f"Generating payoff curve with data: {data}")
-    
+
     option_type = data.get("option_type")
     underlying_price = data.get("underlying_price")
     strike_price = data.get("strike_price")
@@ -685,9 +930,11 @@ def plot_payoff_curve(data):
         payoff = np.maximum(strike_price - price_range, 0)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(price_range, payoff, label=f'{option_type} Option Payoff', color='blue')
-    ax.axhline(0, color='black', linewidth=1, linestyle="--")
-    ax.axvline(strike_price, color='red', linestyle="--", label=f"Strike Price: {strike_price}")
+    ax.plot(price_range, payoff, label=f"{option_type} Option Payoff", color="blue")
+    ax.axhline(0, color="black", linewidth=1, linestyle="--")
+    ax.axvline(
+        strike_price, color="red", linestyle="--", label=f"Strike Price: {strike_price}"
+    )
 
     ax.set_title(f"{option_type} Option Payoff Curve")
     ax.set_xlabel("Underlying Price")
@@ -697,13 +944,15 @@ def plot_payoff_curve(data):
 
     return save_plot(fig, generate_unique_filename("black_scholes_payoff"))
 
+
 from numpy import log, sqrt, exp
 
 from math import log, sqrt, exp
 
+
 def plot_greeks_sensitivity(data):
     logger.info(f"Generating greeks sensitivity with data: {data}")
-    
+
     #  Extraction des inputs depuis le dictionnaire `data`
     option_type = data.get("option_type")
     position_type = data.get("position_type")  # Ajout de la position (LONG/SHORT)
@@ -712,21 +961,34 @@ def plot_greeks_sensitivity(data):
     time_to_maturity = float(data.get("time_to_maturity"))
     risk_free_rate = float(data.get("risk_free_rate"))
     volatility = float(data.get("volatility"))
-    dividend_yield = float(data.get("dividend_yield")) if data.get("dividend_yield") else 0.0
+    dividend_yield = (
+        float(data.get("dividend_yield")) if data.get("dividend_yield") else 0.0
+    )
 
-    if None in (option_type, position_type, underlying_price, strike_price, time_to_maturity, risk_free_rate, volatility):
+    if None in (
+        option_type,
+        position_type,
+        underlying_price,
+        strike_price,
+        time_to_maturity,
+        risk_free_rate,
+        volatility,
+    ):
         raise ValueError("Missing one or more required inputs for Greeks")
 
     #  Plage de prix du sous-jacent pour la courbe
     price_range = np.linspace(0.5 * strike_price, 1.5 * strike_price, 100)
-    
+
     delta = []
     gamma = []
     theta = []
     vega = []
 
     #  Calculer la valeur fixe des Greeks au prix du sous-jacent (pour affichage dans la légende)
-    d1 = (log(underlying_price / strike_price) + (risk_free_rate - dividend_yield + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+    d1 = (
+        log(underlying_price / strike_price)
+        + (risk_free_rate - dividend_yield + 0.5 * volatility**2) * time_to_maturity
+    ) / (volatility * sqrt(time_to_maturity))
     d2 = d1 - volatility * sqrt(time_to_maturity)
 
     if option_type == "CALL":
@@ -735,11 +997,28 @@ def plot_greeks_sensitivity(data):
         base_delta = -exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1)
 
     base_gamma = norm.pdf(d1) / (underlying_price * volatility * sqrt(time_to_maturity))
-    base_theta = (-underlying_price * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
-                  - risk_free_rate * strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2 if option_type == "CALL" else -d2)
-                  + dividend_yield * underlying_price * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
-    base_vega = (underlying_price * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
-    
+    base_theta = (
+        -underlying_price
+        * norm.pdf(d1)
+        * volatility
+        * exp(-dividend_yield * time_to_maturity)
+        / (2 * sqrt(time_to_maturity))
+        - risk_free_rate
+        * strike_price
+        * exp(-risk_free_rate * time_to_maturity)
+        * norm.cdf(d2 if option_type == "CALL" else -d2)
+        + dividend_yield
+        * underlying_price
+        * exp(-dividend_yield * time_to_maturity)
+        * norm.cdf(d1 if option_type == "CALL" else -d1)
+    ) / 365
+    base_vega = (
+        underlying_price
+        * exp(-dividend_yield * time_to_maturity)
+        * norm.pdf(d1)
+        * sqrt(time_to_maturity)
+    ) / 100
+
     #  Ajustement pour la position LONG/SHORT
     if position_type == "SHORT":
         final_delta = -base_delta
@@ -754,7 +1033,10 @@ def plot_greeks_sensitivity(data):
 
     #  Générer la courbe complète des Greeks
     for S in price_range:
-        d1 = (log(S / strike_price) + (risk_free_rate - dividend_yield + 0.5 * volatility ** 2) * time_to_maturity) / (volatility * sqrt(time_to_maturity))
+        d1 = (
+            log(S / strike_price)
+            + (risk_free_rate - dividend_yield + 0.5 * volatility**2) * time_to_maturity
+        ) / (volatility * sqrt(time_to_maturity))
         d2 = d1 - volatility * sqrt(time_to_maturity)
 
         if option_type == "CALL":
@@ -763,10 +1045,27 @@ def plot_greeks_sensitivity(data):
             base_delta = -exp(-dividend_yield * time_to_maturity) * norm.cdf(-d1)
 
         base_gamma = norm.pdf(d1) / (S * volatility * sqrt(time_to_maturity))
-        base_theta = (-S * norm.pdf(d1) * volatility * exp(-dividend_yield * time_to_maturity) / (2 * sqrt(time_to_maturity))
-                     - risk_free_rate * strike_price * exp(-risk_free_rate * time_to_maturity) * norm.cdf(d2 if option_type == "CALL" else -d2)
-                     + dividend_yield * S * exp(-dividend_yield * time_to_maturity) * norm.cdf(d1 if option_type == "CALL" else -d1)) / 365
-        base_vega = (S * exp(-dividend_yield * time_to_maturity) * norm.pdf(d1) * sqrt(time_to_maturity)) / 100
+        base_theta = (
+            -S
+            * norm.pdf(d1)
+            * volatility
+            * exp(-dividend_yield * time_to_maturity)
+            / (2 * sqrt(time_to_maturity))
+            - risk_free_rate
+            * strike_price
+            * exp(-risk_free_rate * time_to_maturity)
+            * norm.cdf(d2 if option_type == "CALL" else -d2)
+            + dividend_yield
+            * S
+            * exp(-dividend_yield * time_to_maturity)
+            * norm.cdf(d1 if option_type == "CALL" else -d1)
+        ) / 365
+        base_vega = (
+            S
+            * exp(-dividend_yield * time_to_maturity)
+            * norm.pdf(d1)
+            * sqrt(time_to_maturity)
+        ) / 100
 
         #  Ajustement selon LONG/SHORT
         delta.append(-base_delta if position_type == "SHORT" else base_delta)
@@ -776,13 +1075,38 @@ def plot_greeks_sensitivity(data):
 
     #  Créer le graphique
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(price_range, delta, label=f"Delta (Current: {round(final_delta, 4)})", color="blue")
-    ax.plot(price_range, gamma, label=f"Gamma (Current: {round(final_gamma, 4)})", color="red")
-    ax.plot(price_range, theta, label=f"Theta (Current: {round(final_theta, 4)})", color="green")
-    ax.plot(price_range, vega, label=f"Vega (Current: {round(final_vega, 4)})", color="purple")
+    ax.plot(
+        price_range,
+        delta,
+        label=f"Delta (Current: {round(final_delta, 4)})",
+        color="blue",
+    )
+    ax.plot(
+        price_range,
+        gamma,
+        label=f"Gamma (Current: {round(final_gamma, 4)})",
+        color="red",
+    )
+    ax.plot(
+        price_range,
+        theta,
+        label=f"Theta (Current: {round(final_theta, 4)})",
+        color="green",
+    )
+    ax.plot(
+        price_range,
+        vega,
+        label=f"Vega (Current: {round(final_vega, 4)})",
+        color="purple",
+    )
 
     #  Marquer le prix actuel du sous-jacent avec une ligne verticale
-    ax.axvline(underlying_price, color="black", linestyle="--", label=f"Underlying Price: {underlying_price}")
+    ax.axvline(
+        underlying_price,
+        color="black",
+        linestyle="--",
+        label=f"Underlying Price: {underlying_price}",
+    )
 
     #  Configurations supplémentaires
     ax.set_title(f"{position_type} {option_type} Option Greeks Sensitivity")
@@ -794,17 +1118,17 @@ def plot_greeks_sensitivity(data):
     plt.grid(True)
 
     #  Sauvegarde du graphe
-    return save_plot(fig, generate_unique_filename(f"{position_type.lower()}_{option_type.lower()}_greeks_with_dividend"))
-
-
-
-
-
+    return save_plot(
+        fig,
+        generate_unique_filename(
+            f"{position_type.lower()}_{option_type.lower()}_greeks_with_dividend"
+        ),
+    )
 
 
 def plot_simulation_results_histogram(data):
     logger.info(f"Generating simulation results histogram with data: {data}")
-    
+
     option_type = data.get("option_type")
     option_style = data.get("option_style")
     underlying_price = float(data.get("underlying_price"))
@@ -816,7 +1140,18 @@ def plot_simulation_results_histogram(data):
     num_steps = int(data.get("num_steps"))
     option_price = float(data.get("option_price"))
 
-    if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, dividend_yield, num_simulations, num_steps, option_price):
+    if None in (
+        option_type,
+        option_style,
+        underlying_price,
+        strike_price,
+        risk_free_rate,
+        volatility,
+        dividend_yield,
+        num_simulations,
+        num_steps,
+        option_price,
+    ):
         raise ValueError("Missing one or more required inputs for simulation histogram")
 
     #  Fix: dt basé sur le temps de maturité divisé par le nombre de pas
@@ -827,11 +1162,14 @@ def plot_simulation_results_histogram(data):
     for _ in range(num_simulations):
         path = [underlying_price]
         for _ in range(num_steps):
-            path.append(path[-1] * np.exp(
-                (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
-                volatility * np.sqrt(dt) * np.random.randn()
-            ))
-        
+            path.append(
+                path[-1]
+                * np.exp(
+                    (risk_free_rate - dividend_yield - 0.5 * volatility**2) * dt
+                    + volatility * np.sqrt(dt) * np.random.randn()
+                )
+            )
+
         #  Payoff final basé sur le type d'option
         if option_type == "CALL":
             payoff = max(0, path[-1] - strike_price)
@@ -845,7 +1183,12 @@ def plot_simulation_results_histogram(data):
     ax.hist(payoffs, bins=50, color="skyblue", edgecolor="black", alpha=0.7)
 
     #  Ajout d'une ligne verticale pour le prix de l'option simulé
-    ax.axvline(option_price, color="red", linestyle="--", label=f"Theoretical Option Price: {round(option_price, 4)}")
+    ax.axvline(
+        option_price,
+        color="red",
+        linestyle="--",
+        label=f"Theoretical Option Price: {round(option_price, 4)}",
+    )
 
     ax.set_title(f"{option_type} Option Simulation Results Histogram")
     ax.set_xlabel("Simulated Payoff")
@@ -856,10 +1199,11 @@ def plot_simulation_results_histogram(data):
     #  Sauvegarde du graphe
     return save_plot(fig, generate_unique_filename("monte_carlo_histogram"))
 
+
 # ==================================
 def plot_convergence_plot(data):
     logger.info(f"Generating convergence plot with data: {data}")
-    
+
     option_type = data.get("option_type")
     option_style = data.get("option_style")
     underlying_price = float(data.get("underlying_price"))
@@ -872,12 +1216,25 @@ def plot_convergence_plot(data):
     time_to_maturity = float(data.get("time_to_maturity"))
     option_price = float(data.get("option_price"))
 
-    if None in (option_type, option_style, underlying_price, strike_price, risk_free_rate, volatility, dividend_yield, num_simulations, num_steps, option_price):
+    if None in (
+        option_type,
+        option_style,
+        underlying_price,
+        strike_price,
+        risk_free_rate,
+        volatility,
+        dividend_yield,
+        num_simulations,
+        num_steps,
+        option_price,
+    ):
         raise ValueError("Missing one or more required inputs for convergence plot")
 
     #  Fix: dt basé sur le temps de maturité divisé par le nombre de pas
     dt = time_to_maturity / num_steps
-    discount_factor = np.exp(-risk_free_rate * time_to_maturity)  #  Facteur d'actualisation
+    discount_factor = np.exp(
+        -risk_free_rate * time_to_maturity
+    )  #  Facteur d'actualisation
     payoffs = []
     cumulative_mean = []
 
@@ -886,12 +1243,12 @@ def plot_convergence_plot(data):
     for i in range(num_simulations):
         path = np.zeros(num_steps + 1)
         path[0] = underlying_price
-        
+
         for t in range(1, num_steps + 1):
             z = np.random.randn()
             path[t] = path[t - 1] * np.exp(
-                (risk_free_rate - dividend_yield - 0.5 * volatility ** 2) * dt +
-                volatility * np.sqrt(dt) * z
+                (risk_free_rate - dividend_yield - 0.5 * volatility**2) * dt
+                + volatility * np.sqrt(dt) * z
             )
 
         #  Payoff en fonction du type d'option
@@ -920,8 +1277,18 @@ def plot_convergence_plot(data):
 
     #  Création du graphique de convergence
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(range(1, num_simulations + 1), cumulative_mean, label="Convergence", color="blue")
-    ax.axhline(option_price, color="red", linestyle="--", label=f"Theoretical Option Price: {round(option_price, 4)}")
+    ax.plot(
+        range(1, num_simulations + 1),
+        cumulative_mean,
+        label="Convergence",
+        color="blue",
+    )
+    ax.axhline(
+        option_price,
+        color="red",
+        linestyle="--",
+        label=f"Theoretical Option Price: {round(option_price, 4)}",
+    )
 
     ax.set_title(f"{option_style} {option_type} Option Convergence Plot")
     ax.set_xlabel("Number of Simulations")

@@ -80,6 +80,7 @@ indices = {
     },
 }
 
+
 # Fonction pour afficher les tableaux et leurs indices
 def inspect_tables(indices):
     for index_name, data in indices.items():
@@ -92,12 +93,15 @@ def inspect_tables(indices):
                 tables = pd.read_html(response.text)
                 for idx, table in enumerate(tables):
                     print(f"Table Index: {idx}")
-                    print(table.head())  # Affiche les premières lignes de chaque tableau
+                    print(
+                        table.head()
+                    )  # Affiche les premières lignes de chaque tableau
                     print("\n")
             else:
                 print(f"Failed to fetch data. HTTP Status Code: {response.status_code}")
         except Exception as e:
             print(f"Error fetching data for {index_name}: {e}")
+
 
 # Exécution du script
 if __name__ == "__main__":

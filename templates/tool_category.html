@@ -1,25 +1,20 @@
-{% extends "base.html" %}
-
-{% block title %}{{ category.title }} - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/tool_category.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}{{ category.title }} - The Derivative
+Desk{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/tool_category.css" />
+{% endblock %} {% block content %}
 <header class="page-header">
-    <h1>{{ category.title }}</h1>
-    <p>{{ category.description }}</p>
+  <h1>{{ category.title }}</h1>
+  <p>{{ category.description }}</p>
 </header>
 <main>
-    <section class="tools-container">
-        {% for tool in category.tools %}
-        <div class="tool-card">
-            <h3>{{ tool.title }}</h3>
-            <p>{{ tool.description }}</p>
-            <a href="{{ tool.url }}" class="btn-explore">Explore</a>
-        </div>
-        {% endfor %}
-    </section>
+  <section class="tools-container">
+    {% for tool in category.tools %}
+    <div class="tool-card">
+      <h3>{{ tool.title }}</h3>
+      <p>{{ tool.description }}</p>
+      <a href="{{ tool.url }}" class="btn-explore">Explore</a>
+    </div>
+    {% endfor %}
+  </section>
 </main>
 {% endblock %}

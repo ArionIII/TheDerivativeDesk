@@ -1,94 +1,121 @@
-{% extends "base.html" %}
-
-{% block title %}Futures & Forwards - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/sub_cat.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Futures & Forwards - The Derivative
+Desk{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/sub_cat.css" />
+{% endblock %} {% block content %}
 <header class="page-header">
-    <h1>Futures & Forwards Tools</h1>
-    <p>Explore tools for pricing, hedging strategies, and contract valuation to master futures and forward contracts.</p>
+  <h1>Futures & Forwards Tools</h1>
+  <p>
+    Explore tools for pricing, hedging strategies, and contract valuation to
+    master futures and forward contracts.
+  </p>
 </header>
 <main>
-    <!-- Pricing Tools Section -->
-    <section class="category-section">
-        <h2>Pricing Tools</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Forward Pricing</h3>
-                <p>Analyze the pricing for forward contracts on different types of assets:</p>
-                <ul>
-                    <li>Investment assets without income</li>
-                    <li>Assets with known income or known yield</li>
-                    <li>Foreign currency using interest rate parity</li>
-                </ul>
-                <a href="/tools/futures-forwards/forward-pricing" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Futures Pricing</h3>
-                <p>Calculate futures prices for various scenarios, including:</p>
-                <ul>
-                    <li>Stock index with dividend yield</li>
-                    <li>Commodity with storage costs</li>
-                    <li>Commodities with proportional/non-proportional storage costs and convenience yield</li>
-                    <li>Cost of carry for investment and consumption assets</li>
-                </ul>
-                <a href="/tools/futures-forwards/futures-pricing" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Pricing Tools Section -->
+  <section class="category-section">
+    <h2>Pricing Tools</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Forward Pricing</h3>
+        <p>
+          Analyze the pricing for forward contracts on different types of
+          assets:
+        </p>
+        <ul>
+          <li>Investment assets without income</li>
+          <li>Assets with known income or known yield</li>
+          <li>Foreign currency using interest rate parity</li>
+        </ul>
+        <a href="/tools/futures-forwards/forward-pricing" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Futures Pricing</h3>
+        <p>Calculate futures prices for various scenarios, including:</p>
+        <ul>
+          <li>Stock index with dividend yield</li>
+          <li>Commodity with storage costs</li>
+          <li>
+            Commodities with proportional/non-proportional storage costs and
+            convenience yield
+          </li>
+          <li>Cost of carry for investment and consumption assets</li>
+        </ul>
+        <a href="/tools/futures-forwards/futures-pricing" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+    </div>
+  </section>
 
-    <!-- Hedging Strategies Section -->
-    <section class="category-section">
-        <h2>Hedging Strategies</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Hedging Basics</h3>
-                <p>Understand the foundational concepts of hedging, including:</p>
-                <ul>
-                    <li>Computing the basis hedge</li>
-                    <li>Calculating the minimum variance hedge ratio</li>
-                    <li>Applying the tailing the hedge adjustment</li>
-                </ul>
-                <a href="/tools/futures-forwards/hedging-basics" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Equity Hedging</h3>
-                <p>Explore strategies to hedge equity portfolios, such as:</p>
-                <ul>
-                    <li>Computing the hedge for an equity portfolio</li>
-                    <li>Changing the beta of a portfolio</li>
-                </ul>
-                <a href="/tools/futures-forwards/equity-hedging" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Hedging Strategies Section -->
+  <section class="category-section">
+    <h2>Hedging Strategies</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Hedging Basics</h3>
+        <p>Understand the foundational concepts of hedging, including:</p>
+        <ul>
+          <li>Computing the basis hedge</li>
+          <li>Calculating the minimum variance hedge ratio</li>
+          <li>Applying the tailing the hedge adjustment</li>
+        </ul>
+        <a href="/tools/futures-forwards/hedging-basics" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Equity Hedging</h3>
+        <p>Explore strategies to hedge equity portfolios, such as:</p>
+        <ul>
+          <li>Computing the hedge for an equity portfolio</li>
+          <li>Changing the beta of a portfolio</li>
+        </ul>
+        <a href="/tools/futures-forwards/equity-hedging" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+    </div>
+  </section>
 
-    <!-- Contract Valuation Section -->
-    <section class="category-section">
-        <h2>Contract Valuation</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Value of Forward Contracts</h3>
-                <p>Determine the value of forward contracts based on position:</p>
-                <ul>
-                    <li>Long position: Understand how value fluctuates as the contract approaches maturity</li>
-                    <li>Short position: Learn how the counterparty’s obligations impact valuation</li>
-                </ul>
-                <a href="/tools/futures-forwards/forward-contract-value" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Delivery Timing Decision</h3>
-                <p>Decide on the best timing for contract delivery:</p>
-                <ul>
-                    <li>Deliver as soon as possible: Minimize costs and risks</li>
-                    <li>Deliver as late as possible: Maximize benefits based on market conditions</li>
-                </ul>
-                <a href="/tools/futures-forwards/delivery-timing" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Contract Valuation Section -->
+  <section class="category-section">
+    <h2>Contract Valuation</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Value of Forward Contracts</h3>
+        <p>Determine the value of forward contracts based on position:</p>
+        <ul>
+          <li>
+            Long position: Understand how value fluctuates as the contract
+            approaches maturity
+          </li>
+          <li>
+            Short position: Learn how the counterparty’s obligations impact
+            valuation
+          </li>
+        </ul>
+        <a
+          href="/tools/futures-forwards/forward-contract-value"
+          class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Delivery Timing Decision</h3>
+        <p>Decide on the best timing for contract delivery:</p>
+        <ul>
+          <li>Deliver as soon as possible: Minimize costs and risks</li>
+          <li>
+            Deliver as late as possible: Maximize benefits based on market
+            conditions
+          </li>
+        </ul>
+        <a href="/tools/futures-forwards/delivery-timing" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+    </div>
+  </section>
 </main>
 {% endblock %}

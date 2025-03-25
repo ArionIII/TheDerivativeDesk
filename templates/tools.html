@@ -1,66 +1,85 @@
-{% extends "base.html" %}
-
-{% block title %}Tools - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/tools.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Tools - The Derivative Desk{%
+endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/tools.css" />
+{% endblock %} {% block content %}
 <header class="tools-header">
-    <h1>Explore Our Tools</h1>
-    <p>Discover the major categories of financial tools designed to simplify derivatives analysis.</p>
+  <h1>Explore Our Tools</h1>
+  <p>
+    Discover the major categories of financial tools designed to simplify
+    derivatives analysis.
+  </p>
 </header>
 <main>
-    <section class="categories">
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-chart-pie"></i></div>
-            <h2>Statistics & Econometrics</h2>
-            <p>Utilize tools for Variance, Standard Deviation, Covariance, and Correlation.</p>
-            <a href="/tools/statistics" class="btn-feature">Explore</a>
-        </div>        
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-chart-line"></i></div>
-            <h2>Futures & Forwards</h2>
-            <p>Explore tools for Futures Pricing, Forward Pricing, and Hedging with Futures.</p>
-            <a href="/tools/futures-forwards" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-percentage"></i></div>
-            <h2>Interest Rates & Fixed Income </h2>
-            <p>Dive into Yield Curve Analysis, Duration and Convexity, and more.</p>
-            <a href="/tools/interest-rates" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-calculator"></i></div>
-            <h2>Options</h2>
-            <p>Access tools for Options Pricing Models, Sensitivities, and Exotic Options.</p>
-            <a href="/tools/options" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-sync-alt"></i></div>
-            <h2>Swaps (Under Construction)</h2>
-            <p>Discover tools for Interest Rate Swaps, Currency Swaps, and Swap Valuation.</p>
-            <a href="/blog" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-shield-alt"></i></div>
-            <h2>Risk Management (Under Construction)</h2>
-            <p>Analyze Value at Risk (VaR), Credit Risk, and Stress Testing using specialized tools.</p>
-            <a href="/blog" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-brain"></i></div>
-            <h2>Numerical Procedures (Under Construction)</h2>
-            <p>Utilize advanced Numerical Methods like Finite Difference, Interpolation, and PDE Solvers.</p>
-            <a href="/blog" class="btn-feature">Explore</a>
-        </div>
-        <div class="category-card">
-            <div class="icon"><i class="fas fa-atom"></i></div>
-            <h2>Advanced Derivatives (Under Construction)</h2>
-            <p>Explore HJM and LMM Models, Commodity Derivatives, and Real Options Valuation.</p>
-            <a href="/blog" class="btn-feature">Explore</a>
-        </div>
-    </section>
+  <section class="categories">
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-chart-pie"></i></div>
+      <h2>Statistics & Econometrics</h2>
+      <p>
+        Utilize tools for Variance, Standard Deviation, Covariance, and
+        Correlation.
+      </p>
+      <a href="/tools/statistics" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-chart-line"></i></div>
+      <h2>Futures & Forwards</h2>
+      <p>
+        Explore tools for Futures Pricing, Forward Pricing, and Hedging with
+        Futures.
+      </p>
+      <a href="/tools/futures-forwards" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-percentage"></i></div>
+      <h2>Interest Rates & Fixed Income</h2>
+      <p>Dive into Yield Curve Analysis, Duration and Convexity, and more.</p>
+      <a href="/tools/interest-rates" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-calculator"></i></div>
+      <h2>Options</h2>
+      <p>
+        Access tools for Options Pricing Models, Sensitivities, and Exotic
+        Options.
+      </p>
+      <a href="/tools/options" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-sync-alt"></i></div>
+      <h2>Swaps (Under Construction)</h2>
+      <p>
+        Discover tools for Interest Rate Swaps, Currency Swaps, and Swap
+        Valuation.
+      </p>
+      <a href="/blog" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-shield-alt"></i></div>
+      <h2>Risk Management (Under Construction)</h2>
+      <p>
+        Analyze Value at Risk (VaR), Credit Risk, and Stress Testing using
+        specialized tools.
+      </p>
+      <a href="/blog" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-brain"></i></div>
+      <h2>Numerical Procedures (Under Construction)</h2>
+      <p>
+        Utilize advanced Numerical Methods like Finite Difference,
+        Interpolation, and PDE Solvers.
+      </p>
+      <a href="/blog" class="btn-feature">Explore</a>
+    </div>
+    <div class="category-card">
+      <div class="icon"><i class="fas fa-atom"></i></div>
+      <h2>Advanced Derivatives (Under Construction)</h2>
+      <p>
+        Explore HJM and LMM Models, Commodity Derivatives, and Real Options
+        Valuation.
+      </p>
+      <a href="/blog" class="btn-feature">Explore</a>
+    </div>
+  </section>
 </main>
 {% endblock %}

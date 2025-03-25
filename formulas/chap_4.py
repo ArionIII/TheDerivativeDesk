@@ -1,5 +1,7 @@
 import numpy as np
+
 ### Chapitre 4 - Interest Rates
+
 
 def convert_nominal_to_continuous(m, R_m):
     """
@@ -25,6 +27,7 @@ def convert_nominal_to_continuous(m, R_m):
 
     return m * np.log(1 + R_m / m)
 
+
 def convert_continuous_to_nominal(m, R_c):
     """
     Convert continuous return to nominal return.
@@ -48,6 +51,7 @@ def convert_continuous_to_nominal(m, R_c):
         raise ValueError("Frequency of compounding (m) must be positive.")
 
     return m * (np.exp(R_c / m) - 1)
+
 
 def compute_zero_coupon_price_continuous(R, t):
     """
@@ -73,6 +77,7 @@ def compute_zero_coupon_price_continuous(R, t):
 
     return 100 * np.exp(-R * t)
 
+
 def compute_zero_coupon_bond_price_discrete(F, r, m, n):
     """
     Compute the price of a zero-coupon bond using discrete compounding.
@@ -95,11 +100,16 @@ def compute_zero_coupon_bond_price_discrete(F, r, m, n):
     if not all(isinstance(val, (int, float)) for val in [F, r]):
         raise ValueError("Face value and interest rate must be numeric (int or float).")
     if not all(isinstance(val, int) for val in [m, n]) or m <= 0 or n <= 0:
-        raise ValueError("Compounding frequency and number of years must be positive integers.")
+        raise ValueError(
+            "Compounding frequency and number of years must be positive integers."
+        )
     if F <= 0 or r < 0:
-        raise ValueError("Face value must be positive, and interest rate must be non-negative.")
+        raise ValueError(
+            "Face value must be positive, and interest rate must be non-negative."
+        )
 
     return F / (1 + r / m) ** (m * n)
+
 
 def compute_zero_coupon_rate(P, t):
     """
@@ -126,6 +136,7 @@ def compute_zero_coupon_rate(P, t):
         raise ValueError("Time to maturity (t) must be positive.")
 
     return -(1 / t) * np.log(P / 100)
+
 
 def compute_bond_price_continuous(C, r, n, F):
     """
@@ -157,6 +168,7 @@ def compute_bond_price_continuous(C, r, n, F):
     face_value_discounted = F * np.exp(-r * n)
     return coupon_sum + face_value_discounted
 
+
 def compute_bond_price_discrete(C, r, m, n, F):
     """
     Compute the price of a bond with coupons using discrete compounding.
@@ -180,13 +192,16 @@ def compute_bond_price_discrete(C, r, m, n, F):
     if not all(isinstance(val, (int, float)) for val in [C, r, F]):
         raise ValueError("Coupon, interest rate, and face value must be numeric.")
     if not all(isinstance(val, int) for val in [m, n]) or m <= 0 or n <= 0:
-        raise ValueError("Compounding frequency and number of periods must be positive integers.")
+        raise ValueError(
+            "Compounding frequency and number of periods must be positive integers."
+        )
     if C < 0 or r < 0 or F < 0:
         raise ValueError("Coupon, interest rate, and face value must be non-negative.")
 
     coupon_sum = sum(C / (1 + r / m) ** (m * t) for t in range(1, n + 1))
     face_value_discounted = F / (1 + r / m) ** (m * n)
     return coupon_sum + face_value_discounted
+
 
 def compute_forward_rate(R1, T1, R2, T2):
     """
@@ -216,6 +231,7 @@ def compute_forward_rate(R1, T1, R2, T2):
 
     return (R2 * T2 - R1 * T1) / (T2 - T1)
 
+
 def compute_instantaneous_forward_rate(R, T, dR_dT):
     """
     Compute the instantaneous forward rate for a maturity T.
@@ -241,6 +257,7 @@ def compute_instantaneous_forward_rate(R, T, dR_dT):
 
     return R + T * dR_dT
 
+
 def compute_fra_cashflow_lender(L, RK, RM, T1, T2):
     """
     Company X lends money to company Y for the period between T1 and T2.
@@ -265,9 +282,12 @@ def compute_fra_cashflow_lender(L, RK, RM, T1, T2):
     if not all(isinstance(val, (int, float)) for val in [L, RK, RM, T1, T2]):
         raise ValueError("All inputs must be numeric (int or float).")
     if L <= 0 or T1 < 0 or T2 <= T1:
-        raise ValueError("Principal (L) must be positive, T1 must be non-negative, and T2 must be greater than T1.")
+        raise ValueError(
+            "Principal (L) must be positive, T1 must be non-negative, and T2 must be greater than T1."
+        )
 
     return (L * (RK - RM) * (T2 - T1)) / (1 + RM * (T2 - T1))
+
 
 def compute_fra_cashflow_borrower(L, RM, RK, T1, T2):
     """
@@ -293,9 +313,12 @@ def compute_fra_cashflow_borrower(L, RM, RK, T1, T2):
     if not all(isinstance(val, (int, float)) for val in [L, RM, RK, T1, T2]):
         raise ValueError("All inputs must be numeric (int or float).")
     if L <= 0 or T1 < 0 or T2 <= T1:
-        raise ValueError("Principal (L) must be positive, T1 must be non-negative, and T2 must be greater than T1.")
+        raise ValueError(
+            "Principal (L) must be positive, T1 must be non-negative, and T2 must be greater than T1."
+        )
 
     return (L * (RM - RK) * (T2 - T1)) / (1 + RM * (T2 - T1))
+
 
 def value_fra_receive_RK(L, RK, RF, T1, T2, R2):
     """
@@ -321,9 +344,12 @@ def value_fra_receive_RK(L, RK, RF, T1, T2, R2):
     if not all(isinstance(val, (int, float)) for val in [L, RK, RF, T1, T2, R2]):
         raise ValueError("All inputs must be numeric (int or float).")
     if L <= 0 or T1 < 0 or T2 <= T1 or R2 < 0:
-        raise ValueError("Principal (L) must be positive, T1 must be non-negative, T2 must be greater than T1, and R2 must be non-negative.")
+        raise ValueError(
+            "Principal (L) must be positive, T1 must be non-negative, T2 must be greater than T1, and R2 must be non-negative."
+        )
 
     return L * (RK - RF) * (T2 - T1) * np.exp(-R2 * T2)
+
 
 def value_fra_pay_RK(L, RF, RK, T1, T2, R2):
     """
@@ -349,9 +375,12 @@ def value_fra_pay_RK(L, RF, RK, T1, T2, R2):
     if not all(isinstance(val, (int, float)) for val in [L, RF, RK, T1, T2, R2]):
         raise ValueError("All inputs must be numeric (int or float).")
     if L <= 0 or T1 < 0 or T2 <= T1 or R2 < 0:
-        raise ValueError("Principal (L) must be positive, T1 must be non-negative, T2 must be greater than T1, and R2 must be non-negative.")
+        raise ValueError(
+            "Principal (L) must be positive, T1 must be non-negative, T2 must be greater than T1, and R2 must be non-negative."
+        )
 
     return L * (RF - RK) * (T2 - T1) * np.exp(-R2 * T2)
+
 
 def compute_bond_price_from_cash_flows(cash_flows, times, yield_rate):
     """
@@ -380,6 +409,7 @@ def compute_bond_price_from_cash_flows(cash_flows, times, yield_rate):
 
     return sum(c * np.exp(-yield_rate * t) for c, t in zip(cash_flows, times))
 
+
 def compute_macaulay_duration(cash_flows, times, yield_rate):
     """
     Compute the Macaulay Duration of a bond.
@@ -404,6 +434,7 @@ def compute_macaulay_duration(cash_flows, times, yield_rate):
 
     numerator = sum(t * c * np.exp(-yield_rate * t) for c, t in zip(cash_flows, times))
     return numerator / bond_price
+
 
 def compute_change_in_bond_price(cash_flows, times, yield_rate, delta_y):
     """
@@ -430,6 +461,7 @@ def compute_change_in_bond_price(cash_flows, times, yield_rate, delta_y):
     numerator = sum(t * c * np.exp(-yield_rate * t) for c, t in zip(cash_flows, times))
     return -delta_y * numerator
 
+
 def compute_change_in_bond_price_from_duration(bond_price, duration, delta_y):
     """
     Compute the change in bond price using its duration and a change in yield.
@@ -448,12 +480,17 @@ def compute_change_in_bond_price_from_duration(bond_price, duration, delta_y):
     Raises:
         ValueError: If inputs are invalid (non-numeric or negative values).
     """
-    if not all(isinstance(val, (int, float)) for val in [bond_price, duration, delta_y]):
+    if not all(
+        isinstance(val, (int, float)) for val in [bond_price, duration, delta_y]
+    ):
         raise ValueError("All inputs must be numeric (int or float).")
     if bond_price <= 0 or duration < 0:
-        raise ValueError("Bond price must be positive and duration must be non-negative.")
+        raise ValueError(
+            "Bond price must be positive and duration must be non-negative."
+        )
 
     return -bond_price * duration * delta_y
+
 
 def compute_relative_change_in_bond_price(duration, delta_y):
     """
@@ -479,6 +516,7 @@ def compute_relative_change_in_bond_price(duration, delta_y):
 
     return -duration * delta_y
 
+
 def compute_modified_duration(macaulay_duration, yield_rate, m=1):
     """
     Compute the modified duration of a bond.
@@ -497,7 +535,9 @@ def compute_modified_duration(macaulay_duration, yield_rate, m=1):
     Raises:
         ValueError: If inputs are invalid (non-numeric, negative values, or m <= 0).
     """
-    if not isinstance(macaulay_duration, (int, float)) or not isinstance(yield_rate, (int, float)):
+    if not isinstance(macaulay_duration, (int, float)) or not isinstance(
+        yield_rate, (int, float)
+    ):
         raise ValueError("Macaulay duration and yield rate must be numeric.")
     if not isinstance(m, int) or m <= 0:
         raise ValueError("Compounding frequency (m) must be a positive integer.")
@@ -507,7 +547,9 @@ def compute_modified_duration(macaulay_duration, yield_rate, m=1):
     return macaulay_duration / (1 + yield_rate / m)
 
 
-def compute_change_in_bond_price_from_modified_duration(bond_price, modified_duration, delta_y):
+def compute_change_in_bond_price_from_modified_duration(
+    bond_price, modified_duration, delta_y
+):
     """
     Compute the change in bond price using modified duration.
 
@@ -525,12 +567,18 @@ def compute_change_in_bond_price_from_modified_duration(bond_price, modified_dur
     Raises:
         ValueError: If inputs are invalid (non-numeric or negative values).
     """
-    if not all(isinstance(val, (int, float)) for val in [bond_price, modified_duration, delta_y]):
+    if not all(
+        isinstance(val, (int, float))
+        for val in [bond_price, modified_duration, delta_y]
+    ):
         raise ValueError("All inputs must be numeric (int or float).")
     if bond_price <= 0 or modified_duration < 0:
-        raise ValueError("Bond price must be positive and modified duration must be non-negative.")
+        raise ValueError(
+            "Bond price must be positive and modified duration must be non-negative."
+        )
 
     return -bond_price * modified_duration * delta_y
+
 
 def compute_convexity(cash_flows, times, yield_rate):
     """
@@ -561,10 +609,15 @@ def compute_convexity(cash_flows, times, yield_rate):
     if bond_price == 0:
         raise ValueError("Bond price cannot be zero.")
 
-    convexity = sum(c * t**2 * np.exp(-yield_rate * t) for c, t in zip(cash_flows, times))
+    convexity = sum(
+        c * t**2 * np.exp(-yield_rate * t) for c, t in zip(cash_flows, times)
+    )
     return convexity / bond_price
 
-def compute_change_in_bond_price_with_convexity(bond_price, modified_duration, convexity, delta_y):
+
+def compute_change_in_bond_price_with_convexity(
+    bond_price, modified_duration, convexity, delta_y
+):
     """
     Compute the change in bond price using modified duration and convexity.
 
@@ -583,14 +636,25 @@ def compute_change_in_bond_price_with_convexity(bond_price, modified_duration, c
     Raises:
         ValueError: If inputs are invalid (non-numeric or negative values).
     """
-    if not all(isinstance(val, (int, float)) for val in [bond_price, modified_duration, convexity, delta_y]):
+    if not all(
+        isinstance(val, (int, float))
+        for val in [bond_price, modified_duration, convexity, delta_y]
+    ):
         raise ValueError("All inputs must be numeric (int or float).")
     if bond_price <= 0 or modified_duration < 0 or convexity < 0:
-        raise ValueError("Bond price, modified duration, and convexity must be non-negative, with bond price positive.")
+        raise ValueError(
+            "Bond price, modified duration, and convexity must be non-negative, with bond price positive."
+        )
 
-    return -bond_price * modified_duration * delta_y + 0.5 * bond_price * convexity * delta_y**2
+    return (
+        -bond_price * modified_duration * delta_y
+        + 0.5 * bond_price * convexity * delta_y**2
+    )
 
-def compute_relative_change_in_bond_price_with_convexity(modified_duration, convexity, delta_y):
+
+def compute_relative_change_in_bond_price_with_convexity(
+    modified_duration, convexity, delta_y
+):
     """
     Compute the relative change in bond price using modified duration and convexity.
 
@@ -608,11 +672,11 @@ def compute_relative_change_in_bond_price_with_convexity(modified_duration, conv
     Raises:
         ValueError: If inputs are invalid (non-numeric or negative values).
     """
-    if not all(isinstance(val, (int, float)) for val in [modified_duration, convexity, delta_y]):
+    if not all(
+        isinstance(val, (int, float)) for val in [modified_duration, convexity, delta_y]
+    ):
         raise ValueError("All inputs must be numeric (int or float).")
     if modified_duration < 0 or convexity < 0:
         raise ValueError("Modified duration and convexity must be non-negative.")
 
     return -modified_duration * delta_y + 0.5 * convexity * delta_y**2
-
-

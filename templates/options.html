@@ -1,134 +1,136 @@
-{% extends "base.html" %}
-
-{% block title %}Options - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/sub_cat.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Options - The Derivative Desk{%
+endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/sub_cat.css" />
+{% endblock %} {% block content %}
 <header class="page-header">
-    <h1>Options Tools</h1>
-    <p>Explore tools for pricing, risk management, and trading strategies to master option contracts.</p>
+  <h1>Options Tools</h1>
+  <p>
+    Explore tools for pricing, risk management, and trading strategies to master
+    option contracts.
+  </p>
 </header>
 
 <main>
-    <!-- Option Pricing Techniques -->
-    <section class="category-section">
-        <h2>Option Pricing Techniques</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Option Pricing (Binomial Trees)</h3>
-                <p>Analyze option prices using step-by-step binomial models:</p>
-                <ul>
-                    <li>Step-by-step valuation using the binomial model</li>
-                    <li>American vs European options in the binomial framework</li>
-                    <li>Incorporating dividends into the binomial model</li>
-                </ul>
-                <a href="/tools/options/binomial-trees" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Option Pricing (Black-Scholes)</h3>
-                <p>Use the Black-Scholes model to price options:</p>
-                <ul>
-                    <li>Closed-form solution for European options</li>
-                    <li>Impact of volatility on option pricing</li>
-                    <li>Application to different asset classes</li>
-                </ul>
-                <a href="/tools/options/black-scholes" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Option Pricing (Monte Carlo)</h3>
-                <p>Simulate option prices using Monte Carlo methods:</p>
-                <ul>
-                    <li>Simulation-based option pricing</li>
-                    <li>Handling path-dependent options</li>
-                    <li>Convergence and accuracy improvements</li>
-                </ul>
-                <a href="/tools/options/monte-carlo" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Option Pricing Techniques -->
+  <section class="category-section">
+    <h2>Option Pricing Techniques</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Option Pricing (Binomial Trees)</h3>
+        <p>Analyze option prices using step-by-step binomial models:</p>
+        <ul>
+          <li>Step-by-step valuation using the binomial model</li>
+          <li>American vs European options in the binomial framework</li>
+          <li>Incorporating dividends into the binomial model</li>
+        </ul>
+        <a href="/tools/options/binomial-trees" class="btn-explore">Explore</a>
+      </div>
+      <div class="category-card">
+        <h3>Option Pricing (Black-Scholes)</h3>
+        <p>Use the Black-Scholes model to price options:</p>
+        <ul>
+          <li>Closed-form solution for European options</li>
+          <li>Impact of volatility on option pricing</li>
+          <li>Application to different asset classes</li>
+        </ul>
+        <a href="/tools/options/black-scholes" class="btn-explore">Explore</a>
+      </div>
+      <div class="category-card">
+        <h3>Option Pricing (Monte Carlo)</h3>
+        <p>Simulate option prices using Monte Carlo methods:</p>
+        <ul>
+          <li>Simulation-based option pricing</li>
+          <li>Handling path-dependent options</li>
+          <li>Convergence and accuracy improvements</li>
+        </ul>
+        <a href="/tools/options/monte-carlo" class="btn-explore">Explore</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Option Sensitivities and Risk Management -->
-    <section class="category-section">
-        <h2>Option Sensitivities and Risk Management</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Greeks</h3>
-                <p>Understand how option prices react to market changes:</p>
-                <ul>
-                    <li>Delta, Gamma, Vega, Theta, and Rho explained</li>
-                    <li>Managing risk using the Greeks</li>
-                    <li>Second-order Greeks and their implications</li>
-                </ul>
-                <a href="/tools/options/greeks" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Equity Hedging with Options (Under Construction)</h3>
-                <p>Use options to hedge equity portfolios:</p>
-                <ul>
-                    <li>Delta-neutral hedging strategies</li>
-                    <li>Portfolio insurance using options</li>
-                    <li>Changing portfolio beta with options</li>
-                </ul>
-                <a href="/tools/options/equity-hedging" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Option Sensitivities and Risk Management -->
+  <section class="category-section">
+    <h2>Option Sensitivities and Risk Management</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Greeks</h3>
+        <p>Understand how option prices react to market changes:</p>
+        <ul>
+          <li>Delta, Gamma, Vega, Theta, and Rho explained</li>
+          <li>Managing risk using the Greeks</li>
+          <li>Second-order Greeks and their implications</li>
+        </ul>
+        <a href="/tools/options/greeks" class="btn-explore">Explore</a>
+      </div>
+      <div class="category-card">
+        <h3>Equity Hedging with Options (Under Construction)</h3>
+        <p>Use options to hedge equity portfolios:</p>
+        <ul>
+          <li>Delta-neutral hedging strategies</li>
+          <li>Portfolio insurance using options</li>
+          <li>Changing portfolio beta with options</li>
+        </ul>
+        <a href="/tools/options/equity-hedging" class="btn-explore">Explore</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Trading and Strategy Implementation -->
-    <section class="category-section">
-        <h2>Trading and Strategy Implementation</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Trading Strategies Involving Options (Under Construction)</h3>
-                <p>Explore popular trading strategies:</p>
-                <ul>
-                    <li>Bull and bear spreads</li>
-                    <li>Straddles, strangles, and butterflies</li>
-                    <li>Using options to hedge against market volatility</li>
-                </ul>
-                <a href="/tools/options/trading-strategies" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Exotic Options (Under Construction)</h3>
-                <p>Learn about complex option structures:</p>
-                <ul>
-                    <li>Barrier, lookback, and Asian options</li>
-                    <li>Path-dependent options and their pricing</li>
-                    <li>Exotic options in FX and commodity markets</li>
-                </ul>
-                <a href="/tools/options/exotic-options" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Trading and Strategy Implementation -->
+  <section class="category-section">
+    <h2>Trading and Strategy Implementation</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Trading Strategies Involving Options (Under Construction)</h3>
+        <p>Explore popular trading strategies:</p>
+        <ul>
+          <li>Bull and bear spreads</li>
+          <li>Straddles, strangles, and butterflies</li>
+          <li>Using options to hedge against market volatility</li>
+        </ul>
+        <a href="/tools/options/trading-strategies" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Exotic Options (Under Construction)</h3>
+        <p>Learn about complex option structures:</p>
+        <ul>
+          <li>Barrier, lookback, and Asian options</li>
+          <li>Path-dependent options and their pricing</li>
+          <li>Exotic options in FX and commodity markets</li>
+        </ul>
+        <a href="/tools/options/exotic-options" class="btn-explore">Explore</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Visualization and Analysis -->
-    <section class="category-section">
-        <h2>Visualization and Analysis</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Graphs (Under Construction)</h3>
-                <p>Visualize option behavior and strategy outcomes:</p>
-                <ul>
-                    <li>Profit and loss diagrams for different strategies</li>
-                    <li>Sensitivity of option price to changes in underlying asset</li>
-                    <li>Real-time tracking of option performance</li>
-                </ul>
-                <a href="/tools/options/graphs" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Scenario Analysis (Under Construction)</h3>
-                <p>Analyze how options perform under different market scenarios:</p>
-                <ul>
-                    <li>Stress testing options under extreme market conditions</li>
-                    <li>Impact of changes in volatility and interest rates</li>
-                    <li>Comparing implied and realized volatility</li>
-                </ul>
-                <a href="/tools/options/scenario-analysis" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Visualization and Analysis -->
+  <section class="category-section">
+    <h2>Visualization and Analysis</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Graphs (Under Construction)</h3>
+        <p>Visualize option behavior and strategy outcomes:</p>
+        <ul>
+          <li>Profit and loss diagrams for different strategies</li>
+          <li>Sensitivity of option price to changes in underlying asset</li>
+          <li>Real-time tracking of option performance</li>
+        </ul>
+        <a href="/tools/options/graphs" class="btn-explore">Explore</a>
+      </div>
+      <div class="category-card">
+        <h3>Scenario Analysis (Under Construction)</h3>
+        <p>Analyze how options perform under different market scenarios:</p>
+        <ul>
+          <li>Stress testing options under extreme market conditions</li>
+          <li>Impact of changes in volatility and interest rates</li>
+          <li>Comparing implied and realized volatility</li>
+        </ul>
+        <a href="/tools/options/scenario-analysis" class="btn-explore"
+          >Explore</a
+        >
+      </div>
+    </div>
+  </section>
 </main>
 {% endblock %}

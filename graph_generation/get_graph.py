@@ -7,51 +7,46 @@ app = Flask(__name__)
 GRAPH_FUNCTIONS = {
     "multiple-regression": {
         1: generate_coefficients_graph,
-        2: generate_observed_vs_predicted_graph
+        2: generate_observed_vs_predicted_graph,
     },
     "determining-zero-rates": {
         1: generate_zero_rates_curve,
         2: generate_zero_rates_vs_bond_prices,
     },
     "duration-and-convexity": {
-        1:generate_duration_contribution_graph,
-        2:generate_cash_flow_discounting_graph,
+        1: generate_duration_contribution_graph,
+        2: generate_cash_flow_discounting_graph,
     },
     "extending-libor-curve-with-swap-rates": {
-        1:generate_extended_zero_rate_curve_graph_fixed,
+        1: generate_extended_zero_rate_curve_graph_fixed,
     },
     "extending-zero-curve-with-fra": {
-        1:generate_extended_zero_rate_curve_graph_fra,
+        1: generate_extended_zero_rate_curve_graph_fra,
     },
     "payoff-of-fra": {
-        1:generate_fra_payoff_evolution_graph,
-        2:generate_fra_fixed_vs_floating_rates_graph,
+        1: generate_fra_payoff_evolution_graph,
+        2: generate_fra_fixed_vs_floating_rates_graph,
     },
     "forward-rate-calculation": {
-        1:generate_forward_rate_curve,
-        2:generate_spot_vs_forward_comparison,
+        1: generate_forward_rate_curve,
+        2: generate_spot_vs_forward_comparison,
     },
-    "valuation-of-fra": {
-        1:plot_fra_payoff,
-        2:plot_fra_fixed_vs_forward
-    },
+    "valuation-of-fra": {1: plot_fra_payoff, 2: plot_fra_fixed_vs_forward},
     # "fra-break-even-rate": {
     #     1:plot_fra_break_even_vs_forward,
     #     2:plot_fra_break_even_vs_maturity,
     # }
     "binomial-dividend": {
-        1:plot_binomial_tree_with_dividend,
-        2:plot_pnl_diagram_with_dividend,
+        1: plot_binomial_tree_with_dividend,
+        2: plot_pnl_diagram_with_dividend,
     },
-    "black-scholes-option": {
-        1:plot_payoff_curve,
-        2:plot_greeks_sensitivity
-},
+    "black-scholes-option": {1: plot_payoff_curve, 2: plot_greeks_sensitivity},
     "monte-carlo-option": {
-        1:plot_simulation_results_histogram,
-        2:plot_convergence_plot
+        1: plot_simulation_results_histogram,
+        2: plot_convergence_plot,
     },
 }
+
 
 @app.route("/api/get-graph")
 def get_graph():

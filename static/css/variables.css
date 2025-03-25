@@ -1,43 +1,39 @@
 :root {
-    /* Colors */
-    --primary-color: #CC7000; /* Deeper, richer orange */
-    --primary-color-hover: #B36200; /* Slightly darker shade for hover */
-    --secondary-color: #00274D; /* Navy Blue */
-    --secondary-color-hover: #001B38; /* Darker Navy Blue */
-    --background-color: #F5F5F5; /* Light Gray */
-    --dark-gray: #333333; /* Dark Gray */
-    --dark-gray-hover: #1A1A1A; /* Hover state for dark gray */
-    --input-border-color: #DDD; /* Light Gray for input borders */
-    --link-color: var(--primary-color); /* Consistent link color */
-    --link-hover-color: var(--primary-color-hover); /* Link hover color */
+  /* Colors */
+  --primary-color: #cc7000; /* Deeper, richer orange */
+  --primary-color-hover: #b36200; /* Slightly darker shade for hover */
+  --secondary-color: #00274d; /* Navy Blue */
+  --secondary-color-hover: #001b38; /* Darker Navy Blue */
+  --background-color: #f5f5f5; /* Light Gray */
+  --dark-gray: #333333; /* Dark Gray */
+  --dark-gray-hover: #1a1a1a; /* Hover state for dark gray */
+  --input-border-color: #ddd; /* Light Gray for input borders */
+  --link-color: var(--primary-color); /* Consistent link color */
+  --link-hover-color: var(--primary-color-hover); /* Link hover color */
 
-    /* Typography */
-    --font-family: "Arial", sans-serif;
-    --logo-font-size: 2rem; /* Font size for logo */
-    --nav-font-size: 1rem; /* Font size for navigation links */
+  /* Typography */
+  --font-family: "Arial", sans-serif;
+  --logo-font-size: 2rem; /* Font size for logo */
+  --nav-font-size: 1rem; /* Font size for navigation links */
 
-    /* Header */
-    --header-padding: 10px 0; /* Top and bottom padding for header */
+  /* Header */
+  --header-padding: 10px 0; /* Top and bottom padding for header */
 
-    /* Navigation */
-    --nav-gap: 15px; /* Spacing between navigation links */
+  /* Navigation */
+  --nav-gap: 15px; /* Spacing between navigation links */
 
-    /* Search Bar */
-    --search-gap: 5px; /* Spacing between search input and button */
-    --search-input-padding: 5px; /* Padding inside search input */
-    --search-input-width: 200px; /* Width of the search input */
+  /* Search Bar */
+  --search-gap: 5px; /* Spacing between search input and button */
+  --search-input-padding: 5px; /* Padding inside search input */
+  --search-input-width: 200px; /* Width of the search input */
 
-    /* Borders and Radius */
-    --input-border-width: 1px; /* Width of input border */
-    --border-radius: 5px; /* Radius for rounded corners */
+  /* Borders and Radius */
+  --input-border-width: 1px; /* Width of input border */
+  --border-radius: 5px; /* Radius for rounded corners */
 
-    /* Buttons */
-    --button-padding: 5px 10px; /* Padding inside buttons */
-    --btn-bg: #D48806; /* Golden Amber */
-    --btn-hover-bg: #B36B00; /* Rich Copper */
-    --btn-text: #FDF6E3; /* Warm Light Beige */
-    
-    
-    
-
+  /* Buttons */
+  --button-padding: 5px 10px; /* Padding inside buttons */
+  --btn-bg: #d48806; /* Golden Amber */
+  --btn-hover-bg: #b36b00; /* Rich Copper */
+  --btn-text: #fdf6e3; /* Warm Light Beige */
 }

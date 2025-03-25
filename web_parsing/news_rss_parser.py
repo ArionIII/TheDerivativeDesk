@@ -22,11 +22,12 @@ rss_feeds = {
     "MarketWatch": "https://www.marketwatch.com/rss/topstories",
     "Reddit": "https://www.reddit.com/r/finance/.rss",
     "CNN Money": "https://money.cnn.com/services/rss/",
-    "Reuters": "https://www.reutersagency.com/feed/?taxonomy=best-sectors&post_type=best"
+    "Reuters": "https://www.reutersagency.com/feed/?taxonomy=best-sectors&post_type=best",
 }
 
 last_fetched_minute = None
 cached_news = []
+
 
 def get_news_from_rss():
     logger.info("Fetching news...")
@@ -35,16 +36,16 @@ def get_news_from_rss():
 
     if last_fetched_minute == current_minute:
         return cached_news
-    
+
     all_news = []
     for source, url in rss_feeds.items():
         feed = feedparser.parse(url)
-        for entry in feed.entries[:10]:  
+        for entry in feed.entries[:10]:
             news_item = {
                 "source": source,
                 "title": entry.title,
                 "link": entry.link,
-                "published": entry.published if "published" in entry else "Unknown"
+                "published": entry.published if "published" in entry else "Unknown",
             }
             all_news.append(news_item)
     last_fetched_minute = current_minute

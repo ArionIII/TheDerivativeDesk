@@ -1,49 +1,88 @@
-{% extends "base.html" %}
-
-{% block title %}Futures Pricing - Futures & Forwards{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/futures-pricing.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Futures Pricing - Futures &
+Forwards{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/futures-pricing.css" />
+{% endblock %} {% block content %}
 <header class="page-header">
-    <h1>Futures Pricing Tools</h1>
-    <p>Select a futures pricing tool based on the type of asset or scenario you are analyzing.</p>
+  <h1>Futures Pricing Tools</h1>
+  <p>
+    Select a futures pricing tool based on the type of asset or scenario you are
+    analyzing.
+  </p>
 </header>
 <main>
-    <section class="cards-container">
-        <div class="category-card">
-            <h3>Stock Index with Dividend Yield</h3>
-            <p>Calculate the futures price of a stock index considering dividend yield.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_stock_index" class="btn-explore">Explore</a>
-        </div>
-        <div class="category-card">
-            <h3>Commodity with Storage Costs</h3>
-            <p>Determine the futures price of a commodity with fixed storage costs.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_with_storage" class="btn-explore">Explore</a>
-        </div>
-        <div class="category-card">
-            <h3>Commodity with Proportional Storage Costs and Convenience Yield</h3>
-            <p>Evaluate the futures price of a commodity with proportional storage costs and convenience yield.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_proportional_costs_yield" class="btn-explore">Explore</a>
-        </div>
-        <div class="category-card">
-            <h3>Commodity with Non-Proportional Storage Costs and Convenience Yield</h3>
-            <p>Compute the futures price of a commodity with fixed storage costs and convenience yield.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_nonproportional_costs_yield" class="btn-explore">Explore</a>
-        </div>
-        <div class="category-card">
-            <h3>Investment Asset (Cost of Carry)</h3>
-            <p>Calculate the futures price of an investment asset using cost of carry.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry" class="btn-explore">Explore</a>
-        </div>
-        <div class="category-card">
-            <h3>Consumption Asset (Cost of Carry with Convenience Yield)</h3>
-            <p>Determine the futures price of a consumption asset using cost of carry and convenience yield.</p>
-            <a href="/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry_yield" class="btn-explore">Explore</a>
-        </div>
-    </section>
+  <section class="cards-container">
+    <div class="category-card">
+      <h3>Stock Index with Dividend Yield</h3>
+      <p>
+        Calculate the futures price of a stock index considering dividend yield.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_stock_index"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+    <div class="category-card">
+      <h3>Commodity with Storage Costs</h3>
+      <p>
+        Determine the futures price of a commodity with fixed storage costs.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_with_storage"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+    <div class="category-card">
+      <h3>Commodity with Proportional Storage Costs and Convenience Yield</h3>
+      <p>
+        Evaluate the futures price of a commodity with proportional storage
+        costs and convenience yield.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_proportional_costs_yield"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+    <div class="category-card">
+      <h3>
+        Commodity with Non-Proportional Storage Costs and Convenience Yield
+      </h3>
+      <p>
+        Compute the futures price of a commodity with fixed storage costs and
+        convenience yield.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_nonproportional_costs_yield"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+    <div class="category-card">
+      <h3>Investment Asset (Cost of Carry)</h3>
+      <p>
+        Calculate the futures price of an investment asset using cost of carry.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+    <div class="category-card">
+      <h3>Consumption Asset (Cost of Carry with Convenience Yield)</h3>
+      <p>
+        Determine the futures price of a consumption asset using cost of carry
+        and convenience yield.
+      </p>
+      <a
+        href="/tools/futures-forwards/futures-pricing/futures_pricing_cost_of_carry_yield"
+        class="btn-explore"
+        >Explore</a
+      >
+    </div>
+  </section>
 </main>
 
 {% endblock %}

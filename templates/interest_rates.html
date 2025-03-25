@@ -1,92 +1,102 @@
-{% extends "base.html" %}
-
-{% block title %}Interest Rate Tools - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/sub_cat.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Interest Rate Tools - The Derivative
+Desk{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/sub_cat.css" />
+{% endblock %} {% block content %}
 <header class="page-header">
-    <h1>Interest Rates</h1>
-    <p>Explore tools for interest rate analysis, derivatives pricing, and advanced risk management strategies.</p>
+  <h1>Interest Rates</h1>
+  <p>
+    Explore tools for interest rate analysis, derivatives pricing, and advanced
+    risk management strategies.
+  </p>
 </header>
 <main>
-    <!-- Interest Rate Fundamentals Section -->
-    <section class="category-section">
-        <h2>Interest Rate Fundamentals</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Basic Interest Rate Analysis</h3>
-                <p>Understand and analyze core interest rate concepts:</p>
-                <ul>
-                    <li>Compounding and discounting (discrete and continuous)</li>
-                    <li>Bond pricing and valuation</li>
-                    <li>Repo market analysis</li>
-                </ul>
-                <a href="/tools/interest-rates/basic-interest-rates-analysis" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Term Structure Construction</h3>
-                <p>Build interest rate curves for valuation:</p>
-                <ul>
-                    <li>Determining zero rates & zero-curve</li>
-                    <li>Extending LIBOR curve using market instruments</li>
-                    <li>Bootstrapping forward rates</li>
-                </ul>
-                <a href="/tools/interest-rates/term-structure-construction" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Interest Rate Fundamentals Section -->
+  <section class="category-section">
+    <h2>Interest Rate Fundamentals</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Basic Interest Rate Analysis</h3>
+        <p>Understand and analyze core interest rate concepts:</p>
+        <ul>
+          <li>Compounding and discounting (discrete and continuous)</li>
+          <li>Bond pricing and valuation</li>
+          <li>Repo market analysis</li>
+        </ul>
+        <a
+          href="/tools/interest-rates/basic-interest-rates-analysis"
+          class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Term Structure Construction</h3>
+        <p>Build interest rate curves for valuation:</p>
+        <ul>
+          <li>Determining zero rates & zero-curve</li>
+          <li>Extending LIBOR curve using market instruments</li>
+          <li>Bootstrapping forward rates</li>
+        </ul>
+        <a
+          href="/tools/interest-rates/term-structure-construction"
+          class="btn-explore"
+          >Explore</a
+        >
+      </div>
+    </div>
+  </section>
 
-    <!-- Interest Rate Derivatives Section -->
-    <section class="category-section">
-        <h2>Interest Rate Derivatives</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Forward Rate Agreements (FRA)</h3>
-                <p>Analyze forward contracts based on interest rates:</p>
-                <ul>
-                    <li>Payoff of FRA based on market conditions</li>
-                    <li>Valuation of FRA using discounting and forward rates</li>
-                </ul>
-                <a href="/tools/interest-rates/forward-rate-agreements" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>Swaps and Interest Rate Futures</h3>
-                <p>Evaluate standard market instruments:</p>
-                <ul>
-                    <li>Interest rate swap cash flows and valuation</li>
-                    <li>Pricing interest rate futures (Eurodollar futures)</li>
-                </ul>
-                <a href="/blog" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Interest Rate Derivatives Section -->
+  <section class="category-section">
+    <h2>Interest Rate Derivatives</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Forward Rate Agreements (FRA)</h3>
+        <p>Analyze forward contracts based on interest rates:</p>
+        <ul>
+          <li>Payoff of FRA based on market conditions</li>
+          <li>Valuation of FRA using discounting and forward rates</li>
+        </ul>
+        <a
+          href="/tools/interest-rates/forward-rate-agreements"
+          class="btn-explore"
+          >Explore</a
+        >
+      </div>
+      <div class="category-card">
+        <h3>Swaps and Interest Rate Futures</h3>
+        <p>Evaluate standard market instruments:</p>
+        <ul>
+          <li>Interest rate swap cash flows and valuation</li>
+          <li>Pricing interest rate futures (Eurodollar futures)</li>
+        </ul>
+        <a href="/blog" class="btn-explore">Explore</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Advanced Interest Rate Models Section -->
-    <section class="category-section">
-        <h2>Advanced Interest Rate Models</h2>
-        <div class="cards-container">
-            <div class="category-card">
-                <h3>Short-Rate Models</h3>
-                <p>Apply single-factor models for interest rate evolution:</p>
-                <ul>
-                    <li>Vasicek and CIR models</li>
-                    <li>Hull-White model for derivatives pricing</li>
-                </ul>
-                <a href="/blog" class="btn-explore">Explore</a>
-            </div>
-            <div class="category-card">
-                <h3>HJM and LMM Models</h3>
-                <p>Use advanced frameworks for interest rate derivatives:</p>
-                <ul>
-                    <li>Heath-Jarrow-Morton (HJM) framework</li>
-                    <li>Libor Market Model (LMM) for caplets and swaptions</li>
-                </ul>
-                <a href="/blog" class="btn-explore">Explore</a>
-            </div>
-        </div>
-    </section>
+  <!-- Advanced Interest Rate Models Section -->
+  <section class="category-section">
+    <h2>Advanced Interest Rate Models</h2>
+    <div class="cards-container">
+      <div class="category-card">
+        <h3>Short-Rate Models</h3>
+        <p>Apply single-factor models for interest rate evolution:</p>
+        <ul>
+          <li>Vasicek and CIR models</li>
+          <li>Hull-White model for derivatives pricing</li>
+        </ul>
+        <a href="/blog" class="btn-explore">Explore</a>
+      </div>
+      <div class="category-card">
+        <h3>HJM and LMM Models</h3>
+        <p>Use advanced frameworks for interest rate derivatives:</p>
+        <ul>
+          <li>Heath-Jarrow-Morton (HJM) framework</li>
+          <li>Libor Market Model (LMM) for caplets and swaptions</li>
+        </ul>
+        <a href="/blog" class="btn-explore">Explore</a>
+      </div>
+    </div>
+  </section>
 </main>
 {% endblock %}
