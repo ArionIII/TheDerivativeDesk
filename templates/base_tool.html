@@ -153,16 +153,11 @@ Desk{% endblock %} {% block styles %}
         endif
         %}
       >
+      <!-- prettier-ignore -->
         {% for option in input.options %}
         <option
           value="{{ option }}"
-          {%
-          if
-          input.default=""
-          ="option"
-          %}selected{%
-          endif
-          %}
+          {% if input.default == option %}selected{% endif %}
         >
           {{ option }}
         </option>
