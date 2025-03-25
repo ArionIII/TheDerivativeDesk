@@ -1,276 +1,339 @@
-{% extends "base.html" %}
-
-{% block title %}{{ tool.title }} - The Derivative Desk{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="/static/css/base_tool.css">
-<link rel="stylesheet" href="/static/css/stock.css">
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}{{ tool.title }} - The Derivative
+Desk{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/base_tool.css" />
+<link rel="stylesheet" href="/static/css/stock.css" />
+{% endblock %} {% block content %}
 <header class="tool-header">
-    <h1>{{ tool.title }}</h1>
-    <p>{{ tool.description }}</p>
+  <h1>{{ tool.title }}</h1>
+  <p>{{ tool.description }}</p>
 </header>
 <main>
-    <!-- Note Section -->
-    {% if tool.note %}
-        <section class="note-section">
-            <h3>Additional Information</h3>
-            <p>{{ tool.note | safe }}</p>
-        </section>
-    {% endif %}
+  <!-- Note Section -->
+  {% if tool.note %}
+  <section class="note-section">
+    <h3>Additional Information</h3>
+    <p>{{ tool.note | safe }}</p>
+  </section>
+  {% endif %}
 
-    
-<!-- Input Section -->
-<section class="input-section">
+  <!-- Input Section -->
+  <section class="input-section">
     <h2>Inputs</h2>
     <form id="tool-form" enctype="multipart/form-data">
-
-        <!--  Classic Inputs -->
-        {% for input in tool.inputs %}
-        {# DEBUG: {{ input }} #}
-            {% if input.type == "number" or input.type == "text" %}
-                <label for="{{ input.id }}">
-                    {{ input.label }}
-                    {% if not input.optional %}
-                        <span class="required">*</span>
-                    {% endif %}
-                </label>
-                <input 
-                    type="{{ input.type }}" 
-                    id="{{ input.id }}" 
-                    name="{{ input.id }}"
-                    {% if input.optional %} 
-                        placeholder="{{ input.placeholder }}" 
-                    {% else %} 
-                        value="{{ input.placeholder }}"
-                    {% endif %}
-                    {% if input.step %} step="{{ input.step }}" {% endif %}
-                    {% if not input.optional %} required {% endif %}
-                >
-            {% endif %}
-        {% endfor %}
-
-        <!--  Classic Inputs Array -->
-        {% for input in tool.inputs %}
-        {% if input.type == "array" %}
-        <label for="{{ input.id }}">
-            {{ input.label }}
-            {% if not input.optional %}
-                <span class="required">*</span>
-            {% endif %}
-        </label>
-        <input 
-                    type="{{ input.type }}" 
-                    id="{{ input.id }}" 
-                    name="{{ input.id }}"
-                    {% if input.optional %} 
-                        placeholder="{{ input.placeholder }}" 
-                    {% else %} 
-                        value="{{ input.placeholder }}"
-                    {% endif %}
-                    {% if input.step %} step="{{ input.step }}" {% endif %}
-                    {% if not input.optional %} required {% endif %}
-                >
+      <!--  Classic Inputs -->
+      {% for input in tool.inputs %} {# DEBUG: {{ input }} #} {% if input.type
+      == "number" or input.type == "text" %}
+      <label for="{{ input.id }}">
+        {{ input.label }} {% if not input.optional %}
+        <span class="required">*</span>
         {% endif %}
-        {% endfor %}
+      </label>
+      <input
+        type="{{ input.type }}"
+        id="{{ input.id }}"
+        name="{{ input.id }}"
+        {%
+        if
+        input.optional
+        %}
+        placeholder="{{ input.placeholder }}"
+        {%
+        else
+        %}
+        value="{{ input.placeholder }}"
+        {%
+        endif
+        %}
+        {%
+        if
+        input.step
+        %}
+        step="{{ input.step }}"
+        {%
+        endif
+        %}
+        {%
+        if
+        not
+        input.optional
+        %}
+        required
+        {%
+        endif
+        %}
+      />
+      {% endif %} {% endfor %}
 
-        <!--  Range Inputs (Sliders) -->
-        {% for input in tool.inputs %}
-            {% if input.type == "range" %}
-                <label for="{{ input.id }}">
-                    {{ input.label }}: <span id="{{ input.id }}-value">{{ input.placeholder }}</span>
-                    {% if not input.optional %}
-                        <span class="required">*</span>
-                    {% endif %}
-                </label>
-                <input 
-                    type="range" 
-                    id="{{ input.id }}" 
-                    name="{{ input.id }}"
-                    min="{{ input.range[0] }}"
-                    max="{{ input.range[1] }}"
-                    step="{{ input.step if input.step else '0.01' }}"
-                    value="{{ input.placeholder }}"
-                    oninput="document.getElementById('{{ input.id }}-value').innerText = this.value"
-                    {% if not input.optional %} required {% endif %}
-                >
-            {% endif %}
-        {% endfor %}
+      <!--  Classic Inputs Array -->
+      {% for input in tool.inputs %} {% if input.type == "array" %}
+      <label for="{{ input.id }}">
+        {{ input.label }} {% if not input.optional %}
+        <span class="required">*</span>
+        {% endif %}
+      </label>
+      <input
+        type="{{ input.type }}"
+        id="{{ input.id }}"
+        name="{{ input.id }}"
+        {%
+        if
+        input.optional
+        %}
+        placeholder="{{ input.placeholder }}"
+        {%
+        else
+        %}
+        value="{{ input.placeholder }}"
+        {%
+        endif
+        %}
+        {%
+        if
+        input.step
+        %}
+        step="{{ input.step }}"
+        {%
+        endif
+        %}
+        {%
+        if
+        not
+        input.optional
+        %}
+        required
+        {%
+        endif
+        %}
+      />
+      {% endif %} {% endfor %}
 
-        <!--  Dropdown Inputs -->
-        {% for input in tool.inputs %}
-            {% if input.type == "select" %}
-                <label for="{{ input.id }}">{{ input.label }}</label>
-                <select id="{{ input.id }}" name="{{ input.id }}" {% if not input.optional %} required {% endif %}>
-                    {% for option in input.options %}
-                        <option value="{{ option }}" {% if input.default == option %}selected{% endif %}>
-                            {{ option }}
-                        </option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-        {% endfor %}
+      <!--  Range Inputs (Sliders) -->
+      {% for input in tool.inputs %} {% if input.type == "range" %}
+      <label for="{{ input.id }}">
+        {{ input.label }}:
+        <span id="{{ input.id }}-value">{{ input.placeholder }}</span>
+        {% if not input.optional %}
+        <span class="required">*</span>
+        {% endif %}
+      </label>
+      <input
+        type="range"
+        id="{{ input.id }}"
+        name="{{ input.id }}"
+        min="{{ input.range[0] }}"
+        max="{{ input.range[1] }}"
+        step="{{ input.step if input.step else '0.01' }}"
+        value="{{ input.placeholder }}"
+        oninput="document.getElementById('{{ input.id }}-value').innerText = this.value"
+        {%
+        if
+        not
+        input.optional
+        %}
+        required
+        {%
+        endif
+        %}
+      />
+      {% endif %} {% endfor %}
 
-        <!--  File Inputs -->
-        {% for input in tool.inputs %}
-        {% if input.type == "file" %}
-        <div class="file-input-container">
-            <label for="{{ input.id }}">
-                {{ input.label }}
-                <span class="optional">(Optional - replaces {{ input.data_target }})</span>
-                {% if input.template %}
-                    <a href="{{ input.template }}" class="btn-download" download>Download CSV template</a>
-                {% endif %}
-            </label>
-            <input 
-                type="file" 
-                id="{{ input.id }}" 
-                name="{{ input.id }}" 
-                accept=".csv, .xlsx"
-                data_target="{{ input.data_target }}"
-            >
-        </div>
-    {% endif %}
+      <!--  Dropdown Inputs -->
+      {% for input in tool.inputs %} {% if input.type == "select" %}
+      <label for="{{ input.id }}">{{ input.label }}</label>
+      <select
+        id="{{ input.id }}"
+        name="{{ input.id }}"
+        {%
+        if
+        not
+        input.optional
+        %}
+        required
+        {%
+        endif
+        %}
+      >
+        {% for option in input.options %}
+        <option
+          value="{{ option }}"
+          {%
+          if
+          input.default=""
+          ="option"
+          %}selected{%
+          endif
+          %}
+        >
+          {{ option }}
+        </option>
         {% endfor %}
+      </select>
+      {% endif %} {% endfor %}
 
-        <!--  Submit Button -->
-        <button type="submit" class="btn-submit">Calculate</button>
+      <!--  File Inputs -->
+      {% for input in tool.inputs %} {% if input.type == "file" %}
+      <div class="file-input-container">
+        <label for="{{ input.id }}">
+          {{ input.label }}
+          <span class="optional"
+            >(Optional - replaces {{ input.data_target }})</span
+          >
+          {% if input.template %}
+          <a href="{{ input.template }}" class="btn-download" download
+            >Download CSV template</a
+          >
+          {% endif %}
+        </label>
+        <input
+          type="file"
+          id="{{ input.id }}"
+          name="{{ input.id }}"
+          accept=".csv, .xlsx"
+          data_target="{{ input.data_target }}"
+        />
+      </div>
+      {% endif %} {% endfor %}
+
+      <!--  Submit Button -->
+      <button type="submit" class="btn-submit">Calculate</button>
     </form>
-</section>
+  </section>
 
-    
-    <!-- Results Section -->
-    <section class="results-section">
-        <h2>Results</h2>
-        <div id="results">
-            {% for output in tool.outputs %}
-                <p>{{ output }}: <span id="result-{{ loop.index }}">N/A</span></p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- Graph Visualization Section -->
-    {% if tool.graphs %}
-    <section class="graphs-section">
-        <div class="graphs-wrapper">
-            <h2 class="graphs-title">Visualizations</h2>
-            <div class="graphs-container">
-                {% for graph in tool.graphs %}
-                <div class="graph-box">
-                    <h3>{{ graph.name }}</h3>
-                    <img id="graph-{{ loop.index }}" src="/static/images/loading-spinner.gif" alt="Loading graph...">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-    {% if tool.is_live %}
-    <!--  Live Graph Section -->
-    <section class="live-graph-section">
-        <h2>Live Graph</h2>
-        <div class="live-graph-container">
-            <canvas id="live-chart"></canvas>
-        </div>
-    </section>
-    {% endif %}
-
-    <!-- Actions Section -->
-    <section class="actions-section">
-        <h2>Stocks</h2>
-        <div class="search-bar">
-            <input type="text" id="search-action" placeholder="Search for companies / tickers..." />
-            <button id="search-btn">Search</button>
-            <div id="suggestions" class="suggestions hidden"></div>
-        </div>
-        <ul id="actions-list">
-            <!-- Dynamically filled -->
-        </ul>
-    </section>
-    
-
-<!-- Modal for See More -->
-<div id="see-more-modal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3 id="modal-action-title">Stock Details</h3>
-
-        <!-- 🔹 Informations générales -->
-        <div class="stock-info">
-            <p id="stock-sector"></p>
-            <p id="stock-industry"></p>
-            <p id="stock-market-cap"></p>
-            <p id="stock-exchange"></p>
-            <p id="stock-currency"></p>
-            <p id="stock-website"></p>
-        </div>
-
-        <!-- 🔹 Prix et performances -->
-        <div class="stock-prices">
-            <h4>Price Performance</h4>
-            <p id="stock-current-price"></p>
-            <p id="stock-52-week-high"></p>
-            <p id="stock-52-week-low"></p>
-            <p id="stock-day-high"></p>
-            <p id="stock-day-low"></p>
-            <p id="stock-volume"></p>
-            <p id="stock-average-volume"></p>
-        </div>
-
-        <!-- 🔹 Ratios financiers -->
-        <div class="stock-ratios">
-            <h4>Financial Ratios</h4>
-            <p id="stock-pe-ratio"></p>
-            <p id="stock-forward-pe"></p>
-            <p id="stock-peg-ratio"></p>
-            <p id="stock-price-to-book"></p>
-            <p id="stock-price-to-sales"></p>
-        </div>
-
-        <!-- 🔹 Rentabilité et marges -->
-        <div class="stock-margins">
-            <h4>Profitability & Margins</h4>
-            <p id="stock-roa"></p>
-            <p id="stock-roe"></p>
-            <p id="stock-profit-margins"></p>
-            <p id="stock-operating-margins"></p>
-            <p id="stock-ebitda"></p>
-        </div>
-
-        <!-- 🔹 Dividendes et Cashflow -->
-        <div class="stock-dividends">
-            <h4>Dividends & Cashflow</h4>
-            <p id="stock-dividend-yield"></p>
-            <p id="stock-dividend-rate"></p>
-            <p id="stock-payout-ratio"></p>
-            <p id="stock-free-cashflow"></p>
-        </div>
-
-        <!-- 🔹 Analyst Ratings -->
-        <div class="stock-analyst-ratings">
-            <h4>Analyst Ratings</h4>
-            <p id="stock-recommendation"></p>
-            <p id="stock-target-price"></p>
-            <p id="stock-target-high"></p>
-            <p id="stock-target-low"></p>
-        </div>
-
-        <!-- 🔹 Graphique de l'historique des prix -->
-        <div class="chart-container">
-            <h4>Stock Performance (1 Year)</h4>
-            <canvas id="detailed-stock-chart"></canvas>
-        </div>
-
-        <button class="close-btn" type="button" onclick="closeModal()">Close</button>
-
+  <!-- Results Section -->
+  <section class="results-section">
+    <h2>Results</h2>
+    <div id="results">
+      {% for output in tool.outputs %}
+      <p>{{ output }}: <span id="result-{{ loop.index }}">N/A</span></p>
+      {% endfor %}
     </div>
-</div>
+  </section>
 
-    
-    <!-- Visualization Section (Optional)
+  <!-- Graph Visualization Section -->
+  {% if tool.graphs %}
+  <section class="graphs-section">
+    <div class="graphs-wrapper">
+      <h2 class="graphs-title">Visualizations</h2>
+      <div class="graphs-container">
+        {% for graph in tool.graphs %}
+        <div class="graph-box">
+          <h3>{{ graph.name }}</h3>
+          <img
+            id="graph-{{ loop.index }}"
+            src="/static/images/loading-spinner.gif"
+            alt="Loading graph..."
+          />
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %} {% if tool.is_live %}
+  <!--  Live Graph Section -->
+  <section class="live-graph-section">
+    <h2>Live Graph</h2>
+    <div class="live-graph-container">
+      <canvas id="live-chart"></canvas>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Actions Section -->
+  <section class="actions-section">
+    <h2>Stocks</h2>
+    <div class="search-bar">
+      <input
+        type="text"
+        id="search-action"
+        placeholder="Search for companies / tickers..."
+      />
+      <button id="search-btn">Search</button>
+      <div id="suggestions" class="suggestions hidden"></div>
+    </div>
+    <ul id="actions-list">
+      <!-- Dynamically filled -->
+    </ul>
+  </section>
+
+  <!-- Modal for See More -->
+  <div id="see-more-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modal-action-title">Stock Details</h3>
+
+      <!-- 🔹 Informations générales -->
+      <div class="stock-info">
+        <p id="stock-sector"></p>
+        <p id="stock-industry"></p>
+        <p id="stock-market-cap"></p>
+        <p id="stock-exchange"></p>
+        <p id="stock-currency"></p>
+        <p id="stock-website"></p>
+      </div>
+
+      <!-- 🔹 Prix et performances -->
+      <div class="stock-prices">
+        <h4>Price Performance</h4>
+        <p id="stock-current-price"></p>
+        <p id="stock-52-week-high"></p>
+        <p id="stock-52-week-low"></p>
+        <p id="stock-day-high"></p>
+        <p id="stock-day-low"></p>
+        <p id="stock-volume"></p>
+        <p id="stock-average-volume"></p>
+      </div>
+
+      <!-- 🔹 Ratios financiers -->
+      <div class="stock-ratios">
+        <h4>Financial Ratios</h4>
+        <p id="stock-pe-ratio"></p>
+        <p id="stock-forward-pe"></p>
+        <p id="stock-peg-ratio"></p>
+        <p id="stock-price-to-book"></p>
+        <p id="stock-price-to-sales"></p>
+      </div>
+
+      <!-- 🔹 Rentabilité et marges -->
+      <div class="stock-margins">
+        <h4>Profitability & Margins</h4>
+        <p id="stock-roa"></p>
+        <p id="stock-roe"></p>
+        <p id="stock-profit-margins"></p>
+        <p id="stock-operating-margins"></p>
+        <p id="stock-ebitda"></p>
+      </div>
+
+      <!-- 🔹 Dividendes et Cashflow -->
+      <div class="stock-dividends">
+        <h4>Dividends & Cashflow</h4>
+        <p id="stock-dividend-yield"></p>
+        <p id="stock-dividend-rate"></p>
+        <p id="stock-payout-ratio"></p>
+        <p id="stock-free-cashflow"></p>
+      </div>
+
+      <!-- 🔹 Analyst Ratings -->
+      <div class="stock-analyst-ratings">
+        <h4>Analyst Ratings</h4>
+        <p id="stock-recommendation"></p>
+        <p id="stock-target-price"></p>
+        <p id="stock-target-high"></p>
+        <p id="stock-target-low"></p>
+      </div>
+
+      <!-- 🔹 Graphique de l'historique des prix -->
+      <div class="chart-container">
+        <h4>Stock Performance (1 Year)</h4>
+        <canvas id="detailed-stock-chart"></canvas>
+      </div>
+
+      <button class="close-btn" type="button" onclick="closeModal()">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Visualization Section (Optional)
     {% if tool.visualization %}
         <section class="visualization-section">
             <h2>Visualization</h2>
@@ -281,19 +344,20 @@
     {% endif %} -->
 </main>
 
-
-{% endblock %}
-
-{% block scripts %}
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+{% endblock %} {% block scripts %}
+<script
+  type="text/javascript"
+  async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+></script>
 
 <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
 
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+<script
+  type="text/javascript"
+  async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+></script>
 
 <script src="/static/js/tool.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

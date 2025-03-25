@@ -1,60 +1,60 @@
 /* Under Construction Page */
 .under-construction {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  text-align: center;
 }
 
 .construction-container {
-    background-color: #fbf8f1;
-    border: 2px solid #e6e6e6;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    max-width: 600px;
-    width: 90%;
+  background-color: #fbf8f1;
+  border: 2px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  width: 90%;
 }
 
 .construction-container h1 {
-    font-size: 2.2rem;
-    color: #d9534f;
-    margin-bottom: 15px;
+  font-size: 2.2rem;
+  color: #d9534f;
+  margin-bottom: 15px;
 }
 
 .construction-container p {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 /* Ajoute un espace plus grand sous le premier paragraphe */
 .construction-container p:first-of-type {
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .construction-container img {
-    max-width: 100%;
-    height: auto;
-    margin: 20px 0;
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
 }
 
 .btn-home {
-    display: inline-block;
-    padding: 12px 20px;
-    margin-top: 15px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    background-color: #007bff;
-    border-radius: 6px;
-    transition: background 0.3s ease;
+  display: inline-block;
+  padding: 12px 20px;
+  margin-top: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  background-color: #007bff;
+  border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
 .btn-home:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
