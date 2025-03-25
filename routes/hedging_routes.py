@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, request, jsonify
 from formulas.chap_3 import *
 from formulas.chap_5 import *
 from config import logger
-from configurations.tool_config.futures_forwards.hedging_tool_config import HEDGING_TOOL_CONFIG
+from configurations.tool_config.futures_forwards.hedging_tool_config import (
+    HEDGING_TOOL_CONFIG,
+)
 
 # Blueprints for forwards and futures
 hedging_basics_routes = Blueprint("hedging_basics_routes", __name__)
@@ -20,8 +22,11 @@ TOOL_FUNCTIONS = {
     "change_beta_portfolio": compute_change_beta_portfolio,
 }
 
+
 # Route for Basics Hedging Tools
-@hedging_basics_routes.route("/tools/hedging-basics/<tool_key>", methods=["GET", "POST"])
+@hedging_basics_routes.route(
+    "/tools/hedging-basics/<tool_key>", methods=["GET", "POST"]
+)
 def handle_basics_hedging_tool(tool_key):
     tool_config = HEDGING_TOOL_CONFIG.get(tool_key)
 
@@ -35,8 +40,8 @@ def handle_basics_hedging_tool(tool_key):
         try:
             # Parse inputs
             params = {
-                input["id"]: float(data[input["id"]]) 
-                for input in tool_config["inputs"] 
+                input["id"]: float(data[input["id"]])
+                for input in tool_config["inputs"]
                 if not input.get("optional") or data.get(input["id"])
             }
 
@@ -49,7 +54,7 @@ def handle_basics_hedging_tool(tool_key):
             # Execute the function and return results
             result = calculation_function(**params)
             return jsonify(result)
-        
+
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
             return jsonify({"error": str(e)}), 400
@@ -57,8 +62,11 @@ def handle_basics_hedging_tool(tool_key):
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
 
+
 # Route for Equity Hedging Tools
-@equity_hedging_routes.route("/tools/equity-hedging/<tool_key>", methods=["GET", "POST"])
+@equity_hedging_routes.route(
+    "/tools/equity-hedging/<tool_key>", methods=["GET", "POST"]
+)
 def handle_equity_hedging_tool(tool_key):
     tool_config = HEDGING_TOOL_CONFIG.get(tool_key)
 
@@ -71,8 +79,8 @@ def handle_equity_hedging_tool(tool_key):
         try:
             # Parse inputs
             params = {
-                input["id"]: float(data[input["id"]]) 
-                for input in tool_config["inputs"] 
+                input["id"]: float(data[input["id"]])
+                for input in tool_config["inputs"]
                 if not input.get("optional") or data.get(input["id"])
             }
 
@@ -85,11 +93,10 @@ def handle_equity_hedging_tool(tool_key):
             # Execute the function and return results
             result = calculation_function(**params)
             return jsonify(result)
-        
+
         except Exception as e:
             logger.error(f"Error processing tool {tool_key}: {e}")
             return jsonify({"error": str(e)}), 400
 
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
-

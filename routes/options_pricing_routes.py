@@ -1,7 +1,15 @@
 from flask import Blueprint, render_template, request, jsonify
-from config import logger, parse_input_data, extract_values, convert_numpy_types, result_tuple_into_dict
-from configurations.tool_config.options.options_pricing_tool_config import OPTION_PRICING_TOOL_CONFIG
-from formulas.options_formulas import *  
+from config import (
+    logger,
+    parse_input_data,
+    extract_values,
+    convert_numpy_types,
+    result_tuple_into_dict,
+)
+from configurations.tool_config.options.options_pricing_tool_config import (
+    OPTION_PRICING_TOOL_CONFIG,
+)
+from formulas.options_formulas import *
 from graph_generation.get_graph import GRAPH_FUNCTIONS
 import markdown
 
@@ -16,6 +24,7 @@ TOOL_FUNCTIONS = {
     "monte-carlo-option": monte_carlo_pricing,
     "american-vs-european-spread": compare_american_vs_european,
 }
+
 
 # Generic Request Handler
 def handle_option_pricing_tool_request(tool_key, sub_category_key):
@@ -54,7 +63,9 @@ def handle_option_pricing_tool_request(tool_key, sub_category_key):
                     graph_function = GRAPH_FUNCTIONS[tool_key][i + 1]
                     graph = graph_function(graph_input)
                     graphs.append(graph)
-                graphs_output = {f'graph_{i + 1}': graph for i, graph in enumerate(graphs)}
+                graphs_output = {
+                    f"graph_{i + 1}": graph for i, graph in enumerate(graphs)
+                }
 
             # Combine result and graphs
             final_result = result_tuple_into_dict(result) | graphs_output
@@ -68,14 +79,16 @@ def handle_option_pricing_tool_request(tool_key, sub_category_key):
 
     # Markdown notes if available
     if tool_config.get("note"):
-        tool_config['note'] = markdown.markdown(tool_config['note'])
+        tool_config["note"] = markdown.markdown(tool_config["note"])
         return render_template("base_tool.html", tool=tool_config)
 
     # Render the tool page
     return render_template("base_tool.html", tool=tool_config)
 
+
 # Routes
-@option_pricing_routes.route("/tools/options/option-pricing/<tool_key>", methods=["GET", "POST"])
+@option_pricing_routes.route(
+    "/tools/options/option-pricing/<tool_key>", methods=["GET", "POST"]
+)
 def handle_option_pricing_tool(tool_key):
     return handle_option_pricing_tool_request(tool_key, "option-pricing")
-

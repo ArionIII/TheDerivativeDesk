@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template
 
-tool_category_future_forwards_routes = Blueprint("tool_category_future_forwards_routes", __name__)
+tool_category_future_forwards_routes = Blueprint(
+    "tool_category_future_forwards_routes", __name__
+)
 
 FUTURES_FORWARDS_TOOL_CATEGORIES = {
     # Futures Pricing Tools
     "futures-pricing": {
         "title": "Futures Pricing Tools",
         "description": "Select a futures pricing tool based on the type of asset or scenario you are analyzing.",
-        "parent_category":"futures-forwards",
+        "parent_category": "futures-forwards",
         "tools": [
             {
                 "title": "Stock Index with Dividend Yield",
@@ -45,7 +47,7 @@ FUTURES_FORWARDS_TOOL_CATEGORIES = {
     "forward-pricing": {
         "title": "Forward Pricing Tools",
         "description": "Select a forward pricing tool based on the type of asset or scenario you are analyzing.",
-        "parent_category":"futures-forwards",
+        "parent_category": "futures-forwards",
         "tools": [
             {
                 "title": "Investment Asset without Income",
@@ -73,7 +75,7 @@ FUTURES_FORWARDS_TOOL_CATEGORIES = {
     "hedging-basics": {
         "title": "Hedging Strategies",
         "description": "Explore tools for optimizing hedge strategies, including minimum variance, tailing adjustments, and optimal contract calculations.",
-        "parent_category":"futures-forwards",
+        "parent_category": "futures-forwards",
         "tools": [
             {
                 "title": "Optimal Futures & Tailing the Hedge",
@@ -109,20 +111,20 @@ FUTURES_FORWARDS_TOOL_CATEGORIES = {
     },
     # Valuation Tools
     "forward-contract-value": {
-    "title": "Value of Forward Contracts",
-    "description": "Evaluate the value of forward contracts for both long and short positions based on market price, forward price, and contract size.",
-    "parent_category": "futures-forwards",
-    "tools": [
-        {
-            "title": "Value of Forward Contracts",
-            "description": (
-                "Calculate the value of forward contracts for both long and short positions "
-                "using the market price, forward price, and contract size."
-            ),
-            "url": "/tools/value-forward-contracts/value_forward_contracts",
-        },
-    ],
-},
+        "title": "Value of Forward Contracts",
+        "description": "Evaluate the value of forward contracts for both long and short positions based on market price, forward price, and contract size.",
+        "parent_category": "futures-forwards",
+        "tools": [
+            {
+                "title": "Value of Forward Contracts",
+                "description": (
+                    "Calculate the value of forward contracts for both long and short positions "
+                    "using the market price, forward price, and contract size."
+                ),
+                "url": "/tools/value-forward-contracts/value_forward_contracts",
+            },
+        ],
+    },
     "delivery-timing": {
         "title": "Delivery Timing Tools",
         "description": "Evaluate the optimal delivery timing for futures contracts based on cost of carry and convenience yield.",
@@ -133,8 +135,8 @@ FUTURES_FORWARDS_TOOL_CATEGORIES = {
                 "description": "Determine whether to deliver a futures contract as soon as possible or as late as possible, based on cost of carry and convenience yield.",
                 "url": "/tools/delivery-timing-decision/delivery_timing_decision",
             }
-        ]
-    }
+        ],
+    },
 }
 
 

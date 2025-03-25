@@ -11,11 +11,12 @@ from werkzeug.datastructures import FileStorage
 
 class LogColors:
     DEBUG = "\033[94m"  # Blue
-    INFO = "\033[92m"   # Green
+    INFO = "\033[92m"  # Green
     WARNING = "\033[93m"  # Yellow
-    ERROR = "\033[91m"   # Red
+    ERROR = "\033[91m"  # Red
     CRITICAL = "\033[95m"  # Magenta
-    RESET = "\033[0m"   # Reset to default color
+    RESET = "\033[0m"  # Reset to default color
+
 
 class ColoredFormatter(logging.Formatter):
     def __init__(self, fmt):
@@ -33,6 +34,7 @@ class ColoredFormatter(logging.Formatter):
         formatter = logging.Formatter(log_fmt)
         return formatter.format(record)
 
+
 def get_colored_logger(name="ColoredLogger"):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
@@ -42,11 +44,15 @@ def get_colored_logger(name="ColoredLogger"):
     logger.addHandler(ch)
     return logger
 
+
 logger = get_colored_logger("AppLogger")
+
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "your_secret_key")
-    MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk")
+    MONGO_URI = os.environ.get(
+        "MONGO_URI", "mongodb://localhost:27017/TheDerivativeDesk"
+    )
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your_jwt_secret_key")
 
 
@@ -70,12 +76,14 @@ def parse_csv_and_xlsx(file):
     try:
         # Déterminer le format du fichier
         filename = file.filename.lower()
-        file_extension = os.path.splitext(filename)[1]  # Récupérer l'extension du fichier
+        file_extension = os.path.splitext(filename)[
+            1
+        ]  # Récupérer l'extension du fichier
         logger.warning(filename)
         if file_extension == ".csv":
             logger.info("Loading CSV file")
             # Lire le contenu du fichier CSV
-            file_content = file.read().decode('utf-8')
+            file_content = file.read().decode("utf-8")
 
             # Détecter automatiquement le séparateur
             first_line = file_content.split("\n")[0]
@@ -94,7 +102,9 @@ def parse_csv_and_xlsx(file):
             raise ValueError("Unsupported file format. Only CSV and XLSX are allowed.")
         # Vérifier si la première ligne contient des strings (header) ou seulement des nombres
         first_row = df.iloc[0].astype(str)  # Convertir en string pour test
-        contains_strings = any(not value.replace(".", "", 1).isdigit() for value in first_row)
+        contains_strings = any(
+            not value.replace(".", "", 1).isdigit() for value in first_row
+        )
         logger.info(f"Contains strings: {contains_strings}")
 
         # Si la première ligne contient des strings, on la considère comme un header et on la saute
@@ -115,7 +125,7 @@ def parse_csv_and_xlsx(file):
             return ([], df.iloc[:, 0].dropna().tolist())
 
         # Si plusieurs colonnes, retourner un dictionnaire {nom_colonne: liste de valeurs}
-        logger.warning('multiple columns')
+        logger.warning("multiple columns")
         return (df.columns.tolist(), [df[col].dropna().tolist() for col in df.columns])
 
     except Exception as e:
@@ -133,7 +143,7 @@ def parse_array(raw_value):
     Returns:
         Parsed array.
     """
-    logger.info('entering parse_array function')
+    logger.info("entering parse_array function")
     logger.info(raw_value)
 
     # Cas ou c'est un nombre
@@ -153,11 +163,17 @@ def parse_array(raw_value):
     try:
         parsed_json = json.loads(raw_value)  # Essayer de charger en JSON
         if isinstance(parsed_json, list):
-            if all(isinstance(sublist, list) for sublist in parsed_json):  # Cas [[1,2],[3,4]]
-                logger.info("Recognized as a JSON-style list of lists, converting to nested float lists.")
+            if all(
+                isinstance(sublist, list) for sublist in parsed_json
+            ):  # Cas [[1,2],[3,4]]
+                logger.info(
+                    "Recognized as a JSON-style list of lists, converting to nested float lists."
+                )
                 return [[float(x) for x in sublist] for sublist in parsed_json]
             else:  # Cas [1,2,3]
-                logger.info("Recognized as a JSON-style simple list, converting to float list.")
+                logger.info(
+                    "Recognized as a JSON-style simple list, converting to float list."
+                )
                 return [float(x) for x in parsed_json]
     except json.JSONDecodeError:
         logger.info("Not a JSON list, checking further.")
@@ -166,13 +182,14 @@ def parse_array(raw_value):
     if "," in raw_value:
         logger.info("Recognized as a CSV-style list, converting to float list.")
         return [float(x.strip()) for x in raw_value.split(",") if x.strip()]
-    
+
     # Cas ou c'est juste une simple liste
     if isinstance(raw_value, list):
         logger.info("Processing list input")
         return raw_value
-   
+
     return raw_value
+
 
 def parse_inputs(data_source, inputs_config):
     """
@@ -203,7 +220,7 @@ def parse_inputs(data_source, inputs_config):
                 elif input_type == "array":
                     logger.info("Processing array input")
                     params[input_id] = parse_array(raw_value)
-                    logger.info('processed array input')
+                    logger.info("processed array input")
                 elif input_type == "number":
                     logger.info("Processing number input")
                     params[input_id] = float(raw_value)
@@ -212,6 +229,7 @@ def parse_inputs(data_source, inputs_config):
             elif not optional:
                 raise ValueError(f"Missing required input: {input_id}")
     return params
+
 
 # Pour extraire les valeurs du result sans prendre en compte la display_value
 def extract_values(results):
@@ -231,13 +249,13 @@ def extract_values(results):
     if isinstance(results, tuple):
         logger.error(results)
         csv_path = None
-        
+
         # Trouver le fichier CSV dans le tuple
         for file in results:
             if file.endswith(".csv"):
                 csv_path = file
                 break
-        
+
         if csv_path is None:
             raise ValueError("No CSV file found in results")
 
@@ -260,11 +278,9 @@ def extract_values(results):
     elif isinstance(results, dict):
         logger.error({key: value[1] for key, value in results.items()})
         return {key: value[1] for key, value in results.items()}
-    
+
     else:
         raise TypeError("Unsupported format for results")
-
-
 
 
 def get_data_source(request):
@@ -276,7 +292,9 @@ def get_data_source(request):
         files_data = request.files if request.files else {}
 
         # Récupérer les champs textes envoyés dans le form-data
-        form_data = request.form.to_dict()  # Convertir en dict pour éviter ImmutableMultiDict
+        form_data = (
+            request.form.to_dict()
+        )  # Convertir en dict pour éviter ImmutableMultiDict
 
         # Vérifier si un JSON est encodé dans un champ texte
         json_data = {}
@@ -296,13 +314,16 @@ def get_data_source(request):
         logger.warning("Type de requête inconnu")
         return {"files": None, "json": {}, "form": {}}
 
+
 def convert_numpy_types(obj):
     """Convertit les types NumPy en types standards pour éviter les erreurs JSON."""
     if isinstance(obj, np.integer):  # Vérifie si c'est un int NumPy (ex: int32, int64)
         return int(obj)  # Convertit en int standard
     elif isinstance(obj, np.floating):  # Vérifie si c'est un float NumPy
         return float(obj)  # Convertit en float standard
-    elif isinstance(obj, dict):  # Vérifie si c'est un dictionnaire et convertit récursivement
+    elif isinstance(
+        obj, dict
+    ):  # Vérifie si c'est un dictionnaire et convertit récursivement
         return {key: convert_numpy_types(value) for key, value in obj.items()}
     elif isinstance(obj, list):  # Vérifie si c'est une liste et convertit récursivement
         return [convert_numpy_types(item) for item in obj]
@@ -333,17 +354,25 @@ def process_uploaded_files_with_target(data_source, tool_config):
 
                 # Trouver `data_target` correspondant à l'ID du fichier
                 target_name = next(
-                (item["data_target"] for item in tool_config["inputs"] if item["id"] == file_key),
-                file_key  # Valeur par défaut si non trouvé
-            )
+                    (
+                        item["data_target"]
+                        for item in tool_config["inputs"]
+                        if item["id"] == file_key
+                    ),
+                    file_key,  # Valeur par défaut si non trouvé
+                )
                 # Parser le fichier CSV/XLSX
                 try:
                     column_names, parsed_data = parse_csv_and_xlsx(file_obj)
                     logger.warning(f" Fichier {file_obj.filename} chargé avec succès.")
                     parsed_datasets[target_name] = parsed_data
-                    logger.warning(f" Fichier {file_obj.filename} chargé sous `{target_name}` avec succès.")
+                    logger.warning(
+                        f" Fichier {file_obj.filename} chargé sous `{target_name}` avec succès."
+                    )
                 except Exception as e:
-                    logger.error(f" Erreur lors du traitement de {file_obj.filename} : {e}")
+                    logger.error(
+                        f" Erreur lors du traitement de {file_obj.filename} : {e}"
+                    )
     logger.warning(f" Parsed datasets: {parsed_datasets}")
     return column_names, parsed_datasets
 
@@ -354,16 +383,18 @@ def parse_input_data(request, tool_config):
 
     logger.warning("📥 Processing input data...")
     column_names = []
-    
+
     # 🔹 1️⃣ Parsing des fichiers (prioritaires)
     if "files" in data_source and data_source["files"]:
         logger.warning(" Processing uploaded files...")
-        column_names, parsed_files = process_uploaded_files_with_target(data_source, tool_config)
+        column_names, parsed_files = process_uploaded_files_with_target(
+            data_source, tool_config
+        )
         logger.warning(f" Parsed files: {parsed_files}")
-        
+
         # Priorité aux fichiers : on écrase les valeurs existantes
         parsed_data.update(parsed_files)
-        logger.error('parsed data 1')
+        logger.error("parsed data 1")
         logger.error(parsed_data)
 
     # 🔹 2️⃣ Parsing du JSON
@@ -372,27 +403,30 @@ def parse_input_data(request, tool_config):
             # Ajouter seulement si l'input n'a pas déjà été remplacé par un fichier
             if key not in parsed_data:
                 parsed_data[key] = value
-        logger.error('parsed data 2', parsed_data)
+        logger.error("parsed data 2", parsed_data)
 
     # 🔹 3️⃣ Parsing du formulaire (`form`)
     if "form" in data_source and data_source["form"]:
         parsed_values = [parse_array(value) for value in data_source["form"].values()]
-        parsed_form_data = {k: v for k, v in zip(data_source["form"].keys(), parsed_values)}
+        parsed_form_data = {
+            k: v for k, v in zip(data_source["form"].keys(), parsed_values)
+        }
 
         for key, value in parsed_form_data.items():
             # Ajouter seulement si l'input n'a pas déjà été remplacé par un fichier
             if key not in parsed_data:
                 parsed_data[key] = value
 
-        logger.error('parsed data 3')
+        logger.error("parsed data 3")
         logger.error(parsed_data)
 
     logger.info(f" Parsed data: {parsed_data}")
     return column_names, parsed_data
 
+
 def reassign_params_if_header(tool_config, params, column_names):
     """
-    Réassigne les paramètres et les noms de colonnes si un fichier CSV a été fourni 
+    Réassigne les paramètres et les noms de colonnes si un fichier CSV a été fourni
     et que son id dans tool_config contient "header": True.
 
     Args:
@@ -405,24 +439,28 @@ def reassign_params_if_header(tool_config, params, column_names):
     """
     for input_config in tool_config.get("inputs", []):
         data_target = input_config.get("data_target")
-        
+
         if data_target and input_config.get("header") == True:
             # Vérifier si ce data_target est bien dans params
             if data_target in params and isinstance(params[data_target], list):
                 data_values = params[data_target]  # Liste des listes
-                
+
                 if len(column_names) == 1:
                     # Si une seule colonne, on garde une liste plate
-                    params[data_target] = data_values[0]  # On prend la première liste (colonne unique)
+                    params[data_target] = data_values[
+                        0
+                    ]  # On prend la première liste (colonne unique)
                 else:
                     # Si plusieurs colonnes, transformer en dictionnaire {nom_colonne: liste de valeurs}
                     params[data_target] = {
-                        col_name: data_values[i] for i, col_name in enumerate(column_names)
+                        col_name: data_values[i]
+                        for i, col_name in enumerate(column_names)
                     }
 
                 break  # Une seule mise à jour suffit
 
     return params, column_names
+
 
 def result_tuple_into_dict(result):
     # Vérifier si result est un tuple (cas où ce sont des fichiers)
@@ -431,6 +469,7 @@ def result_tuple_into_dict(result):
     else:
         result_dict = result  # Déjà un dictionnaire
     return result_dict
+
 
 def generate_input_from_file(filepath):
     """
@@ -445,16 +484,18 @@ def generate_input_from_file(filepath):
     try:
         if not os.path.exists(filepath):
             raise FileNotFoundError(f"File not found: {filepath}")
-        
+
         # Déterminer le format du fichier
         file_extension = os.path.splitext(filepath)[1].lower()
 
         # Lire le fichier
         if file_extension == ".csv":
             # Détecter automatiquement le séparateur ("," ou ";" ou "\t")
-            with open(filepath, 'r', encoding="utf-8") as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 first_line = f.readline()
-                separator = "," if "," in first_line else ";" if ";" in first_line else "\t"
+                separator = (
+                    "," if "," in first_line else ";" if ";" in first_line else "\t"
+                )
             df = pd.read_csv(filepath, sep=separator)
 
         elif file_extension in [".xls", ".xlsx"]:
@@ -474,8 +515,6 @@ def generate_input_from_file(filepath):
             values = [df.iloc[:, i].dropna().tolist() for i in range(df.shape[1])]
 
         return values
-    
+
     except Exception as e:
         raise ValueError(f"Error parsing file: {e}")
-
-
