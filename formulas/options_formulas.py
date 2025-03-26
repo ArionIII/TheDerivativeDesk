@@ -515,7 +515,7 @@ def plot_greeks_sensitivity_formula(
         },
         "call_value": {
             "label": "Option Value",
-            "data": call_value if position_type == "LONG" else [-c for c in call_value],
+            "data": call_value,
             "borderColor": "orange",
             "fill": False,
             "yAxisID": "secondary",  #  Courbe sur le 2ème axe Y
