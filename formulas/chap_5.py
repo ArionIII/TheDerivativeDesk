@@ -296,8 +296,7 @@ def delivery_timing_decision(cost_of_carry, convenience_yield):
         isinstance(val, (int, float)) for val in [cost_of_carry, convenience_yield]
     ):
         raise ValueError("Both inputs must be numeric.")
-
-    # Decision logic: deliver asap if cost_of_carry - convenience_yield > 0, deliver late if cost_of_carry - convenience_yield <= 0
+ 
     return (
         "Deliver as soon as possible"
         if cost_of_carry - convenience_yield > 0
